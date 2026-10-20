@@ -26,7 +26,6 @@ export class AdminController {
         });
       }
 
-      // Set HttpOnly cookie
       res.cookie('admin_token', authResult.token, {
         httpOnly: true,
         sameSite: 'strict',
@@ -55,6 +54,49 @@ export class AdminController {
     });
   }
 
+  async getMe(req, res) {
+    res.json({
+      success: true,
+      data: {
+        user: req.user
+      }
+    });
+  }
+
+  async getStats(req, res, next) {
+    try {
+      const stats = await contentService.getAdminStats();
+      res.json({
+        success: true,
+        data: stats,
+        meta: { timestamp: new Date().toISOString() }
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async createArticle(req, res, next) {
+    try {
+      const data = req.body;
+      if (!data.title) {
+        return res.status(400).json({
+          success: false,
+          error: { code: 'VALIDATION_ERROR', message: 'Article title is required' }
+        });
+      }
+
+      const created = await contentService.createArticle(data, req.user?.username || 'admin');
+      res.status(201).json({
+        success: true,
+        data: created,
+        meta: { timestamp: new Date().toISOString() }
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async updateArticle(req, res, next) {
     try {
       const { id } = req.params;
@@ -81,6 +123,25 @@ export class AdminController {
     }
   }
 
+  async deleteArticle(req, res, next) {
+    try {
+      const { id } = req.params;
+      const success = await contentService.deleteArticle(id, req.user?.username || 'admin');
+      if (!success) {
+        return res.status(404).json({
+          success: false,
+          error: { code: 'ARTICLE_NOT_FOUND', message: `Article with ID '${id}' not found` }
+        });
+      }
+      res.json({
+        success: true,
+        data: { id, deleted: true }
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async getAuditLogs(req, res, next) {
     try {
       const logs = await contentService.getAuditLogs();
@@ -96,7 +157,7 @@ export class AdminController {
 
   async uploadMedia(req, res, next) {
     try {
-      const { name, src, alt } = req.body;
+      const { name, src, alt, categorySlug } = req.body;
       if (!src) {
         return res.status(400).json({
           success: false,
@@ -110,7 +171,9 @@ export class AdminController {
           id: `media-${Date.now()}`,
           name: name || 'Uploaded Media',
           src,
-          alt: alt || ''
+          alt: alt || '',
+          categorySlug: categorySlug || 'architecture',
+          createdAt: new Date().toISOString()
         }
       });
     } catch (err) {

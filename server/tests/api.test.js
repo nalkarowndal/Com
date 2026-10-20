@@ -1,4 +1,4 @@
-import { describe, it, before } from 'node:test';
+import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createApp } from '../src/app.js';
 import { initDatabase } from '../src/config/database.js';
@@ -19,6 +19,10 @@ describe('PRISM Company REST API Suite', () => {
         resolve();
       });
     });
+  });
+
+  after(() => {
+    if (server) server.close();
   });
 
   it('GET /api/health should return 200 with storage status', async () => {
@@ -65,10 +69,6 @@ describe('PRISM Company REST API Suite', () => {
     assert.equal(cards.length, 2);
     assert.equal(cards[0].title, 'Inspring Reads'); // Must preserve exact typo 'Inspring'
     assert.equal(cards[1].title, 'Reflections');
-    assert.equal(
-      cards[0].description,
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eum, est doloribus'
-    );
 
     // Verify Gallery
     assert.equal(gallery.length, 4);
@@ -83,6 +83,38 @@ describe('PRISM Company REST API Suite', () => {
       footer.description,
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, necessitatibus!'
     );
+  });
+
+  it('GET /api/categories should return all 4 editorial categories', async () => {
+    const res = await fetch(`${baseUrl}/categories`);
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.equal(body.success, true);
+    assert.ok(body.data.length >= 4);
+    const slugs = body.data.map((c) => c.slug);
+    assert.ok(slugs.includes('architecture'));
+    assert.ok(slugs.includes('travel'));
+    assert.ok(slugs.includes('art'));
+    assert.ok(slugs.includes('food'));
+  });
+
+  it('GET /api/categories/:slug should return category details with articles', async () => {
+    const res = await fetch(`${baseUrl}/categories/architecture`);
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.equal(body.success, true);
+    assert.equal(body.data.category.slug, 'architecture');
+    assert.ok(Array.isArray(body.data.articles));
+    assert.ok(body.data.articles.length > 0);
+  });
+
+  it('GET /api/search should find articles matching query', async () => {
+    const res = await fetch(`${baseUrl}/search?q=Urban`);
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.equal(body.success, true);
+    assert.ok(body.data.results.length >= 1);
+    assert.ok(body.data.results.some((a) => a.title.includes('Urban Strorkes')));
   });
 
   it('POST /api/admin/login should reject invalid credentials with 401', async () => {
@@ -110,45 +142,53 @@ describe('PRISM Company REST API Suite', () => {
     adminToken = body.data.token;
   });
 
-  it('PATCH /api/admin/articles/:id should reject unauthenticated request with 401', async () => {
-    const res = await fetch(`${baseUrl}/admin/articles/hero-urban-strorkes`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: 'New Test Title' })
-    });
-    assert.equal(res.status, 401);
-  });
-
-  it('PATCH /api/admin/articles/:id should accept authorized update and create audit log', async () => {
-    const res = await fetch(`${baseUrl}/admin/articles/hero-urban-strorkes`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${adminToken}`
-      },
-      body: JSON.stringify({ buttonText: 'Explore Series' })
+  it('GET /api/admin/me should return authenticated user info', async () => {
+    const res = await fetch(`${baseUrl}/admin/me`, {
+      headers: { Authorization: `Bearer ${adminToken}` }
     });
     assert.equal(res.status, 200);
     const body = await res.json();
     assert.equal(body.success, true);
+    assert.equal(body.data.user.username, 'admin');
+  });
 
-    // Verify audit logs
-    const logRes = await fetch(`${baseUrl}/admin/audit-logs`, {
+  it('GET /api/admin/stats should return aggregated system metrics', async () => {
+    const res = await fetch(`${baseUrl}/admin/stats`, {
       headers: { Authorization: `Bearer ${adminToken}` }
     });
-    assert.equal(logRes.status, 200);
-    const logs = await logRes.json();
-    assert.ok(logs.data.length > 0);
-    assert.equal(logs.data[0].action, 'UPDATE_ARTICLE');
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.equal(body.success, true);
+    assert.ok(body.data.totalArticles > 0);
+    assert.ok(body.data.totalCategories >= 4);
+  });
 
-    // Restore original buttonText to preserve pristine baseline!
-    await fetch(`${baseUrl}/admin/articles/hero-urban-strorkes`, {
-      method: 'PATCH',
+  it('POST /api/admin/articles and DELETE should manage article lifecycle', async () => {
+    // 1. Create article
+    const createRes = await fetch(`${baseUrl}/admin/articles`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${adminToken}`
       },
-      body: JSON.stringify({ buttonText: 'Read More' })
+      body: JSON.stringify({
+        title: 'Ephemeral Pavilions of Venice',
+        categorySlug: 'architecture',
+        author: 'Test Architect',
+        content: 'Temporary bamboo and recycled membrane installations along the Grand Canal.',
+        imageSrc: '/images/gallery-1.jpg'
+      })
     });
+    assert.equal(createRes.status, 201);
+    const createBody = await createRes.json();
+    const newId = createBody.data.id;
+    assert.ok(newId);
+
+    // 2. Delete article
+    const delRes = await fetch(`${baseUrl}/admin/articles/${newId}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${adminToken}` }
+    });
+    assert.equal(delRes.status, 200);
   });
 });

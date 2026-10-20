@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { NavLink, Link } from 'react-router-dom';
 
 export default function MobileNav({ isOpen, onClose, navigation = [] }) {
   useEffect(() => {
@@ -42,19 +43,53 @@ export default function MobileNav({ isOpen, onClose, navigation = [] }) {
 
         <nav>
           <ul>
+            <li>
+              <NavLink
+                to="/"
+                onClick={onClose}
+                className={({ isActive }) => (isActive ? 'active' : '')}
+              >
+                Home
+              </NavLink>
+            </li>
             {navigation.map((item) => (
               <li key={item.id || item.label}>
-                <a
-                  href={item.href || '#'}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onClose();
-                  }}
+                <NavLink
+                  to={item.href || `/${item.label.toLowerCase()}`}
+                  onClick={onClose}
+                  className={({ isActive }) => (isActive ? 'active' : '')}
                 >
                   {item.label}
-                </a>
+                </NavLink>
               </li>
             ))}
+            <li>
+              <NavLink
+                to="/gallery"
+                onClick={onClose}
+                className={({ isActive }) => (isActive ? 'active' : '')}
+              >
+                Gallery
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/search"
+                onClick={onClose}
+                className={({ isActive }) => (isActive ? 'active' : '')}
+              >
+                Search
+              </NavLink>
+            </li>
+            <li style={{ marginTop: '16px' }}>
+              <Link
+                to="/admin/dashboard"
+                onClick={onClose}
+                style={{ color: 'var(--color-accent-champagne)' }}
+              >
+                Admin Panel &rarr;
+              </Link>
+            </li>
           </ul>
         </nav>
 

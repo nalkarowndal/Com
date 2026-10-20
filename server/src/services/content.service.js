@@ -2,16 +2,17 @@ import { contentRepository } from '../repositories/content.repository.js';
 
 export class ContentService {
   async getHomePayload() {
-    const [site, navigation, articles, cards, gallery, footer] = await Promise.all([
+    const [site, navigation, articlesData, cards, gallery, footer] = await Promise.all([
       contentRepository.getSiteSettings(),
       contentRepository.getNavigation(),
-      contentRepository.getArticles(),
+      contentRepository.getArticles({ limit: 10 }),
       contentRepository.getFeaturedCards(),
       contentRepository.getGalleryItems(),
       contentRepository.getFooter()
     ]);
 
-    const hero = articles.find(a => a.isFeatured) || articles[0];
+    const articles = articlesData.items || articlesData;
+    const hero = articles.find((a) => a.isFeatured) || articles[0];
 
     return {
       site,
@@ -33,26 +34,27 @@ export class ContentService {
   }
 
   async getCategories() {
-    const nav = await contentRepository.getNavigation();
-    return nav.map(item => ({
-      id: item.id,
-      name: item.label,
-      slug: item.label.toLowerCase(),
-      href: item.href,
-      order: item.order
-    }));
+    return contentRepository.getCategories();
   }
 
-  async getArticles() {
-    return contentRepository.getArticles();
+  async getCategoryBySlug(slug) {
+    return contentRepository.getCategoryBySlug(slug);
+  }
+
+  async getArticles(params = {}) {
+    return contentRepository.getArticles(params);
   }
 
   async getArticleBySlug(slug) {
     return contentRepository.getArticleBySlug(slug);
   }
 
-  async getGallery() {
-    return contentRepository.getGalleryItems();
+  async getGallery(params = {}) {
+    return contentRepository.getGalleryItems(params);
+  }
+
+  async search(params = {}) {
+    return contentRepository.getArticles(params);
   }
 
   async getSiteInfo() {
@@ -67,6 +69,12 @@ export class ContentService {
     };
   }
 
+  async createArticle(data, performedBy = 'admin') {
+    const created = await contentRepository.createArticle(data);
+    await contentRepository.createAuditLog('CREATE_ARTICLE', 'article', created.id, data, performedBy);
+    return created;
+  }
+
   async updateArticle(id, updates, performedBy = 'admin') {
     const updated = await contentRepository.updateArticle(id, updates);
     if (updated) {
@@ -75,8 +83,20 @@ export class ContentService {
     return updated;
   }
 
+  async deleteArticle(id, performedBy = 'admin') {
+    const success = await contentRepository.deleteArticle(id);
+    if (success) {
+      await contentRepository.createAuditLog('DELETE_ARTICLE', 'article', id, { deleted: true }, performedBy);
+    }
+    return success;
+  }
+
   async getAuditLogs() {
     return contentRepository.getAuditLogs();
+  }
+
+  async getAdminStats() {
+    return contentRepository.getAdminStats();
   }
 }
 

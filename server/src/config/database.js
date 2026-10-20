@@ -6,7 +6,7 @@ import { env } from './env.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const SEED_FILE = path.resolve(__dirname, '../../db/seeds/001_initial_content.json');
+const SEED_FILE = path.resolve(__dirname, '../../db/seeds/002_multipage_content.json');
 const PERSISTENT_DB_FILE = path.resolve(__dirname, '../../db/persistent_data.json');
 
 let pgPool = null;
@@ -17,18 +17,31 @@ let dbStatus = {
   message: 'Database not initialized'
 };
 
-// In-memory / file-backed persistent cache for fallback engine
 let fileDbCache = null;
 
-async function loadSeedData() {
-  const raw = await fs.readFile(SEED_FILE, 'utf-8');
-  return JSON.parse(raw);
+export async function loadSeedData() {
+  try {
+    const raw = await fs.readFile(SEED_FILE, 'utf-8');
+    return JSON.parse(raw);
+  } catch {
+    const fallbackPath = path.resolve(__dirname, '../../db/seeds/001_initial_content.json');
+    const raw = await fs.readFile(fallbackPath, 'utf-8');
+    return JSON.parse(raw);
+  }
 }
 
 async function initFileDb() {
   try {
     const raw = await fs.readFile(PERSISTENT_DB_FILE, 'utf-8');
     fileDbCache = JSON.parse(raw);
+    // Ensure all collections exist
+    if (!fileDbCache.categories) {
+      const seed = await loadSeedData();
+      fileDbCache.categories = seed.categories || [];
+      fileDbCache.articles = seed.articles || fileDbCache.articles;
+      fileDbCache.gallery = seed.gallery || fileDbCache.gallery;
+      await saveFileDb();
+    }
     console.info('[Storage] Loaded existing file-backed persistent database.');
   } catch {
     console.info('[Storage] Initializing new file-backed persistent database from seed...');
@@ -44,8 +57,127 @@ export async function saveFileDb() {
   }
 }
 
+async function seedPostgres(client, data) {
+  // Check if articles exist
+  const res = await client.query('SELECT COUNT(*) FROM articles');
+  const count = parseInt(res.rows[0].count, 10);
+  if (count > 0) {
+    console.info('[Storage] PostgreSQL already contains records. Skipping seed.');
+    return;
+  }
+
+  console.info('[Storage] Seeding initial data into PostgreSQL...');
+
+  // 1. Site settings
+  if (data.site) {
+    await client.query(
+      `INSERT INTO site_settings (key, value, description) VALUES
+       ('site_name', $1, 'Site identifier'),
+       ('brand_logo_src', $2, 'Logo path'),
+       ('brand_logo_alt', $3, 'Logo alt'),
+       ('copyright', $4, 'Copyright notice'),
+       ('footer_description', $5, 'Footer copy')
+       ON CONFLICT (key) DO NOTHING`,
+      [
+        data.site.name,
+        data.site.brandLogoSrc,
+        data.site.brandLogoAlt,
+        data.footer?.copyright || '',
+        data.footer?.description || ''
+      ]
+    );
+  }
+
+  // 2. Navigation
+  if (Array.isArray(data.navigation)) {
+    for (const item of data.navigation) {
+      await client.query(
+        `INSERT INTO navigation_items (id, label, href, order_index, is_active)
+         VALUES ($1, $2, $3, $4, $5)
+         ON CONFLICT (id) DO NOTHING`,
+        [item.id, item.label, item.href, item.order, item.isActive !== false]
+      );
+    }
+  }
+
+  // 3. Categories
+  if (Array.isArray(data.categories)) {
+    for (const cat of data.categories) {
+      await client.query(
+        `INSERT INTO categories (id, slug, name, description, hero_image, sort_order, is_active)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         ON CONFLICT (id) DO NOTHING`,
+        [cat.id, cat.slug, cat.name, cat.description, cat.heroImage, cat.order, cat.isActive !== false]
+      );
+    }
+  }
+
+  // 4. Articles
+  if (Array.isArray(data.articles)) {
+    for (const a of data.articles) {
+      await client.query(
+        `INSERT INTO articles (id, slug, category_slug, badge, author, title, button_text, image_src, excerpt, content, tags, is_featured, is_published, is_demo, views)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+         ON CONFLICT (id) DO NOTHING`,
+        [
+          a.id,
+          a.slug,
+          a.categorySlug || 'architecture',
+          a.badge,
+          a.author,
+          a.title,
+          a.buttonText || 'Read More',
+          a.imageSrc,
+          a.excerpt || '',
+          a.content || '',
+          a.tags || '',
+          Boolean(a.isFeatured),
+          Boolean(a.isPublished),
+          Boolean(a.isDemo),
+          a.views || 0
+        ]
+      );
+    }
+  }
+
+  // 5. Featured Cards
+  if (Array.isArray(data.cards)) {
+    for (const c of data.cards) {
+      await client.query(
+        `INSERT INTO featured_contents (id, variant, title, description, button_text, link, order_index)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         ON CONFLICT (id) DO NOTHING`,
+        [c.id, c.variant, c.title, c.description, c.buttonText || 'Read More', c.link || '', c.order || 0]
+      );
+    }
+  }
+
+  // 6. Gallery
+  if (Array.isArray(data.gallery)) {
+    for (const g of data.gallery) {
+      await client.query(
+        `INSERT INTO gallery_items (id, src, alt, title, description, category_slug, order_index, is_published, is_demo)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+         ON CONFLICT (id) DO NOTHING`,
+        [
+          g.id,
+          g.src,
+          g.alt,
+          g.title || g.alt,
+          g.description || '',
+          g.categorySlug || 'architecture',
+          g.order || 0,
+          g.isPublished !== false,
+          Boolean(g.isDemo)
+        ]
+      );
+    }
+  }
+
+  console.info('[Storage] PostgreSQL seeded successfully.');
+}
+
 export async function initDatabase() {
-  // Always prepare persistent fallback database first
   await initFileDb();
 
   if (env.DATABASE_URL) {
@@ -56,17 +188,24 @@ export async function initDatabase() {
         connectionTimeoutMillis: 2000
       });
 
-      // Test connection
       const client = await pgPool.connect();
       try {
         await client.query('SELECT 1');
-        console.info('[Storage] PostgreSQL connection established successfully.');
+        console.info('[Storage] PostgreSQL connection established.');
 
         // Run migrations
-        const migrationPath = path.resolve(__dirname, '../../db/migrations/001_create_tables.sql');
-        const migrationSql = await fs.readFile(migrationPath, 'utf-8');
-        await client.query(migrationSql);
-        console.info('[Storage] PostgreSQL migrations executed successfully.');
+        const mig1 = path.resolve(__dirname, '../../db/migrations/001_create_tables.sql');
+        const mig1Sql = await fs.readFile(mig1, 'utf-8');
+        await client.query(mig1Sql);
+
+        const mig2 = path.resolve(__dirname, '../../db/migrations/002_multipage_extension.sql');
+        const mig2Sql = await fs.readFile(mig2, 'utf-8');
+        await client.query(mig2Sql);
+        console.info('[Storage] PostgreSQL migrations 001 & 002 executed.');
+
+        // Seed initial data if empty
+        const seedData = await loadSeedData();
+        await seedPostgres(client, seedData);
 
         activeEngine = 'postgres';
         dbStatus = {
@@ -98,7 +237,6 @@ export async function initDatabase() {
       };
     }
   } else {
-    console.info('[Storage] No DATABASE_URL configured. Using resilient file-backed persistent storage.');
     activeEngine = 'file_persistence';
     dbStatus = {
       engine: 'file_persistence',

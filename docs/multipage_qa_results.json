@@ -1,0 +1,106 @@
+{
+  "timestamp": "2026-10-20T02:25:36.013Z",
+  "routesTested": [
+    {
+      "path": "/",
+      "name": "home",
+      "status": 200,
+      "matched": true
+    },
+    {
+      "path": "/architecture",
+      "name": "architecture",
+      "status": 200,
+      "matched": true
+    },
+    {
+      "path": "/travel",
+      "name": "travel",
+      "status": 200,
+      "matched": true
+    },
+    {
+      "path": "/art",
+      "name": "art",
+      "status": 200,
+      "matched": true
+    },
+    {
+      "path": "/food",
+      "name": "food",
+      "status": 200,
+      "matched": true
+    },
+    {
+      "path": "/stories/urban-strorkes",
+      "name": "article_detail",
+      "status": 200,
+      "matched": true
+    },
+    {
+      "path": "/gallery",
+      "name": "gallery",
+      "status": 200,
+      "matched": true
+    },
+    {
+      "path": "/search",
+      "name": "search",
+      "status": 200,
+      "matched": true
+    },
+    {
+      "path": "/admin/login",
+      "name": "admin_login",
+      "status": 200,
+      "matched": true
+    },
+    {
+      "path": "/random-unknown-404",
+      "name": "not_found",
+      "status": 200,
+      "matched": true
+    }
+  ],
+  "viewportsTested": [
+    {
+      "viewport": "mobile_375x812",
+      "width": 375,
+      "height": 812,
+      "overflow": 0,
+      "passed": true
+    },
+    {
+      "viewport": "tablet_768x1024",
+      "width": 768,
+      "height": 1024,
+      "overflow": 0,
+      "passed": true
+    },
+    {
+      "viewport": "desktop_1280x800",
+      "width": 1280,
+      "height": 800,
+      "overflow": 0,
+      "passed": true
+    },
+    {
+      "viewport": "desktop_wide_1440x900",
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "passed": true
+    },
+    {
+      "viewport": "desktop_fullhd_1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "overflow": 0,
+      "passed": true
+    }
+  ],
+  "horizontalOverflowPassed": true,
+  "a11yPassed": true,
+  "adminLifecyclePassed": true,
+  "failures": []
+}

@@ -58,12 +58,53 @@ export class PublicController {
     }
   }
 
-  async getArticles(req, res, next) {
+  async getCategoryBySlug(req, res, next) {
     try {
-      const articles = await contentService.getArticles();
+      const { slug } = req.params;
+      const category = await contentService.getCategoryBySlug(slug);
+      if (!category) {
+        return res.status(404).json({
+          success: false,
+          error: { code: 'CATEGORY_NOT_FOUND', message: `Category '${slug}' not found` }
+        });
+      }
+
+      // Also fetch related articles for this category
+      const articles = await contentService.getArticles({ category: slug, limit: 12 });
+
       res.json({
         success: true,
-        data: articles,
+        data: {
+          category,
+          articles: articles.items || articles
+        },
+        meta: { timestamp: new Date().toISOString() }
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getArticles(req, res, next) {
+    try {
+      const { category, q, page = 1, limit = 12, sort = 'latest' } = req.query;
+      const result = await contentService.getArticles({
+        category,
+        q,
+        page: parseInt(page, 10) || 1,
+        limit: Math.min(50, parseInt(limit, 10) || 12),
+        sort
+      });
+
+      res.json({
+        success: true,
+        data: result.items,
+        pagination: {
+          total: result.total,
+          page: result.page,
+          limit: result.limit,
+          totalPages: result.totalPages
+        },
         meta: { timestamp: new Date().toISOString() }
       });
     } catch (err) {
@@ -84,9 +125,21 @@ export class PublicController {
           }
         });
       }
+
+      // Fetch 2-3 related articles in the same category
+      const related = await contentService.getArticles({
+        category: article.categorySlug,
+        limit: 4
+      });
+
+      const relatedItems = (related.items || related).filter((a) => a.id !== article.id).slice(0, 3);
+
       res.json({
         success: true,
-        data: article,
+        data: {
+          ...article,
+          related: relatedItems
+        },
         meta: { timestamp: new Date().toISOString() }
       });
     } catch (err) {
@@ -96,10 +149,41 @@ export class PublicController {
 
   async getGallery(req, res, next) {
     try {
-      const gallery = await contentService.getGallery();
+      const { category } = req.query;
+      const gallery = await contentService.getGallery({ category });
       res.json({
         success: true,
         data: gallery,
+        meta: { timestamp: new Date().toISOString() }
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async search(req, res, next) {
+    try {
+      const { q = '', category, page = 1, limit = 12, sort } = req.query;
+      const result = await contentService.search({
+        q,
+        category,
+        page: parseInt(page, 10) || 1,
+        limit: Math.min(50, parseInt(limit, 10) || 12),
+        sort
+      });
+
+      res.json({
+        success: true,
+        data: {
+          query: q,
+          results: result.items,
+          pagination: {
+            total: result.total,
+            page: result.page,
+            limit: result.limit,
+            totalPages: result.totalPages
+          }
+        },
         meta: { timestamp: new Date().toISOString() }
       });
     } catch (err) {

@@ -5,10 +5,10 @@ export const defaultContent = {
     brandLogoSrc: "/images/logo.png"
   },
   navigation: [
-    { id: "nav-arch", label: "Architecture", href: "#", order: 1 },
-    { id: "nav-travel", label: "Travel", href: "#", order: 2 },
-    { id: "nav-art", label: "Art", href: "#", order: 3 },
-    { id: "nav-food", label: "Food", href: "#", order: 4 }
+    { id: "nav-arch", label: "Architecture", href: "/architecture", order: 1 },
+    { id: "nav-travel", label: "Travel", href: "/travel", order: 2 },
+    { id: "nav-art", label: "Art", href: "/art", order: 3 },
+    { id: "nav-food", label: "Food", href: "/food", order: 4 }
   ],
   hero: {
     id: "hero-urban-strorkes",
