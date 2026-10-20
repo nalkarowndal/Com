@@ -1,62 +1,54 @@
-import Header from "./include/Header"
-import Footer from "./include/Footer"
+import { useState } from 'react';
+import Header from './components/layout/Header';
+import HeroSection from './components/hero/HeroSection';
+import FeaturedSection from './components/content/FeaturedSection';
+import GalleryGrid from './components/gallery/GalleryGrid';
+import Footer from './components/layout/Footer';
+import AdminModal from './components/admin/AdminModal';
+import { useHomeContent } from './hooks/useHomeContent';
 
 function App() {
- 
+  const { content, auditLogs, updateContentFromAdmin } = useHomeContent();
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
+
   return (
-    <>
-<Header/>
+    <div className="site-wrapper">
+      <Header
+        brandLogoSrc={content.project?.brandLogoSrc || '/images/logo.png'}
+        brandLogoAlt={content.project?.brandLogoAlt || 'Logo'}
+        navigation={content.navigation}
+        onOpenAdmin={() => setIsAdminOpen(true)}
+      />
 
-<main>
+      <main id="main-content">
+        <HeroSection
+          badge={content.hero?.badge}
+          author={content.hero?.author}
+          title={content.hero?.title}
+          buttonText={content.hero?.buttonText}
+          backgroundImage={content.hero?.backgroundImage}
+          content={content.hero?.content}
+        />
 
-<div className="row">
-  <div className="col">
-    <div className="hero">
-      <h3>Editor's Choice</h3>
-      <h4>Sebastian Weiss</h4>
-      <h1>Urban Strorkes</h1>
-      <a href="#" className="button">Read More</a>
+        <FeaturedSection cards={content.cards} />
+
+        <GalleryGrid items={content.gallery} />
+      </main>
+
+      <Footer
+        copyright={content.footer?.copyright}
+        description={content.footer?.description}
+      />
+
+      <AdminModal
+        isOpen={isAdminOpen}
+        onClose={() => setIsAdminOpen(false)}
+        content={content}
+        onSaveContent={updateContentFromAdmin}
+        auditLogs={auditLogs}
+      />
     </div>
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col-md-one-half">
-    <div className="info-box-tan">
-      <h2>Inspring Reads</h2>
-      <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eum, est doloribus</p>
-      <a href="" className="button">Read More</a>
-    </div>
-  </div>
-  <div className="col col-md-one-half">
-    <div className="info-box-dark">
-      <h2>Reflections</h2>
-      <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eum, est doloribus</p>
-      <a href="" className="button">Read More</a>
-    </div>
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col-md-one-half col-lg-one-fourth">
-    <img src="images/gallery-1.jpg" alt="" />
-  </div>
-  <div className="col col-md-one-half col-lg-one-fourth">
-    <img src="images/gallery-2.jpg" alt="" />
-  </div>
-  <div className="col col-md-one-half col-lg-one-fourth">
-    <img src="images/gallery-3.jpg" alt="" />
-  </div>
-  <div className="col col-md-one-half col-lg-one-fourth">
-    <img src="images/gallery-4.jpg" alt="" />
-  </div>
-</div>
-
-</main>
-
-<Footer/>      
-    </>
-  )
+  );
 }
 
-export default App
+export default App;

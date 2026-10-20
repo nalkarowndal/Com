@@ -1,0 +1,41 @@
+h1, h2, h3, h4, h5, h6 {
+  color: inherit;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+h1 {
+  font-family: var(--font-sans);
+  font-size: clamp(2.25rem, 5vw + 1rem, 3.8rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+h2 {
+  font-family: var(--font-sans);
+  font-size: clamp(1.6rem, 3vw + 0.5rem, 2.2rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+h3 {
+  font-family: var(--font-sans);
+  font-size: clamp(0.85rem, 1vw + 0.4rem, 1rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+h4 {
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 1.2vw + 0.4rem, 1.15rem);
+  letter-spacing: 0.04em;
+  font-weight: 400;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.7;
+}
