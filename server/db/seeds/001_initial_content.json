@@ -1,0 +1,89 @@
+{
+  "site": {
+    "name": "company",
+    "brandLogoSrc": "/images/logo.png",
+    "brandLogoAlt": "Logo",
+    "copyright": "2026 Green Systems Incorporated. All rights reserved.",
+    "footerDescription": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, necessitatibus!"
+  },
+  "navigation": [
+    { "id": "nav-arch", "label": "Architecture", "href": "#", "order": 1, "isActive": true },
+    { "id": "nav-travel", "label": "Travel", "href": "#", "order": 2, "isActive": true },
+    { "id": "nav-art", "label": "Art", "href": "#", "order": 3, "isActive": true },
+    { "id": "nav-food", "label": "Food", "href": "#", "order": 4, "isActive": true }
+  ],
+  "articles": [
+    {
+      "id": "hero-urban-strorkes",
+      "slug": "urban-strorkes",
+      "badge": "Editor's Choice",
+      "author": "Sebastian Weiss",
+      "title": "Urban Strorkes",
+      "buttonText": "Read More",
+      "imageSrc": "/images/hero.jpg",
+      "content": "Urban Strorkes is an acclaimed photographic exploration of contemporary metropolitan form and organic geometry by photographer Sebastian Weiss. Through minimalist framing, dramatic natural lighting, and architectural abstractions, the series uncovers sculptural rhythms within everyday urban structures.",
+      "isFeatured": true,
+      "isPublished": true
+    }
+  ],
+  "cards": [
+    {
+      "id": "card-inspring-reads",
+      "variant": "tan",
+      "title": "Inspring Reads",
+      "description": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eum, est doloribus",
+      "buttonText": "Read More",
+      "link": "",
+      "fullText": "Inspring Reads curates essential architectural discourse, monograph highlights, and spatial criticism. Exploring how built environments shape human psychology and cultural evolution.",
+      "order": 1
+    },
+    {
+      "id": "card-reflections",
+      "variant": "dark",
+      "title": "Reflections",
+      "description": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eum, est doloribus",
+      "buttonText": "Read More",
+      "link": "",
+      "fullText": "Reflections delves into the interplay between glass, light, shadow, and urban solitude. A contemplative series examining stillness inside the relentless pulse of modern architecture.",
+      "order": 2
+    }
+  ],
+  "gallery": [
+    {
+      "id": "gallery-1",
+      "src": "/images/gallery-1.jpg",
+      "alt": "Spiral architectural concrete staircase",
+      "title": "Spiral Concrete Dynamics",
+      "order": 1,
+      "isPublished": true
+    },
+    {
+      "id": "gallery-2",
+      "src": "/images/gallery-2.jpg",
+      "alt": "Suspension bridge perspective view",
+      "title": "Suspension Geometry",
+      "order": 2,
+      "isPublished": true
+    },
+    {
+      "id": "gallery-3",
+      "src": "/images/gallery-3.jpg",
+      "alt": "Geometric angular modern building facade",
+      "title": "Angular Facade Rhythms",
+      "order": 3,
+      "isPublished": true
+    },
+    {
+      "id": "gallery-4",
+      "src": "/images/gallery-4.jpg",
+      "alt": "Curved skyscraper glass window grid",
+      "title": "Curvilinear Verticality",
+      "order": 4,
+      "isPublished": true
+    }
+  ],
+  "footer": {
+    "copyright": "2026 Green Systems Incorporated. All rights reserved.",
+    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, necessitatibus!"
+  }
+}

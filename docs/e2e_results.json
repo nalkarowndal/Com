@@ -1,0 +1,114 @@
+{
+  "viewports": [
+    {
+      "viewport": {
+        "name": "mobile",
+        "width": 375,
+        "height": 812
+      },
+      "overflow": {
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "hasOverflow": false
+      },
+      "contentChecks": {
+        "hasHeroTitle": true,
+        "hasBadge": true,
+        "hasAuthor": true,
+        "hasCard1": true,
+        "hasCard2": true,
+        "hasCopyright": true,
+        "galleryImageCount": 4
+      },
+      "screenshot": "D:\\JSW_React\\8_portfolio_123\\company\\docs\\screenshots\\viewport_375x812.png"
+    },
+    {
+      "viewport": {
+        "name": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "overflow": {
+        "scrollWidth": 768,
+        "clientWidth": 768,
+        "hasOverflow": false
+      },
+      "contentChecks": {
+        "hasHeroTitle": true,
+        "hasBadge": true,
+        "hasAuthor": true,
+        "hasCard1": true,
+        "hasCard2": true,
+        "hasCopyright": true,
+        "galleryImageCount": 4
+      },
+      "screenshot": "D:\\JSW_React\\8_portfolio_123\\company\\docs\\screenshots\\viewport_768x1024.png"
+    },
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1280,
+        "height": 800
+      },
+      "overflow": {
+        "scrollWidth": 1280,
+        "clientWidth": 1280,
+        "hasOverflow": false
+      },
+      "contentChecks": {
+        "hasHeroTitle": true,
+        "hasBadge": true,
+        "hasAuthor": true,
+        "hasCard1": true,
+        "hasCard2": true,
+        "hasCopyright": true,
+        "galleryImageCount": 4
+      },
+      "screenshot": "D:\\JSW_React\\8_portfolio_123\\company\\docs\\screenshots\\viewport_1280x800.png"
+    },
+    {
+      "viewport": {
+        "name": "desktop_wide",
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": {
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "hasOverflow": false
+      },
+      "contentChecks": {
+        "hasHeroTitle": true,
+        "hasBadge": true,
+        "hasAuthor": true,
+        "hasCard1": true,
+        "hasCard2": true,
+        "hasCopyright": true,
+        "galleryImageCount": 4
+      },
+      "screenshot": "D:\\JSW_React\\8_portfolio_123\\company\\docs\\screenshots\\viewport_1440x900.png"
+    }
+  ],
+  "interactions": {
+    "mobileNav": {
+      "isDrawerOpen": true,
+      "isDrawerClosed": true
+    },
+    "heroModal": {
+      "isHeroModalOpen": true,
+      "isHeroModalClosed": true
+    },
+    "lightbox": {
+      "isLightboxOpen": true,
+      "activeImageSrc": "/images/gallery-2.jpg",
+      "isLightboxClosed": true
+    }
+  },
+  "accessibility": {
+    "passes": 27,
+    "violationsCount": 0,
+    "criticalCount": 0,
+    "violations": []
+  },
+  "consoleErrors": []
+}

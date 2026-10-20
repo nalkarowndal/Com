@@ -1,0 +1,73 @@
+-- 001_create_tables.sql
+-- PostgreSQL DDL Schema for company (PRISM) project
+
+CREATE TABLE IF NOT EXISTS site_settings (
+    key VARCHAR(64) PRIMARY KEY,
+    value TEXT NOT NULL,
+    description VARCHAR(255),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS navigation_items (
+    id VARCHAR(64) PRIMARY KEY,
+    label VARCHAR(100) NOT NULL,
+    href VARCHAR(255) NOT NULL,
+    order_index INT NOT NULL DEFAULT 0,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS articles (
+    id VARCHAR(64) PRIMARY KEY,
+    slug VARCHAR(128) UNIQUE NOT NULL,
+    badge VARCHAR(100),
+    author VARCHAR(100),
+    title VARCHAR(255) NOT NULL,
+    content TEXT,
+    button_text VARCHAR(64) DEFAULT 'Read More',
+    image_src VARCHAR(255) NOT NULL,
+    is_featured BOOLEAN DEFAULT FALSE,
+    is_published BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS featured_contents (
+    id VARCHAR(64) PRIMARY KEY,
+    variant VARCHAR(32) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    button_text VARCHAR(64) DEFAULT 'Read More',
+    link VARCHAR(255) DEFAULT '',
+    order_index INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS gallery_items (
+    id VARCHAR(64) PRIMARY KEY,
+    src VARCHAR(255) NOT NULL,
+    alt VARCHAR(255) NOT NULL,
+    caption TEXT,
+    order_index INT NOT NULL DEFAULT 0,
+    is_published BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS admin_users (
+    id VARCHAR(64) PRIMARY KEY,
+    username VARCHAR(64) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(32) DEFAULT 'admin',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS audit_logs (
+    id SERIAL PRIMARY KEY,
+    action VARCHAR(64) NOT NULL,
+    target_entity VARCHAR(64) NOT NULL,
+    target_id VARCHAR(64) NOT NULL,
+    details JSONB,
+    performed_by VARCHAR(64) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
