@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Modal from '../common/Modal';
 
 export default function ContentCard({
@@ -18,18 +19,20 @@ export default function ContentCard({
         <div className={boxClass}>
           <h2>{title}</h2>
           <p>{description}</p>
-          <a
-            href={link}
-            className="button"
-            role="button"
-            aria-haspopup="dialog"
-            onClick={(e) => {
-              e.preventDefault();
-              setIsOpen(true);
-            }}
-          >
-            {buttonText}
-          </a>
+          {link ? (
+            <Link to={link} className="button">
+              {buttonText}
+            </Link>
+          ) : (
+            <button
+              type="button"
+              className="button"
+              aria-haspopup="dialog"
+              onClick={() => setIsOpen(true)}
+            >
+              {buttonText}
+            </button>
+          )}
         </div>
       </div>
 

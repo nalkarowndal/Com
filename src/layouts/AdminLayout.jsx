@@ -21,7 +21,7 @@ export default function AdminLayout() {
             setCurrentUser(user);
           }
         }
-      } catch (err) {
+      } catch {
         if (isMounted) {
           navigate('/admin/login', { replace: true, state: { from: location.pathname } });
         }

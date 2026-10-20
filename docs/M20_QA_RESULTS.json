@@ -1,0 +1,113 @@
+{
+  "timestamp": "2026-10-20T05:47:54.714Z",
+  "viewportsTested": [
+    "320x568_mobile_small",
+    "375x812_iphone_mini",
+    "390x844_modern_phone",
+    "768x1024_tablet_portrait",
+    "1024x768_tablet_landscape",
+    "1280x800_laptop",
+    "1440x900_desktop",
+    "1920x1080_fullhd"
+  ],
+  "publicPagesTested": [
+    {
+      "path": "/",
+      "name": "home",
+      "keywordFound": true,
+      "breadcrumbClean": true,
+      "breadcrumbText": ""
+    },
+    {
+      "path": "/architecture",
+      "name": "architecture",
+      "keywordFound": true,
+      "breadcrumbClean": true,
+      "breadcrumbText": ""
+    },
+    {
+      "path": "/travel",
+      "name": "travel",
+      "keywordFound": true,
+      "breadcrumbClean": true,
+      "breadcrumbText": ""
+    },
+    {
+      "path": "/art",
+      "name": "art",
+      "keywordFound": true,
+      "breadcrumbClean": true,
+      "breadcrumbText": ""
+    },
+    {
+      "path": "/food",
+      "name": "food",
+      "keywordFound": true,
+      "breadcrumbClean": true,
+      "breadcrumbText": ""
+    },
+    {
+      "path": "/gallery",
+      "name": "gallery",
+      "keywordFound": true,
+      "breadcrumbClean": true,
+      "breadcrumbText": ""
+    },
+    {
+      "path": "/search",
+      "name": "search",
+      "keywordFound": true,
+      "breadcrumbClean": true,
+      "breadcrumbText": ""
+    },
+    {
+      "path": "/stories/urban-strorkes",
+      "name": "article_detail",
+      "keywordFound": true,
+      "breadcrumbClean": true,
+      "breadcrumbText": ""
+    },
+    {
+      "path": "/non-existent-page-404",
+      "name": "page_404",
+      "keywordFound": true,
+      "breadcrumbClean": true,
+      "breadcrumbText": ""
+    }
+  ],
+  "adminPagesTested": [
+    {
+      "path": "/admin/dashboard",
+      "name": "admin_dashboard",
+      "passed": true
+    },
+    {
+      "path": "/admin/articles",
+      "name": "admin_articles",
+      "passed": true
+    },
+    {
+      "path": "/admin/categories",
+      "name": "admin_categories",
+      "passed": true
+    },
+    {
+      "path": "/admin/media",
+      "name": "admin_media",
+      "passed": true
+    },
+    {
+      "path": "/admin/settings",
+      "name": "admin_settings",
+      "passed": true
+    }
+  ],
+  "breadcrumbDeduplicationPassed": true,
+  "horizontalOverflowPassed": true,
+  "mobileNavTrapPassed": true,
+  "galleryInteractionPassed": true,
+  "tagFilteringPassed": true,
+  "axePassed": true,
+  "failures": [],
+  "consoleErrors": []
+}

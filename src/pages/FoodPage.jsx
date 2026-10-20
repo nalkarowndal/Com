@@ -12,21 +12,31 @@ export default function FoodPage() {
   const [articles, setArticles] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState('latest');
   const [activeTheme, setActiveTheme] = useState('all');
+  const [retryTrigger, setRetryTrigger] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
+    const controller = new AbortController();
+
     async function loadData() {
       setLoading(true);
+      setError(null);
       try {
-        const catData = await fetchCategoryDetail('food');
-        const articlesRes = await fetchArticles({
-          category: 'food',
-          page: pagination.page,
-          limit: 6,
-          sort: sortBy
-        });
+        const [catData, articlesRes] = await Promise.all([
+          fetchCategoryDetail('food', { signal: controller.signal }),
+          fetchArticles({
+            category: 'food',
+            tag: activeTheme !== 'all' ? activeTheme : undefined,
+            page,
+            limit: 6,
+            sort: sortBy,
+            signal: controller.signal
+          })
+        ]);
 
         if (isMounted) {
           setCategory(catData?.category || {
@@ -38,25 +48,39 @@ export default function FoodPage() {
           setPagination(articlesRes.pagination);
         }
       } catch (err) {
+        if (err.name === 'AbortError') return;
         console.error('Failed to load food articles:', err);
+        if (isMounted) {
+          setError(err.message || 'Failed to load culinary essays. Please verify your connection.');
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
     }
 
     loadData();
-    return () => { isMounted = false; };
-  }, [pagination.page, sortBy]);
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [page, sortBy, activeTheme, retryTrigger]);
+
+  const handleThemeChange = (theme) => {
+    setActiveTheme(theme);
+    setPage(1);
+  };
+
+  const handleSortChange = (newSort) => {
+    setSortBy(newSort);
+    setPage(1);
+  };
 
   const featuredStory = articles.find((a) => a.isFeatured) || articles[0];
-  const filteredStories = activeTheme === 'all'
-    ? articles
-    : articles.filter((a) => a.tags?.toLowerCase().includes(activeTheme.toLowerCase()));
 
   return (
     <div className="category-page food-page">
       <div className="category-container">
-        <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Food' }]} />
+        <Breadcrumb items={[{ label: 'Food' }]} />
 
         <PageHeader
           badge="Taste & Heritage"
@@ -99,28 +123,28 @@ export default function FoodPage() {
             <button
               type="button"
               className={`tag-btn ${activeTheme === 'all' ? 'active' : ''}`}
-              onClick={() => setActiveTheme('all')}
+              onClick={() => handleThemeChange('all')}
             >
               All Traditions
             </button>
             <button
               type="button"
               className={`tag-btn ${activeTheme === 'bakery' ? 'active' : ''}`}
-              onClick={() => setActiveTheme('bakery')}
+              onClick={() => handleThemeChange('bakery')}
             >
               Grains & Fermentation
             </button>
             <button
               type="button"
               className={`tag-btn ${activeTheme === 'umami' ? 'active' : ''}`}
-              onClick={() => setActiveTheme('umami')}
+              onClick={() => handleThemeChange('umami')}
             >
               Broths & Umami
             </button>
             <button
               type="button"
               className={`tag-btn ${activeTheme === 'artisanal' ? 'active' : ''}`}
-              onClick={() => setActiveTheme('artisanal')}
+              onClick={() => handleThemeChange('artisanal')}
             >
               Heritage Craft
             </button>
@@ -131,7 +155,7 @@ export default function FoodPage() {
             <select
               id="food-sort"
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={(e) => handleSortChange(e.target.value)}
               className="sort-select"
             >
               <option value="latest">Latest Table Stories</option>
@@ -140,15 +164,52 @@ export default function FoodPage() {
           </div>
         </div>
 
-        {/* Food Stories Grid */}
-        {loading ? (
+        {/* Results Counter */}
+        {!loading && !error && (
+          <div className="results-count-bar" aria-live="polite">
+            <span>Showing {articles.length} of {pagination.total} culinary essays</span>
+          </div>
+        )}
+
+        {/* Food Stories Grid with error and empty states */}
+        {error ? (
+          <div className="editorial-status-box error-box" role="alert">
+            <h3 className="status-title">Unable to Load Culinary Archive</h3>
+            <p className="status-desc">{error}</p>
+            <button
+              type="button"
+              className="btn-retry"
+              onClick={() => setRetryTrigger((k) => k + 1)}
+            >
+              Retry Connection
+            </button>
+          </div>
+        ) : loading ? (
           <div className="loading-container">
             <LoadingSpinner />
+          </div>
+        ) : articles.length === 0 ? (
+          <div className="editorial-status-box empty-box">
+            <h3 className="status-title">No Culinary Essays Found</h3>
+            <p className="status-desc">
+              No articles match theme &ldquo;{activeTheme}&rdquo;. Try resetting your filters.
+            </p>
+            <button
+              type="button"
+              className="btn-reset-filters"
+              onClick={() => {
+                setActiveTheme('all');
+                setSortBy('latest');
+                setPage(1);
+              }}
+            >
+              Reset Filters
+            </button>
           </div>
         ) : (
           <div className="food-grid-wrapper">
             <div className="food-editorial-grid">
-              {filteredStories.map((article) => (
+              {articles.map((article) => (
                 <div key={article.id} className="food-grid-item">
                   <EditorialCard
                     article={article}
@@ -163,7 +224,7 @@ export default function FoodPage() {
               <Pagination
                 currentPage={pagination.page}
                 totalPages={pagination.totalPages}
-                onPageChange={(p) => setPagination((prev) => ({ ...prev, page: p }))}
+                onPageChange={(p) => setPage(p)}
               />
             )}
           </div>

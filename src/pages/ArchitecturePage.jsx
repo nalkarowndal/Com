@@ -12,21 +12,31 @@ export default function ArchitecturePage() {
   const [articles, setArticles] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState('latest');
   const [activeTag, setActiveTag] = useState('all');
+  const [retryTrigger, setRetryTrigger] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
+    const controller = new AbortController();
+
     async function loadData() {
       setLoading(true);
+      setError(null);
       try {
-        const catData = await fetchCategoryDetail('architecture');
-        const articlesRes = await fetchArticles({
-          category: 'architecture',
-          page: pagination.page,
-          limit: 6,
-          sort: sortBy
-        });
+        const [catData, articlesRes] = await Promise.all([
+          fetchCategoryDetail('architecture', { signal: controller.signal }),
+          fetchArticles({
+            category: 'architecture',
+            tag: activeTag !== 'all' ? activeTag : undefined,
+            page,
+            limit: 6,
+            sort: sortBy,
+            signal: controller.signal
+          })
+        ]);
 
         if (isMounted) {
           setCategory(catData?.category || {
@@ -38,25 +48,37 @@ export default function ArchitecturePage() {
           setPagination(articlesRes.pagination);
         }
       } catch (err) {
+        if (err.name === 'AbortError') return;
         console.error('Failed to load architecture articles:', err);
+        if (isMounted) {
+          setError(err.message || 'Failed to load monographs. Please verify your connection.');
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
     }
 
     loadData();
-    return () => { isMounted = false; };
-  }, [pagination.page, sortBy]);
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [page, sortBy, activeTag, retryTrigger]);
 
-  const featuredStory = articles.find((a) => a.isFeatured) || articles[0];
-  const gridStories = activeTag === 'all'
-    ? articles
-    : articles.filter((a) => a.tags?.toLowerCase().includes(activeTag.toLowerCase()));
+  const handleTagChange = (tag) => {
+    setActiveTag(tag);
+    setPage(1);
+  };
+
+  const handleSortChange = (newSort) => {
+    setSortBy(newSort);
+    setPage(1);
+  };
 
   return (
     <div className="category-page architecture-page">
       <div className="category-container">
-        <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Architecture' }]} />
+        <Breadcrumb items={[{ label: 'Architecture' }]} />
 
         <PageHeader
           badge="Discourse & Form"
@@ -95,28 +117,28 @@ export default function ArchitecturePage() {
             <button
               type="button"
               className={`tag-btn ${activeTag === 'all' ? 'active' : ''}`}
-              onClick={() => setActiveTag('all')}
+              onClick={() => handleTagChange('all')}
             >
               All Works
             </button>
             <button
               type="button"
               className={`tag-btn ${activeTag === 'minimalist' ? 'active' : ''}`}
-              onClick={() => setActiveTag('minimalist')}
+              onClick={() => handleTagChange('minimalist')}
             >
               Minimalist
             </button>
             <button
               type="button"
               className={`tag-btn ${activeTag === 'concrete' ? 'active' : ''}`}
-              onClick={() => setActiveTag('concrete')}
+              onClick={() => handleTagChange('concrete')}
             >
               Concrete & Brutalism
             </button>
             <button
               type="button"
               className={`tag-btn ${activeTag === 'facade' ? 'active' : ''}`}
-              onClick={() => setActiveTag('facade')}
+              onClick={() => handleTagChange('facade')}
             >
               High-Rise Facades
             </button>
@@ -127,7 +149,7 @@ export default function ArchitecturePage() {
             <select
               id="arch-sort"
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={(e) => handleSortChange(e.target.value)}
               className="sort-select"
             >
               <option value="latest">Latest Releases</option>
@@ -136,15 +158,52 @@ export default function ArchitecturePage() {
           </div>
         </div>
 
-        {/* Architecture Grid with asymmetric negative-space styling */}
-        {loading ? (
+        {/* Results Counter */}
+        {!loading && !error && (
+          <div className="results-count-bar" aria-live="polite">
+            <span>Showing {articles.length} of {pagination.total} monographs</span>
+          </div>
+        )}
+
+        {/* Architecture Grid with loading, error and empty states */}
+        {error ? (
+          <div className="editorial-status-box error-box" role="alert">
+            <h3 className="status-title">Unable to Load Architecture Archive</h3>
+            <p className="status-desc">{error}</p>
+            <button
+              type="button"
+              className="btn-retry"
+              onClick={() => setRetryTrigger((k) => k + 1)}
+            >
+              Retry Connection
+            </button>
+          </div>
+        ) : loading ? (
           <div className="loading-container">
             <LoadingSpinner />
+          </div>
+        ) : articles.length === 0 ? (
+          <div className="editorial-status-box empty-box">
+            <h3 className="status-title">No Monographs Found</h3>
+            <p className="status-desc">
+              No architectural records match tag &ldquo;{activeTag}&rdquo;. Try resetting your filters.
+            </p>
+            <button
+              type="button"
+              className="btn-reset-filters"
+              onClick={() => {
+                setActiveTag('all');
+                setSortBy('latest');
+                setPage(1);
+              }}
+            >
+              Reset Filters
+            </button>
           </div>
         ) : (
           <div className="architecture-grid-wrapper">
             <div className="architecture-editorial-grid">
-              {gridStories.map((article, index) => (
+              {articles.map((article, index) => (
                 <div
                   key={article.id}
                   className={`arch-grid-col ${index === 0 ? 'arch-col-wide' : 'arch-col-standard'}`}
@@ -162,7 +221,7 @@ export default function ArchitecturePage() {
               <Pagination
                 currentPage={pagination.page}
                 totalPages={pagination.totalPages}
-                onPageChange={(p) => setPagination((prev) => ({ ...prev, page: p }))}
+                onPageChange={(p) => setPage(p)}
               />
             )}
           </div>

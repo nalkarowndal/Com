@@ -11,28 +11,31 @@ export default function AdminArticlesPage() {
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const [actionMessage, setActionMessage] = useState(null);
 
-  const loadData = async () => {
-    setLoading(true);
-    try {
-      const res = await fetchArticles({ limit: 100 });
-      setArticles(res.items || []);
-    } catch (err) {
-      console.error('Failed to load articles in admin:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
+    let isMounted = true;
+    async function loadData() {
+      try {
+        const res = await fetchArticles({ limit: 100 });
+        if (isMounted) setArticles(res.items || []);
+      } catch (err) {
+        console.error('Failed to load articles in admin:', err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
     loadData();
-  }, []);
+    return () => { isMounted = false; };
+  }, [refreshKey]);
 
   const handleDelete = async (id, title) => {
     try {
       await apiAdminDeleteArticle(id);
       setActionMessage(`Monograph "${title}" was successfully deleted.`);
       setDeleteConfirmId(null);
-      await loadData();
+      setRefreshKey((k) => k + 1);
       setTimeout(() => setActionMessage(null), 3500);
     } catch (err) {
       alert(`Delete failed: ${err.message}`);

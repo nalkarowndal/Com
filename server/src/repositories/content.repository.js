@@ -71,7 +71,8 @@ export class ContentRepository {
     return (db.categories || []).find((c) => c.slug === slug) || null;
   }
 
-  async getArticles({ category = null, q = null, page = 1, limit = 20, sort = 'latest' } = {}) {
+  async getArticles({ category = null, q = null, tag = null, page = 1, limit = 20, sort = 'latest' } = {}) {
+    const isViewsSort = sort === 'views' || sort === 'popular';
     const status = getDbStatus();
     if (status.activeEngine === 'postgres') {
       const pool = getPgPool();
@@ -83,13 +84,20 @@ export class ContentRepository {
         conditions.push(`category_slug = $${values.length}`);
       }
 
+      if (tag && tag !== 'all') {
+        values.push(`%${tag.trim()}%`);
+        conditions.push(`tags ILIKE $${values.length}`);
+      }
+
       if (q && q.trim()) {
         values.push(`%${q.trim()}%`);
         conditions.push(`(title ILIKE $${values.length} OR content ILIKE $${values.length} OR tags ILIKE $${values.length})`);
       }
 
       const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
-      const orderBy = sort === 'popular' ? 'ORDER BY views DESC, created_at DESC' : 'ORDER BY is_featured DESC, created_at DESC';
+      const orderBy = isViewsSort
+        ? 'ORDER BY views DESC, created_at DESC'
+        : 'ORDER BY is_featured DESC, created_at DESC';
 
       const offset = (Math.max(1, page) - 1) * limit;
       values.push(limit);
@@ -138,6 +146,11 @@ export class ContentRepository {
       list = list.filter((a) => a.categorySlug === category);
     }
 
+    if (tag && tag !== 'all') {
+      const tagLower = tag.trim().toLowerCase();
+      list = list.filter((a) => a.tags && a.tags.toLowerCase().includes(tagLower));
+    }
+
     if (q && q.trim()) {
       const keyword = q.trim().toLowerCase();
       list = list.filter((a) =>
@@ -148,7 +161,7 @@ export class ContentRepository {
       );
     }
 
-    if (sort === 'popular') {
+    if (isViewsSort) {
       list.sort((a, b) => (b.views || 0) - (a.views || 0));
     } else {
       list.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));

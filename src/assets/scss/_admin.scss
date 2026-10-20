@@ -82,6 +82,40 @@
             background: var(--color-white);
           }
         }
+
+        .password-input-wrap {
+          position: relative;
+          display: flex;
+          align-items: center;
+
+          input {
+            padding-right: 44px;
+          }
+
+          .btn-toggle-password {
+            position: absolute;
+            right: 6px;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: color var(--transition-fast);
+
+            &:hover {
+              color: var(--color-primary-charcoal);
+            }
+
+            &:focus-visible {
+              outline: 2px solid var(--color-accent-champagne);
+            }
+          }
+        }
       }
 
       .btn-login-submit {

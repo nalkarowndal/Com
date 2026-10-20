@@ -15,20 +15,21 @@ export default function ArticleDetailPage() {
 
   useEffect(() => {
     let isMounted = true;
-    setLoading(true);
-    setError(null);
+    const controller = new AbortController();
 
     async function loadArticle() {
       try {
-        const data = await fetchArticleDetail(slug);
+        const data = await fetchArticleDetail(slug, { signal: controller.signal });
         if (isMounted) {
           if (!data) {
             setError('Article not found');
           } else {
             setArticle(data);
+            setError(null);
           }
         }
       } catch (err) {
+        if (err.name === 'AbortError') return;
         if (isMounted) {
           setError(err.message || 'Article not found');
         }
@@ -38,7 +39,10 @@ export default function ArticleDetailPage() {
     }
 
     loadArticle();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
   }, [slug]);
 
   const handleShare = () => {
@@ -92,7 +96,6 @@ export default function ArticleDetailPage() {
         {/* Breadcrumb Navigation */}
         <Breadcrumb
           items={[
-            { label: 'Home', href: '/' },
             { label: categoryName, href: `/${article.categorySlug}` },
             { label: article.title }
           ]}

@@ -46,7 +46,7 @@ export default function AdminDashboardPage() {
         <div>
           <h1 className="admin-view-title">Editorial Intelligence Dashboard</h1>
           <p className="admin-view-desc">
-            Overview of published monographs, active media assets, and curator audit trails.
+            Welcome back, {currentUser?.username || 'Editor'}. Overview of published monographs, active media assets, and curator audit trails.
           </p>
         </div>
 

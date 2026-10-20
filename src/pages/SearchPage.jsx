@@ -15,16 +15,22 @@ export default function SearchPage() {
 
   const [inputVal, setInputVal] = useState(qParam);
   const [selectedCategory, setSelectedCategory] = useState(catParam);
+  const [prevParams, setPrevParams] = useState({ q: qParam, cat: catParam });
   const [results, setResults] = useState([]);
   const [pagination, setPagination] = useState({ total: 0, page: 1, totalPages: 1 });
   const [loading, setLoading] = useState(false);
 
-  // Sync state with URL params when URL changes
-  useEffect(() => {
+  // Sync controlled state when URL parameters change
+  if (prevParams.q !== qParam || prevParams.cat !== catParam) {
+    setPrevParams({ q: qParam, cat: catParam });
     setInputVal(qParam);
     setSelectedCategory(catParam);
+  }
 
+  useEffect(() => {
     let isMounted = true;
+    const controller = new AbortController();
+
     async function executeSearch() {
       setLoading(true);
       try {
@@ -32,13 +38,15 @@ export default function SearchPage() {
           q: qParam,
           category: catParam,
           page: pageParam,
-          limit: 9
+          limit: 9,
+          signal: controller.signal
         });
         if (isMounted) {
           setResults(res.results || []);
           setPagination(res.pagination || { total: 0, page: 1, totalPages: 1 });
         }
       } catch (err) {
+        if (err.name === 'AbortError') return;
         console.error('Search error:', err);
       } finally {
         if (isMounted) setLoading(false);
@@ -46,7 +54,10 @@ export default function SearchPage() {
     }
 
     executeSearch();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
   }, [qParam, catParam, pageParam]);
 
   const handleSubmit = (e) => {
@@ -68,7 +79,7 @@ export default function SearchPage() {
   return (
     <div className="search-archive-page">
       <div className="search-container">
-        <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Search Archive' }]} />
+        <Breadcrumb items={[{ label: 'Search Archive' }]} />
 
         <PageHeader
           badge="Query & Retrieval"

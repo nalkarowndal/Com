@@ -51,7 +51,6 @@ main {
 /* ==========================================================================
    Header Component
    ========================================================================== */
-header,
 .site-header {
   position: sticky;
   top: 0;
@@ -131,16 +130,10 @@ header,
             transition: width var(--transition-normal);
           }
 
-          &:hover {
-            color: var(--color-accent-champagne-dark);
-
-            &::after {
-              width: 100%;
-            }
-          }
-
+          &:hover,
           &.active {
-            color: var(--color-accent-champagne-dark);
+            color: var(--color-accent-champagne-text);
+            font-weight: 600;
 
             &::after {
               width: 100%;
@@ -169,7 +162,7 @@ header,
     padding: 6px 12px;
     border-radius: var(--radius-pill);
     background: rgba(180, 154, 112, 0.15);
-    color: var(--color-accent-champagne-dark);
+    color: var(--color-accent-champagne-text);
     border: 1px solid rgba(180, 154, 112, 0.3);
     font-weight: 600;
     letter-spacing: 0.05em;
@@ -178,7 +171,7 @@ header,
 
     &:hover {
       background: var(--color-accent-champagne);
-      color: var(--color-white);
+      color: var(--color-primary-charcoal);
     }
   }
 
@@ -243,10 +236,14 @@ header,
   justify-content: space-between;
   box-shadow: -8px 0 32px rgba(0, 0, 0, 0.35);
   transform: translateX(100%);
-  transition: transform var(--transition-normal);
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform var(--transition-normal), visibility var(--transition-normal);
 
   &.open {
     transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
   }
 
   .drawer-close {
@@ -409,8 +406,41 @@ header,
     text-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
   }
 
-  .button {
-    align-self: flex-start;
+  .hero-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .button {
+      align-self: auto;
+    }
+
+    .hero-synopsis-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: rgba(255, 255, 255, 0.9);
+      padding: 10px 20px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: all var(--transition-fast);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: var(--color-white);
+        color: var(--color-white);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--color-accent-champagne);
+        outline-offset: 2px;
+      }
+    }
   }
 }
 

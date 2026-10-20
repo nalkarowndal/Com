@@ -12,21 +12,31 @@ export default function TravelPage() {
   const [articles, setArticles] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState('latest');
   const [activeRegion, setActiveRegion] = useState('all');
+  const [retryTrigger, setRetryTrigger] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
+    const controller = new AbortController();
+
     async function loadData() {
       setLoading(true);
+      setError(null);
       try {
-        const catData = await fetchCategoryDetail('travel');
-        const articlesRes = await fetchArticles({
-          category: 'travel',
-          page: pagination.page,
-          limit: 6,
-          sort: sortBy
-        });
+        const [catData, articlesRes] = await Promise.all([
+          fetchCategoryDetail('travel', { signal: controller.signal }),
+          fetchArticles({
+            category: 'travel',
+            tag: activeRegion !== 'all' ? activeRegion : undefined,
+            page,
+            limit: 6,
+            sort: sortBy,
+            signal: controller.signal
+          })
+        ]);
 
         if (isMounted) {
           setCategory(catData?.category || {
@@ -38,25 +48,39 @@ export default function TravelPage() {
           setPagination(articlesRes.pagination);
         }
       } catch (err) {
+        if (err.name === 'AbortError') return;
         console.error('Failed to load travel articles:', err);
+        if (isMounted) {
+          setError(err.message || 'Failed to load travel chronicles. Please verify your connection.');
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
     }
 
     loadData();
-    return () => { isMounted = false; };
-  }, [pagination.page, sortBy]);
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [page, sortBy, activeRegion, retryTrigger]);
+
+  const handleRegionChange = (region) => {
+    setActiveRegion(region);
+    setPage(1);
+  };
+
+  const handleSortChange = (newSort) => {
+    setSortBy(newSort);
+    setPage(1);
+  };
 
   const featuredStory = articles.find((a) => a.isFeatured) || articles[0];
-  const filteredStories = activeRegion === 'all'
-    ? articles
-    : articles.filter((a) => a.tags?.toLowerCase().includes(activeRegion.toLowerCase()));
 
   return (
     <div className="category-page travel-page">
       <div className="category-container">
-        <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Travel' }]} />
+        <Breadcrumb items={[{ label: 'Travel' }]} />
 
         <PageHeader
           badge="Terrains & Horizons"
@@ -95,28 +119,28 @@ export default function TravelPage() {
             <button
               type="button"
               className={`tag-btn ${activeRegion === 'all' ? 'active' : ''}`}
-              onClick={() => setActiveRegion('all')}
+              onClick={() => handleRegionChange('all')}
             >
               All Regions
             </button>
             <button
               type="button"
               className={`tag-btn ${activeRegion === 'japan' ? 'active' : ''}`}
-              onClick={() => setActiveRegion('japan')}
+              onClick={() => handleRegionChange('japan')}
             >
               East Asia & Kyoto
             </button>
             <button
               type="button"
               className={`tag-btn ${activeRegion === 'mediterranean' ? 'active' : ''}`}
-              onClick={() => setActiveRegion('mediterranean')}
+              onClick={() => handleRegionChange('mediterranean')}
             >
               Aegean Archipelago
             </button>
             <button
               type="button"
               className={`tag-btn ${activeRegion === 'bridges' ? 'active' : ''}`}
-              onClick={() => setActiveRegion('bridges')}
+              onClick={() => handleRegionChange('bridges')}
             >
               Iconic Crossings
             </button>
@@ -127,7 +151,7 @@ export default function TravelPage() {
             <select
               id="travel-sort"
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={(e) => handleSortChange(e.target.value)}
               className="sort-select"
             >
               <option value="latest">Latest Departures</option>
@@ -136,15 +160,52 @@ export default function TravelPage() {
           </div>
         </div>
 
-        {/* Travel Stories Grid */}
-        {loading ? (
+        {/* Results Counter */}
+        {!loading && !error && (
+          <div className="results-count-bar" aria-live="polite">
+            <span>Showing {articles.length} of {pagination.total} chronicles</span>
+          </div>
+        )}
+
+        {/* Travel Stories Grid with error and empty states */}
+        {error ? (
+          <div className="editorial-status-box error-box" role="alert">
+            <h3 className="status-title">Unable to Load Travel Archive</h3>
+            <p className="status-desc">{error}</p>
+            <button
+              type="button"
+              className="btn-retry"
+              onClick={() => setRetryTrigger((k) => k + 1)}
+            >
+              Retry Connection
+            </button>
+          </div>
+        ) : loading ? (
           <div className="loading-container">
             <LoadingSpinner />
+          </div>
+        ) : articles.length === 0 ? (
+          <div className="editorial-status-box empty-box">
+            <h3 className="status-title">No Chronicles Found</h3>
+            <p className="status-desc">
+              No expeditions match region tag &ldquo;{activeRegion}&rdquo;. Try resetting your filters.
+            </p>
+            <button
+              type="button"
+              className="btn-reset-filters"
+              onClick={() => {
+                setActiveRegion('all');
+                setSortBy('latest');
+                setPage(1);
+              }}
+            >
+              Reset Filters
+            </button>
           </div>
         ) : (
           <div className="travel-grid-wrapper">
             <div className="travel-editorial-cards">
-              {filteredStories.map((article) => (
+              {articles.map((article) => (
                 <div key={article.id} className="travel-card-wrapper">
                   <EditorialCard
                     article={article}
@@ -159,7 +220,7 @@ export default function TravelPage() {
               <Pagination
                 currentPage={pagination.page}
                 totalPages={pagination.totalPages}
-                onPageChange={(p) => setPagination((prev) => ({ ...prev, page: p }))}
+                onPageChange={(p) => setPage(p)}
               />
             )}
           </div>

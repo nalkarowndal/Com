@@ -12,29 +12,42 @@ export default function GalleryPage() {
 
   useEffect(() => {
     let isMounted = true;
-    setLoading(true);
+    const controller = new AbortController();
+
     async function loadGallery() {
       try {
-        const data = await fetchGallery(activeCategory);
+        const data = await fetchGallery(activeCategory, { signal: controller.signal });
         if (isMounted) setItems(data || []);
       } catch (err) {
+        if (err.name === 'AbortError') return;
         console.error('Failed to load gallery:', err);
       } finally {
         if (isMounted) setLoading(false);
       }
     }
     loadGallery();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
   }, [activeCategory]);
+
+  // Manage body scroll lock cleanly via effect
+  useEffect(() => {
+    if (activeLightboxIndex !== null) {
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = '';
+      };
+    }
+  }, [activeLightboxIndex]);
 
   const openLightbox = (index) => {
     setActiveLightboxIndex(index);
-    document.body.style.overflow = 'hidden';
   };
 
   const closeLightbox = useCallback(() => {
     setActiveLightboxIndex(null);
-    document.body.style.overflow = '';
   }, []);
 
   const nextImage = useCallback(() => {
@@ -68,7 +81,7 @@ export default function GalleryPage() {
   return (
     <div className="gallery-archive-page">
       <div className="gallery-page-container">
-        <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Visual Archive' }]} />
+        <Breadcrumb items={[{ label: 'Visual Archive' }]} />
 
         <PageHeader
           badge="Permanent Collection"
@@ -133,13 +146,11 @@ export default function GalleryPage() {
         ) : (
           <div className="gallery-archive-grid">
             {items.map((item, index) => (
-              <div
+              <button
+                type="button"
                 key={item.id || index}
                 className="gallery-archive-item"
                 onClick={() => openLightbox(index)}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') openLightbox(index); }}
-                tabIndex={0}
-                role="button"
                 aria-label={`View ${item.title || item.alt || 'artwork'} in full screen`}
               >
                 <div className="gallery-img-box">
@@ -164,7 +175,7 @@ export default function GalleryPage() {
                     </span>
                   </div>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         )}

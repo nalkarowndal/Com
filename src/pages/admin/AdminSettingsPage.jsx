@@ -31,9 +31,9 @@ export default function AdminSettingsPage() {
     <div className="admin-settings-view">
       <div className="admin-view-header">
         <div>
-          <h1 className="admin-view-title">System Architecture & Configuration</h1>
+          <h1 className="admin-view-title">System Settings & Architecture</h1>
           <p className="admin-view-desc">
-            Operational telemetry, database persistence engine status, and security compliance verification.
+            Operational telemetry, system settings, database persistence engine status, and security compliance verification.
           </p>
         </div>
       </div>

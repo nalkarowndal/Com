@@ -85,16 +85,17 @@ export async function fetchCategoryDetail(slug) {
 /**
  * Fetch articles list with filters
  */
-export async function fetchArticles({ category, q, page = 1, limit = 12, sort = 'latest' } = {}) {
+export async function fetchArticles({ category, tag, q, page = 1, limit = 12, sort = 'latest', signal } = {}) {
   const params = new URLSearchParams();
   if (category && category !== 'all') params.append('category', category);
+  if (tag && tag !== 'all') params.append('tag', tag);
   if (q) params.append('q', q);
   if (page) params.append('page', page);
   if (limit) params.append('limit', limit);
   if (sort) params.append('sort', sort);
 
   const queryStr = params.toString() ? `?${params.toString()}` : '';
-  const json = await request(`/articles${queryStr}`);
+  const json = await request(`/articles${queryStr}`, { signal });
   return {
     items: json.data || [],
     pagination: json.pagination || { total: json.data?.length || 0, page: 1, totalPages: 1 }
@@ -104,11 +105,12 @@ export async function fetchArticles({ category, q, page = 1, limit = 12, sort = 
 /**
  * Fetch single article detail by slug
  */
-export async function fetchArticleDetail(slug) {
+export async function fetchArticleDetail(slug, options = {}) {
   try {
-    const json = await request(`/articles/${slug}`);
+    const json = await request(`/articles/${slug}`, options);
     return json.data;
   } catch (err) {
+    if (err.name === 'AbortError') throw err;
     // If urban-strorkes fails, return default hero data
     if (slug === 'urban-strorkes') {
       return {
@@ -133,12 +135,13 @@ export async function fetchArticleDetail(slug) {
 /**
  * Fetch gallery items with optional category filter
  */
-export async function fetchGallery(category = null) {
+export async function fetchGallery(category = null, options = {}) {
   const queryStr = category && category !== 'all' ? `?category=${encodeURIComponent(category)}` : '';
   try {
-    const json = await request(`/gallery${queryStr}`);
+    const json = await request(`/gallery${queryStr}`, options);
     return json.data || [];
   } catch (err) {
+    if (err.name === 'AbortError') throw err;
     console.warn('[PRISM API] Gallery fallback:', err.message);
     return defaultContent.gallery;
   }
@@ -147,14 +150,14 @@ export async function fetchGallery(category = null) {
 /**
  * Search articles
  */
-export async function searchArticles({ q, category, page = 1, limit = 12 } = {}) {
+export async function searchArticles({ q, category, page = 1, limit = 12, signal } = {}) {
   const params = new URLSearchParams();
   if (q) params.append('q', q);
   if (category && category !== 'all') params.append('category', category);
   if (page) params.append('page', page);
   if (limit) params.append('limit', limit);
 
-  const json = await request(`/search?${params.toString()}`);
+  const json = await request(`/search?${params.toString()}`, { signal });
   return {
     query: json.data?.query || q,
     results: json.data?.results || [],

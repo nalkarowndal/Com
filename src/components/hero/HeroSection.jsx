@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Modal from '../common/Modal';
 
 export default function HeroSection({
@@ -6,6 +7,7 @@ export default function HeroSection({
   author = "Sebastian Weiss",
   title = "Urban Strorkes",
   buttonText = "Read More",
+  linkTo = "/stories/urban-strorkes",
   backgroundImage = "/images/hero.jpg",
   content = "Urban Strorkes is an acclaimed photographic exploration of contemporary metropolitan form and organic geometry by photographer Sebastian Weiss. Through minimalist framing, dramatic natural lighting, and architectural abstractions, the series uncovers sculptural rhythms within everyday urban structures."
 }) {
@@ -24,25 +26,31 @@ export default function HeroSection({
                 <h3 className="hero-badge">{badge}</h3>
                 <h4 className="hero-author">{author}</h4>
                 <h1 className="hero-title">{title}</h1>
-                <a
-                  href="#"
-                  className="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsArticleOpen(true);
-                  }}
-                  role="button"
-                  aria-haspopup="dialog"
-                >
-                  {buttonText}
-                </a>
+                <div className="hero-actions-row">
+                  <Link
+                    to={linkTo}
+                    className="button"
+                    aria-label={`Read full monograph: ${title}`}
+                  >
+                    {buttonText}
+                  </Link>
+                  <button
+                    type="button"
+                    className="hero-synopsis-btn"
+                    onClick={() => setIsArticleOpen(true)}
+                    aria-haspopup="dialog"
+                    aria-label={`Quick synopsis for ${title}`}
+                  >
+                    Quick Synopsis
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Accessible Detail Modal for Read More */}
+      {/* Accessible Detail Modal for Quick Synopsis */}
       <Modal
         isOpen={isArticleOpen}
         onClose={() => setIsArticleOpen(false)}
@@ -53,7 +61,7 @@ export default function HeroSection({
           <h2 className="modal-title">{title}</h2>
           <p className="modal-author">Curation by {author}</p>
           <p className="modal-body-text">{content}</p>
-          <div style={{ marginTop: '24px', textAlign: 'right' }}>
+          <div style={{ marginTop: '24px', display: 'flex', gap: '12px', justifyContent: 'flex-end', alignItems: 'center' }}>
             <button
               type="button"
               className="button"
@@ -63,8 +71,20 @@ export default function HeroSection({
               }}
               onClick={() => setIsArticleOpen(false)}
             >
-              Close Story
+              Close
             </button>
+            <Link
+              to={linkTo}
+              className="button"
+              style={{
+                background: 'var(--color-accent-champagne)',
+                color: 'var(--color-primary-charcoal)',
+                borderColor: 'var(--color-accent-champagne)'
+              }}
+              onClick={() => setIsArticleOpen(false)}
+            >
+              Open Full Monograph &rarr;
+            </Link>
           </div>
         </div>
       </Modal>

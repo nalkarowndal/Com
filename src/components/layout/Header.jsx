@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import MobileNav from './MobileNav';
 
@@ -14,6 +14,7 @@ export default function Header({
   onOpenAdmin
 }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const toggleBtnRef = useRef(null);
   const navigate = useNavigate();
 
   return (
@@ -36,16 +37,21 @@ export default function Header({
 
           <nav className="style-nav" aria-label="Main Navigation">
             <ul>
-              {navigation.map((item) => (
-                <li key={item.id || item.label}>
-                  <NavLink
-                    to={item.href || `/${item.label.toLowerCase()}`}
-                    className={({ isActive }) => (isActive ? 'active' : '')}
-                  >
-                    {item.label}
-                  </NavLink>
-                </li>
-              ))}
+              {navigation.map((item) => {
+                const targetHref = item.href && item.href !== '#'
+                  ? item.href
+                  : `/${item.label.toLowerCase()}`;
+                return (
+                  <li key={item.id || item.label}>
+                    <NavLink
+                      to={targetHref}
+                      className={({ isActive }) => (isActive ? 'active' : '')}
+                    >
+                      {item.label}
+                    </NavLink>
+                  </li>
+                );
+              })}
               <li>
                 <NavLink
                   to="/gallery"
@@ -87,6 +93,7 @@ export default function Header({
             </button>
 
             <button
+              ref={toggleBtnRef}
               type="button"
               className="mobile-menu-toggle"
               onClick={() => setIsMobileOpen((prev) => !prev)}
@@ -106,6 +113,7 @@ export default function Header({
         isOpen={isMobileOpen}
         onClose={() => setIsMobileOpen(false)}
         navigation={navigation}
+        triggerRef={toggleBtnRef}
       />
     </>
   );

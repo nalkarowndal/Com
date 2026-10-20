@@ -87,10 +87,11 @@ export class PublicController {
 
   async getArticles(req, res, next) {
     try {
-      const { category, q, page = 1, limit = 12, sort = 'latest' } = req.query;
+      const { category, q, tag, page = 1, limit = 12, sort = 'latest' } = req.query;
       const result = await contentService.getArticles({
         category,
         q,
+        tag,
         page: parseInt(page, 10) || 1,
         limit: Math.min(50, parseInt(limit, 10) || 12),
         sort

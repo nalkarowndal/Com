@@ -1,22 +1,84 @@
-import { useEffect } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { NavLink, Link, useLocation } from 'react-router-dom';
 
-export default function MobileNav({ isOpen, onClose, navigation = [] }) {
+export default function MobileNav({ isOpen, onClose, navigation = [], triggerRef }) {
+  const drawerRef = useRef(null);
+  const closeBtnRef = useRef(null);
+  const previousFocusRef = useRef(null);
+  const location = useLocation();
+
+  // Auto-close on route change
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      const handleKeyDown = (e) => {
-        if (e.key === 'Escape') {
-          onClose();
-        }
-      };
-      window.addEventListener('keydown', handleKeyDown);
-      return () => {
-        document.body.style.overflow = '';
-        window.removeEventListener('keydown', handleKeyDown);
-      };
+      onClose();
     }
-  }, [isOpen, onClose]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
+  // Focus trap, focus restoration, body scroll lock, Escape key, and resize cleanup
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const triggerEl = triggerRef?.current;
+    previousFocusRef.current = document.activeElement;
+    document.body.style.overflow = 'hidden';
+
+    // Focus the close button when opened
+    const timer = setTimeout(() => {
+      closeBtnRef.current?.focus();
+    }, 50);
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (e.key === 'Tab' && drawerRef.current) {
+        const focusables = drawerRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusables.length === 0) return;
+
+        const firstElement = focusables[0];
+        const lastElement = focusables[focusables.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      }
+    };
+
+    const handleResize = () => {
+      if (window.innerWidth >= 992) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      clearTimeout(timer);
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('resize', handleResize);
+      // Restore focus to triggering button
+      const restoreTarget = triggerEl || previousFocusRef.current;
+      if (restoreTarget && typeof restoreTarget.focus === 'function') {
+        restoreTarget.focus();
+      }
+    };
+  }, [isOpen, onClose, triggerRef]);
 
   return (
     <>
@@ -26,6 +88,7 @@ export default function MobileNav({ isOpen, onClose, navigation = [] }) {
         aria-hidden="true"
       />
       <div
+        ref={drawerRef}
         id="mobile-navigation"
         className={`mobile-nav-drawer ${isOpen ? 'open' : ''}`}
         role="dialog"
@@ -33,6 +96,7 @@ export default function MobileNav({ isOpen, onClose, navigation = [] }) {
         aria-label="Mobile Navigation"
       >
         <button
+          ref={closeBtnRef}
           type="button"
           className="drawer-close"
           onClick={onClose}
@@ -41,28 +105,34 @@ export default function MobileNav({ isOpen, onClose, navigation = [] }) {
           ✕
         </button>
 
-        <nav>
+        <nav aria-label="Mobile menu">
           <ul>
             <li>
               <NavLink
                 to="/"
                 onClick={onClose}
                 className={({ isActive }) => (isActive ? 'active' : '')}
+                end
               >
                 Home
               </NavLink>
             </li>
-            {navigation.map((item) => (
-              <li key={item.id || item.label}>
-                <NavLink
-                  to={item.href || `/${item.label.toLowerCase()}`}
-                  onClick={onClose}
-                  className={({ isActive }) => (isActive ? 'active' : '')}
-                >
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
+            {navigation.map((item) => {
+              const targetHref = item.href && item.href !== '#'
+                ? item.href
+                : `/${item.label.toLowerCase()}`;
+              return (
+                <li key={item.id || item.label}>
+                  <NavLink
+                    to={targetHref}
+                    onClick={onClose}
+                    className={({ isActive }) => (isActive ? 'active' : '')}
+                  >
+                    {item.label}
+                  </NavLink>
+                </li>
+              );
+            })}
             <li>
               <NavLink
                 to="/gallery"

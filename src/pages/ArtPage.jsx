@@ -12,21 +12,31 @@ export default function ArtPage() {
   const [articles, setArticles] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState('latest');
   const [activeMedium, setActiveMedium] = useState('all');
+  const [retryTrigger, setRetryTrigger] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
+    const controller = new AbortController();
+
     async function loadData() {
       setLoading(true);
+      setError(null);
       try {
-        const catData = await fetchCategoryDetail('art');
-        const articlesRes = await fetchArticles({
-          category: 'art',
-          page: pagination.page,
-          limit: 6,
-          sort: sortBy
-        });
+        const [catData, articlesRes] = await Promise.all([
+          fetchCategoryDetail('art', { signal: controller.signal }),
+          fetchArticles({
+            category: 'art',
+            tag: activeMedium !== 'all' ? activeMedium : undefined,
+            page,
+            limit: 6,
+            sort: sortBy,
+            signal: controller.signal
+          })
+        ]);
 
         if (isMounted) {
           setCategory(catData?.category || {
@@ -38,25 +48,39 @@ export default function ArtPage() {
           setPagination(articlesRes.pagination);
         }
       } catch (err) {
+        if (err.name === 'AbortError') return;
         console.error('Failed to load art articles:', err);
+        if (isMounted) {
+          setError(err.message || 'Failed to load art critiques. Please verify your connection.');
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
     }
 
     loadData();
-    return () => { isMounted = false; };
-  }, [pagination.page, sortBy]);
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [page, sortBy, activeMedium, retryTrigger]);
+
+  const handleMediumChange = (medium) => {
+    setActiveMedium(medium);
+    setPage(1);
+  };
+
+  const handleSortChange = (newSort) => {
+    setSortBy(newSort);
+    setPage(1);
+  };
 
   const featuredStory = articles.find((a) => a.isFeatured) || articles[0];
-  const filteredStories = activeMedium === 'all'
-    ? articles
-    : articles.filter((a) => a.tags?.toLowerCase().includes(activeMedium.toLowerCase()));
 
   return (
     <div className="category-page art-page">
       <div className="category-container">
-        <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Art' }]} />
+        <Breadcrumb items={[{ label: 'Art' }]} />
 
         <PageHeader
           badge="Exhibition & Critique"
@@ -103,28 +127,28 @@ export default function ArtPage() {
             <button
               type="button"
               className={`tag-btn ${activeMedium === 'all' ? 'active' : ''}`}
-              onClick={() => setActiveMedium('all')}
+              onClick={() => handleMediumChange('all')}
             >
               All Movements
             </button>
             <button
               type="button"
               className={`tag-btn ${activeMedium === 'sculpture' ? 'active' : ''}`}
-              onClick={() => setActiveMedium('sculpture')}
+              onClick={() => handleMediumChange('sculpture')}
             >
               Sculpture & Void
             </button>
             <button
               type="button"
               className={`tag-btn ${activeMedium === 'light' ? 'active' : ''}`}
-              onClick={() => setActiveMedium('light')}
+              onClick={() => handleMediumChange('light')}
             >
               Light Installations
             </button>
             <button
               type="button"
               className={`tag-btn ${activeMedium === 'minimalism' ? 'active' : ''}`}
-              onClick={() => setActiveMedium('minimalism')}
+              onClick={() => handleMediumChange('minimalism')}
             >
               Monochrome
             </button>
@@ -135,7 +159,7 @@ export default function ArtPage() {
             <select
               id="art-sort"
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={(e) => handleSortChange(e.target.value)}
               className="sort-select"
             >
               <option value="latest">Latest Critiques</option>
@@ -144,15 +168,52 @@ export default function ArtPage() {
           </div>
         </div>
 
-        {/* Gallery Exhibition Grid */}
-        {loading ? (
+        {/* Results Counter */}
+        {!loading && !error && (
+          <div className="results-count-bar" aria-live="polite">
+            <span>Showing {articles.length} of {pagination.total} exhibitions</span>
+          </div>
+        )}
+
+        {/* Gallery Exhibition Grid with error and empty states */}
+        {error ? (
+          <div className="editorial-status-box error-box" role="alert">
+            <h3 className="status-title">Unable to Load Art Archive</h3>
+            <p className="status-desc">{error}</p>
+            <button
+              type="button"
+              className="btn-retry"
+              onClick={() => setRetryTrigger((k) => k + 1)}
+            >
+              Retry Connection
+            </button>
+          </div>
+        ) : loading ? (
           <div className="loading-container">
             <LoadingSpinner />
+          </div>
+        ) : articles.length === 0 ? (
+          <div className="editorial-status-box empty-box">
+            <h3 className="status-title">No Exhibitions Found</h3>
+            <p className="status-desc">
+              No gallery works match movement &ldquo;{activeMedium}&rdquo;. Try resetting your filters.
+            </p>
+            <button
+              type="button"
+              className="btn-reset-filters"
+              onClick={() => {
+                setActiveMedium('all');
+                setSortBy('latest');
+                setPage(1);
+              }}
+            >
+              Reset Filters
+            </button>
           </div>
         ) : (
           <div className="art-grid-wrapper">
             <div className="art-editorial-grid">
-              {filteredStories.map((article) => (
+              {articles.map((article) => (
                 <div key={article.id} className="art-grid-item">
                   <EditorialCard
                     article={article}
@@ -167,7 +228,7 @@ export default function ArtPage() {
               <Pagination
                 currentPage={pagination.page}
                 totalPages={pagination.totalPages}
-                onPageChange={(p) => setPagination((prev) => ({ ...prev, page: p }))}
+                onPageChange={(p) => setPage(p)}
               />
             )}
           </div>

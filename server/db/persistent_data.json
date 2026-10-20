@@ -10,28 +10,28 @@
     {
       "id": "nav-arch",
       "label": "Architecture",
-      "href": "#",
+      "href": "/architecture",
       "order": 1,
       "isActive": true
     },
     {
       "id": "nav-travel",
       "label": "Travel",
-      "href": "#",
+      "href": "/travel",
       "order": 2,
       "isActive": true
     },
     {
       "id": "nav-art",
       "label": "Art",
-      "href": "#",
+      "href": "/art",
       "order": 3,
       "isActive": true
     },
     {
       "id": "nav-food",
       "label": "Food",
-      "href": "#",
+      "href": "/food",
       "order": 4,
       "isActive": true
     }
@@ -281,6 +281,58 @@
     "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, necessitatibus!"
   },
   "auditLogs": [
+    {
+      "id": 1792475617459,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792475617456",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T05:53:37.459Z"
+    },
+    {
+      "id": 1792475617457,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792475617456",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T05:53:37.457Z"
+    },
+    {
+      "id": 1792465826238,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792465826233",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T03:10:26.238Z"
+    },
+    {
+      "id": 1792465826234,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792465826233",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T03:10:26.234Z"
+    },
     {
       "id": 1792463132371,
       "action": "DELETE_ARTICLE",
