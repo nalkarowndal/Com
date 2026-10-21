@@ -19,12 +19,21 @@ export default function EditorialCard({
     isDemo
   } = article;
 
+  const categoryFallbacks = {
+    architecture: '/images/hero.jpg',
+    travel: '/images/library/travel-kyoto-pavilions.jpg',
+    art: '/images/library/art-spatial-dimensions.jpg',
+    food: '/images/library/food-slow-harvest.jpg'
+  };
+
+  const resolvedImage = imageSrc || categoryFallbacks[categorySlug] || '/images/hero.jpg';
+
   return (
     <article className={`editorial-card editorial-card--${variant}`}>
       <Link to={`/stories/${slug}`} className="editorial-card-media-link" tabIndex={-1} aria-hidden="true">
         <div className="editorial-card-image-wrap">
           <img
-            src={imageSrc || '/images/hero.jpg'}
+            src={resolvedImage}
             alt={title}
             loading="lazy"
             className="editorial-card-img"

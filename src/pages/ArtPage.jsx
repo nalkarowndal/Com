@@ -94,7 +94,7 @@ export default function ArtPage() {
             <div className="art-spotlight-frame">
               <div className="art-spotlight-visual">
                 <img
-                  src={featuredStory.imageSrc || '/images/gallery-3.jpg'}
+                  src={featuredStory.imageSrc || category?.heroImage || '/images/library/hero-art-exhibition.jpg'}
                   alt={featuredStory.title}
                   className="art-spotlight-img"
                 />

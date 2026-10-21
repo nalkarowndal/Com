@@ -1,0 +1,497 @@
+{
+  "site": {
+    "name": "company",
+    "brandLogoSrc": "/images/logo.png",
+    "brandLogoAlt": "Logo",
+    "copyright": "2026 Green Systems Incorporated. All rights reserved.",
+    "footerDescription": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, necessitatibus!"
+  },
+  "navigation": [
+    {
+      "id": "nav-arch",
+      "label": "Architecture",
+      "href": "/architecture",
+      "order": 1,
+      "isActive": true
+    },
+    {
+      "id": "nav-travel",
+      "label": "Travel",
+      "href": "/travel",
+      "order": 2,
+      "isActive": true
+    },
+    {
+      "id": "nav-art",
+      "label": "Art",
+      "href": "/art",
+      "order": 3,
+      "isActive": true
+    },
+    {
+      "id": "nav-food",
+      "label": "Food",
+      "href": "/food",
+      "order": 4,
+      "isActive": true
+    }
+  ],
+  "articles": [
+    {
+      "id": "hero-urban-strorkes",
+      "slug": "urban-strorkes",
+      "categorySlug": "architecture",
+      "badge": "Editor's Choice",
+      "author": "Sebastian Weiss",
+      "title": "Urban Strorkes",
+      "buttonText": "Read More",
+      "imageSrc": "/images/hero.jpg",
+      "excerpt": "An acclaimed photographic exploration of contemporary metropolitan form and organic geometry by photographer Sebastian Weiss.",
+      "content": "Urban Strorkes is an acclaimed photographic exploration of contemporary metropolitan form and organic geometry by photographer Sebastian Weiss. Through minimalist framing, dramatic natural lighting, and architectural abstractions, the series uncovers sculptural rhythms within everyday urban structures.\n\nCaptured across major European metropolitan centers, the project examines the tactile intersection of polished steel, reinforced curved concrete, and expansive structural glazing. Weiss deliberately abstracts functional edifices into pure typographic and rhythmic cadences, inviting the observer to perceive built environments as living spatial choreographies.",
+      "tags": "Architecture, Minimalist, Sebastian Weiss, Facade, Monograph",
+      "isFeatured": true,
+      "isPublished": true,
+      "isDemo": false,
+      "views": 1420
+    },
+    {
+      "id": "art-concrete-cantilevers",
+      "slug": "concrete-cantilevers",
+      "categorySlug": "architecture",
+      "badge": "Architectural Study",
+      "author": "Elena Rostova",
+      "title": "Brutalist Echoes: Suspended Concrete Dynamics",
+      "buttonText": "Read More",
+      "imageSrc": "/images/gallery-1.jpg",
+      "excerpt": "Investigating how daring cantilevered forms and raw cast-concrete spirals redefine interior spatial drama.",
+      "content": "Brutalist architecture has experienced a profound contemporary renaissance. In this critical study, Elena Rostova dissects the engineering audacities of helical stairwells, dramatic overhangs, and tactile formwork impressions that challenge gravity.",
+      "tags": "Architecture, Concrete, Brutalism, Spiral, Engineering",
+      "isFeatured": false,
+      "isPublished": true,
+      "isDemo": true,
+      "views": 890
+    },
+    {
+      "id": "art-facade-reflections",
+      "slug": "facade-reflections",
+      "categorySlug": "architecture",
+      "badge": "Urban Monograph",
+      "author": "Marcus Vance",
+      "title": "Curvature & Grid: The High-Rise Enclosure",
+      "buttonText": "Read More",
+      "imageSrc": "/images/gallery-4.jpg",
+      "excerpt": "A study on how double-curved structural glazing softens monolithic urban massing against dynamic skyscapes.",
+      "content": "Modern high-rise towers continually renegotiate the threshold between interior shelter and panoramic urban horizons. Marcus Vance examines the computational geometry of parametric curtain walls and solar shading louvers.",
+      "tags": "Architecture, High-Rise, Facade, Glazing, Skyscraper",
+      "isFeatured": false,
+      "isPublished": true,
+      "isDemo": true,
+      "views": 640
+    },
+    {
+      "id": "trv-bridge-horizons",
+      "slug": "suspension-horizons",
+      "categorySlug": "travel",
+      "badge": "Travel Monograph",
+      "author": "Clara Lindqvist",
+      "title": "Suspension Horizons: The Solitude of Iconic Crossings",
+      "buttonText": "Read More",
+      "imageSrc": "/images/gallery-2.jpg",
+      "excerpt": "Walking monumental suspension bridges at daybreak when river mists unveil monumental steel cables.",
+      "content": "Crossing an iconic suspension span on foot before dawn is an intimate communion with urban scale. Clara Lindqvist traverses historic river passages, recording the rhythmic resonance of suspension cables against amber skies.",
+      "tags": "Travel, Bridges, Urban, Morning, Solitude",
+      "isFeatured": true,
+      "isPublished": true,
+      "isDemo": true,
+      "views": 1150
+    },
+    {
+      "id": "trv-kyoto-pavilions",
+      "slug": "kyoto-pavilions",
+      "categorySlug": "travel",
+      "badge": "Cultural Essay",
+      "author": "Kenji Takahashi",
+      "title": "Timber and Moss: Whispers of Historic Sanctuaries",
+      "buttonText": "Read More",
+      "imageSrc": "/images/gallery-3.jpg",
+      "excerpt": "Meditations on weathered hinoki cypress, raked gravel courtyards, and silent morning contemplation.",
+      "content": "In the foothills surrounding historic capitals, ancient wooden pavilions demonstrate that longevity arises not from rigid permanence, but from harmonious cyclical maintenance and deep organic integration.",
+      "tags": "Travel, Japan, Heritage, Timber, Gardens",
+      "isFeatured": false,
+      "isPublished": true,
+      "isDemo": true,
+      "views": 980
+    },
+    {
+      "id": "trv-aegean-dwellings",
+      "slug": "aegean-dwellings",
+      "categorySlug": "travel",
+      "badge": "Vernacular Journey",
+      "author": "Mateo Rossi",
+      "title": "Limestone Horizons: Vernacular Aegean Architecture",
+      "buttonText": "Read More",
+      "imageSrc": "/images/gallery-1.jpg",
+      "excerpt": "Sculpted white lime plaster, wind-carved stone terraces, and the timeless azure of island horizons.",
+      "content": "Vernacular coastal settlements developed without master plans yet achieve supreme functional and aesthetic harmony. Mateo Rossi explores the organic staircases and lime-washed cubic residences carved directly into seaside cliffs.",
+      "tags": "Travel, Coast, Vernacular, Limestone, Mediterranean",
+      "isFeatured": false,
+      "isPublished": true,
+      "isDemo": true,
+      "views": 720
+    },
+    {
+      "id": "art-spatial-dimensions",
+      "slug": "spatial-dimensions",
+      "categorySlug": "art",
+      "badge": "Exhibition Review",
+      "author": "Sophie Arnault",
+      "title": "Monochrome Volume: Spatial Interventions in White Cube Galleries",
+      "buttonText": "Read More",
+      "imageSrc": "/images/gallery-3.jpg",
+      "excerpt": "How contemporary minimalist sculptors deploy scale, tension, and void to recalibrate viewer presence.",
+      "content": "By stripping away decorative narrative, minimalist spatial installations force the spectator to confront physical absence, atmospheric acoustics, and subtle gradients of natural daylight filtering through architectural skylights.",
+      "tags": "Art, Sculpture, Minimalism, Gallery, Spatial",
+      "isFeatured": true,
+      "isPublished": true,
+      "isDemo": true,
+      "views": 1280
+    },
+    {
+      "id": "art-kinetic-shadows",
+      "slug": "kinetic-shadows",
+      "categorySlug": "art",
+      "badge": "Artist Spotlight",
+      "author": "David Chen",
+      "title": "Light as Medium: Ephemeral Projections and Chromatic Space",
+      "buttonText": "Read More",
+      "imageSrc": "/images/gallery-4.jpg",
+      "excerpt": "Deconstructing light not merely as illumination, but as tangible architectural material.",
+      "content": "Artists who sculpt with pure luminescence dissolve conventional wall boundaries. David Chen analyzes how calibrated color fields and slow chromatic transitions alter circadian perception in gallery environments.",
+      "tags": "Art, Light Art, Installations, Color, Perception",
+      "isFeatured": false,
+      "isPublished": true,
+      "isDemo": true,
+      "views": 850
+    },
+    {
+      "id": "food-slow-harvest",
+      "slug": "slow-harvest",
+      "categorySlug": "food",
+      "badge": "Culinary Heritage",
+      "author": "Luc Mercier",
+      "title": "Ancient Grains and Sourdough: The Geometry of Bread",
+      "buttonText": "Read More",
+      "imageSrc": "/images/gallery-3.jpg",
+      "excerpt": "The quiet art of stone-milling heirloom wheat, natural wild fermentation, and wood-fired baking.",
+      "content": "Bread is mankind's oldest architectural food—composed of cellular crusts, steam chambers, and structural crumb. Luc Mercier spends a week with artisanal bakers reviving heritage grains and wood-stoked ovens.",
+      "tags": "Food, Bakery, Sourdough, Heritage, Artisanal",
+      "isFeatured": true,
+      "isPublished": true,
+      "isDemo": true,
+      "views": 1090
+    },
+    {
+      "id": "food-dashi-traditions",
+      "slug": "dashi-traditions",
+      "categorySlug": "food",
+      "badge": "Gastronomy Essay",
+      "author": "Yoko Sato",
+      "title": "The Architecture of Umami: Mineral Broths & Seasonal Restraint",
+      "buttonText": "Read More",
+      "imageSrc": "/images/gallery-1.jpg",
+      "excerpt": "A study in elemental balance: aged kombu, hand-shaved katsuobushi, and soft spring waters.",
+      "content": "In traditional culinary philosophy, peak refinement is achieved by subtraction rather than addition. Yoko Sato reveals how mineral-rich waters extract clarity and umami depth without masking the seasonal qualities of ingredients.",
+      "tags": "Food, Umami, Broth, Gastronomy, Culture",
+      "isFeatured": false,
+      "isPublished": true,
+      "isDemo": true,
+      "views": 940
+    }
+  ],
+  "cards": [
+    {
+      "id": "card-inspring-reads",
+      "variant": "tan",
+      "title": "Inspring Reads",
+      "description": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eum, est doloribus",
+      "buttonText": "Read More",
+      "link": "",
+      "fullText": "Inspring Reads curates essential architectural discourse, monograph highlights, and spatial criticism. Exploring how built environments shape human psychology and cultural evolution.",
+      "order": 1
+    },
+    {
+      "id": "card-reflections",
+      "variant": "dark",
+      "title": "Reflections",
+      "description": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eum, est doloribus",
+      "buttonText": "Read More",
+      "link": "",
+      "fullText": "Reflections delves into the interplay between glass, light, shadow, and urban solitude. A contemplative series examining stillness inside the relentless pulse of modern architecture.",
+      "order": 2
+    }
+  ],
+  "gallery": [
+    {
+      "id": "gallery-1",
+      "src": "/images/gallery-1.jpg",
+      "alt": "Spiral architectural concrete staircase",
+      "title": "Spiral Concrete Dynamics",
+      "categorySlug": "architecture",
+      "description": "Helical cast-concrete cantilevered staircase showcasing structural tension and organic geometry.",
+      "order": 1,
+      "isPublished": true,
+      "isDemo": false
+    },
+    {
+      "id": "gallery-2",
+      "src": "/images/gallery-2.jpg",
+      "alt": "Suspension bridge perspective view",
+      "title": "Suspension Geometry",
+      "categorySlug": "travel",
+      "description": "Monumental suspension bridge cables photographed at dawn, showing industrial symmetry and atmospheric depth.",
+      "order": 2,
+      "isPublished": true,
+      "isDemo": false
+    },
+    {
+      "id": "gallery-3",
+      "src": "/images/gallery-3.jpg",
+      "alt": "Geometric angular modern building facade",
+      "title": "Angular Facade Rhythms",
+      "categorySlug": "art",
+      "description": "Asymmetrical pyramidal roofline interacting with shifting cloud patterns and natural skylight.",
+      "order": 3,
+      "isPublished": true,
+      "isDemo": false
+    },
+    {
+      "id": "gallery-4",
+      "src": "/images/gallery-4.jpg",
+      "alt": "Curved skyscraper glass window grid",
+      "title": "Curvilinear Verticality",
+      "categorySlug": "food",
+      "description": "Precision glass-and-aluminum curtain wall reflecting the evening horizon and structural rhythms.",
+      "order": 4,
+      "isPublished": true,
+      "isDemo": false
+    }
+  ],
+  "footer": {
+    "copyright": "2026 Green Systems Incorporated. All rights reserved.",
+    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, necessitatibus!"
+  },
+  "auditLogs": [
+    {
+      "id": 1792475617459,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792475617456",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T05:53:37.459Z"
+    },
+    {
+      "id": 1792475617457,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792475617456",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T05:53:37.457Z"
+    },
+    {
+      "id": 1792465826238,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792465826233",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T03:10:26.238Z"
+    },
+    {
+      "id": 1792465826234,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792465826233",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T03:10:26.234Z"
+    },
+    {
+      "id": 1792463132371,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792463132365",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T02:25:32.371Z"
+    },
+    {
+      "id": 1792463132367,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792463132365",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T02:25:32.367Z"
+    },
+    {
+      "id": 1792461581163,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792461581159",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T01:59:41.163Z"
+    },
+    {
+      "id": 1792461581160,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792461581159",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T01:59:41.160Z"
+    },
+    {
+      "id": 1792460716940,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792460716937",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T01:45:16.940Z"
+    },
+    {
+      "id": 1792460716938,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792460716937",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T01:45:16.938Z"
+    },
+    {
+      "id": 1792459407970,
+      "action": "UPDATE_ARTICLE",
+      "entity": "article",
+      "targetId": "hero-urban-strorkes",
+      "details": {
+        "buttonText": "Read More"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T01:23:27.970Z"
+    },
+    {
+      "id": 1792459407963,
+      "action": "UPDATE_ARTICLE",
+      "entity": "article",
+      "targetId": "hero-urban-strorkes",
+      "details": {
+        "buttonText": "Explore Series"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T01:23:27.963Z"
+    },
+    {
+      "id": 1792459124579,
+      "action": "UPDATE_ARTICLE",
+      "entity": "article",
+      "targetId": "hero-urban-strorkes",
+      "details": {
+        "buttonText": "Read More"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T01:18:44.579Z"
+    },
+    {
+      "id": 1792459124569,
+      "action": "UPDATE_ARTICLE",
+      "entity": "article",
+      "targetId": "hero-urban-strorkes",
+      "details": {
+        "buttonText": "Explore Series"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T01:18:44.569Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": "cat-arch",
+      "slug": "architecture",
+      "name": "Architecture",
+      "description": "Monographs, structural forms, and spatial discourse defining modern metropolises and organic architecture.",
+      "heroImage": "/images/hero.jpg",
+      "order": 1,
+      "isActive": true
+    },
+    {
+      "id": "cat-travel",
+      "slug": "travel",
+      "name": "Travel",
+      "description": "Contemplative journeys, cultural terrains, and geographic narratives across continents and historic cities.",
+      "heroImage": "/images/gallery-2.jpg",
+      "order": 2,
+      "isActive": true
+    },
+    {
+      "id": "cat-art",
+      "slug": "art",
+      "name": "Art",
+      "description": "Contemporary spatial installations, sculptural minimalism, and visual critiques in modern galleries.",
+      "heroImage": "/images/gallery-1.jpg",
+      "order": 3,
+      "isActive": true
+    },
+    {
+      "id": "cat-food",
+      "slug": "food",
+      "name": "Food",
+      "description": "Culinary heritage, artisanal gastronomy, and the thoughtful intersection of taste, culture, and aesthetics.",
+      "heroImage": "/images/gallery-3.jpg",
+      "order": 4,
+      "isActive": true
+    }
+  ]
+}

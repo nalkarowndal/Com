@@ -94,7 +94,7 @@ export default function FoodPage() {
             <div className="food-spotlight-card">
               <div className="food-spotlight-image-side">
                 <img
-                  src={featuredStory.imageSrc || '/images/gallery-3.jpg'}
+                  src={featuredStory.imageSrc || category?.heroImage || '/images/library/hero-food-gastronomy.jpg'}
                   alt={featuredStory.title}
                   className="food-spotlight-img"
                 />

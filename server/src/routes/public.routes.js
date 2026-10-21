@@ -14,6 +14,7 @@ router.get('/articles', (req, res, next) => publicController.getArticles(req, re
 router.get('/articles/:slug', (req, res, next) => publicController.getArticleBySlug(req, res, next));
 
 router.get('/gallery', (req, res, next) => publicController.getGallery(req, res, next));
+router.get('/media', (req, res, next) => publicController.getMedia(req, res, next));
 router.get('/search', (req, res, next) => publicController.search(req, res, next));
 
 export default router;

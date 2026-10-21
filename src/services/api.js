@@ -240,3 +240,119 @@ export async function apiAdminGetAuditLogs() {
   const json = await request('/admin/audit-logs', { headers });
   return json.data || [];
 }
+
+/**
+ * Public Media API
+ */
+export async function fetchMediaAssets({ category, search, page = 1, limit = 50 } = {}) {
+  const params = new URLSearchParams();
+  if (category && category !== 'all') params.append('category', category);
+  if (search) params.append('search', search);
+  if (page) params.append('page', page);
+  if (limit) params.append('limit', limit);
+
+  const queryStr = params.toString() ? `?${params.toString()}` : '';
+  const json = await request(`/media${queryStr}`);
+  return {
+    items: json.data || [],
+    pagination: json.pagination || { total: json.data?.length || 0, page: 1, totalPages: 1 }
+  };
+}
+
+/**
+ * Admin Media Management API
+ */
+export async function apiAdminGetMedia({ category, search, isApproved, isOriginal, page = 1, limit = 50 } = {}) {
+  const token = localStorage.getItem('prism_admin_token');
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+  const params = new URLSearchParams();
+  if (category && category !== 'all') params.append('category', category);
+  if (search) params.append('search', search);
+  if (isApproved !== undefined && isApproved !== null) params.append('isApproved', isApproved);
+  if (isOriginal !== undefined && isOriginal !== null) params.append('isOriginal', isOriginal);
+  if (page) params.append('page', page);
+  if (limit) params.append('limit', limit);
+
+  const queryStr = params.toString() ? `?${params.toString()}` : '';
+  const json = await request(`/admin/media${queryStr}`, { headers });
+  return {
+    items: json.data || [],
+    pagination: json.pagination || { total: json.data?.length || 0, page: 1, totalPages: 1 }
+  };
+}
+
+export async function apiAdminGetMediaById(id) {
+  const token = localStorage.getItem('prism_admin_token');
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  const json = await request(`/admin/media/${id}`, { headers });
+  return json.data;
+}
+
+export async function apiAdminUploadMedia(formData) {
+  const token = localStorage.getItem('prism_admin_token');
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  // Note: let browser set multipart/form-data boundary
+  const json = await request('/admin/media/upload', {
+    method: 'POST',
+    headers,
+    body: formData
+  });
+  return json.data;
+}
+
+export async function apiAdminUpdateMedia(id, updates) {
+  const token = localStorage.getItem('prism_admin_token');
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  const json = await request(`/admin/media/${id}`, {
+    method: 'PUT',
+    headers,
+    body: updates
+  });
+  return json.data;
+}
+
+export async function apiAdminDeleteMedia(id) {
+  const token = localStorage.getItem('prism_admin_token');
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  const json = await request(`/admin/media/${id}`, {
+    method: 'DELETE',
+    headers
+  });
+  return json.data;
+}
+
+export async function apiAdminDetectDuplicateMedia({ filename, fileSize }) {
+  const token = localStorage.getItem('prism_admin_token');
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  const json = await request('/admin/media/detect-duplicate', {
+    method: 'POST',
+    headers,
+    body: { filename, fileSize }
+  });
+  return json;
+}
+
+export async function apiAdminRecommendMedia({ title, content, tags, categorySlug }) {
+  const token = localStorage.getItem('prism_admin_token');
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  const params = new URLSearchParams();
+  if (title) params.append('title', title);
+  if (content) params.append('content', content);
+  if (tags) params.append('tags', tags);
+  if (categorySlug) params.append('categorySlug', categorySlug);
+
+  const json = await request(`/admin/media/recommend?${params.toString()}`, { headers });
+  return json.data || [];
+}
+
+export async function apiAdminRollbackMedia({ targetType, targetId }) {
+  const token = localStorage.getItem('prism_admin_token');
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  const json = await request('/admin/media/rollback', {
+    method: 'POST',
+    headers,
+    body: { targetType, targetId }
+  });
+  return json.data;
+}

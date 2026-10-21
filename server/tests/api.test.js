@@ -191,4 +191,96 @@ describe('PRISM Company REST API Suite', () => {
     });
     assert.equal(delRes.status, 200);
   });
+
+  it('GET /api/media should return active media assets and support category filtering', async () => {
+    const res = await fetch(`${baseUrl}/media`);
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.equal(body.success, true);
+    assert.ok(Array.isArray(body.data));
+    assert.ok(body.data.length >= 12);
+
+    const foodRes = await fetch(`${baseUrl}/media?category=food`);
+    assert.equal(foodRes.status, 200);
+    const foodBody = await foodRes.json();
+    assert.ok(foodBody.data.length >= 2);
+    assert.ok(foodBody.data.every((item) => item.categorySlug === 'food'));
+  });
+
+  it('GET /api/admin/media should return paginated media list with metadata', async () => {
+    const res = await fetch(`${baseUrl}/admin/media`, {
+      headers: { Authorization: `Bearer ${adminToken}` }
+    });
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.equal(body.success, true);
+    assert.ok(Array.isArray(body.data));
+    assert.ok(body.pagination.total >= 12);
+  });
+
+  it('GET /api/admin/media/recommend should recommend appropriate media based on category and keywords', async () => {
+    const res = await fetch(`${baseUrl}/admin/media/recommend?categorySlug=food&title=Sourdough%20Heritage`, {
+      headers: { Authorization: `Bearer ${adminToken}` }
+    });
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.equal(body.success, true);
+    assert.ok(Array.isArray(body.data));
+    assert.ok(body.data.length > 0);
+    assert.equal(body.data[0].asset.categorySlug, 'food');
+  });
+
+  it('POST /api/admin/media/detect-duplicate should detect duplicate image files', async () => {
+    const res = await fetch(`${baseUrl}/admin/media/detect-duplicate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${adminToken}`
+      },
+      body: JSON.stringify({ filename: 'hero.jpg', fileSize: 0 })
+    });
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.equal(body.success, true);
+    assert.equal(body.isDuplicate, true);
+    assert.ok(body.match);
+  });
+
+  it('POST /api/admin/media should create media asset and prevent deleting original assets', async () => {
+    // 1. Create a media asset
+    const createRes = await fetch(`${baseUrl}/admin/media`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${adminToken}`
+      },
+      body: JSON.stringify({
+        src: '/images/uploads/test-sample.jpg',
+        title: 'Nordic Timber Architecture',
+        categorySlug: 'architecture',
+        photographer: 'Editorial Photographer',
+        licenseType: 'Unsplash License'
+      })
+    });
+    assert.equal(createRes.status, 201);
+    const createBody = await createRes.json();
+    assert.equal(createBody.success, true);
+    const newMediaId = createBody.data.id;
+
+    // 2. Delete the created non-original asset (should succeed)
+    const delRes = await fetch(`${baseUrl}/admin/media/${newMediaId}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${adminToken}` }
+    });
+    assert.equal(delRes.status, 200);
+
+    // 3. Attempt to delete an original protected asset (should return 403)
+    const protectedDelRes = await fetch(`${baseUrl}/admin/media/asset-hero`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${adminToken}` }
+    });
+    assert.equal(protectedDelRes.status, 403);
+    const protectedBody = await protectedDelRes.json();
+    assert.equal(protectedBody.error.code, 'ORIGINAL_ASSET_PROTECTED');
+  });
 });

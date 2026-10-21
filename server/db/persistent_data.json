@@ -52,7 +52,8 @@
       "isFeatured": true,
       "isPublished": true,
       "isDemo": false,
-      "views": 1420
+      "views": 1420,
+      "coverImageId": "asset-hero"
     },
     {
       "id": "art-concrete-cantilevers",
@@ -69,7 +70,8 @@
       "isFeatured": false,
       "isPublished": true,
       "isDemo": true,
-      "views": 890
+      "views": 890,
+      "coverImageId": "asset-gal-1"
     },
     {
       "id": "art-facade-reflections",
@@ -86,7 +88,8 @@
       "isFeatured": false,
       "isPublished": true,
       "isDemo": true,
-      "views": 640
+      "views": 640,
+      "coverImageId": "asset-gal-4"
     },
     {
       "id": "trv-bridge-horizons",
@@ -103,7 +106,8 @@
       "isFeatured": true,
       "isPublished": true,
       "isDemo": true,
-      "views": 1150
+      "views": 1150,
+      "coverImageId": "asset-gal-2"
     },
     {
       "id": "trv-kyoto-pavilions",
@@ -113,14 +117,15 @@
       "author": "Kenji Takahashi",
       "title": "Timber and Moss: Whispers of Historic Sanctuaries",
       "buttonText": "Read More",
-      "imageSrc": "/images/gallery-3.jpg",
+      "imageSrc": "/images/library/travel-kyoto-pavilions.jpg",
       "excerpt": "Meditations on weathered hinoki cypress, raked gravel courtyards, and silent morning contemplation.",
       "content": "In the foothills surrounding historic capitals, ancient wooden pavilions demonstrate that longevity arises not from rigid permanence, but from harmonious cyclical maintenance and deep organic integration.",
       "tags": "Travel, Japan, Heritage, Timber, Gardens",
       "isFeatured": false,
       "isPublished": true,
       "isDemo": true,
-      "views": 980
+      "views": 980,
+      "coverImageId": "media-kyoto-pavilions"
     },
     {
       "id": "trv-aegean-dwellings",
@@ -130,14 +135,15 @@
       "author": "Mateo Rossi",
       "title": "Limestone Horizons: Vernacular Aegean Architecture",
       "buttonText": "Read More",
-      "imageSrc": "/images/gallery-1.jpg",
+      "imageSrc": "/images/library/travel-aegean-dwellings.jpg",
       "excerpt": "Sculpted white lime plaster, wind-carved stone terraces, and the timeless azure of island horizons.",
       "content": "Vernacular coastal settlements developed without master plans yet achieve supreme functional and aesthetic harmony. Mateo Rossi explores the organic staircases and lime-washed cubic residences carved directly into seaside cliffs.",
       "tags": "Travel, Coast, Vernacular, Limestone, Mediterranean",
       "isFeatured": false,
       "isPublished": true,
       "isDemo": true,
-      "views": 720
+      "views": 720,
+      "coverImageId": "media-aegean-dwellings"
     },
     {
       "id": "art-spatial-dimensions",
@@ -147,14 +153,15 @@
       "author": "Sophie Arnault",
       "title": "Monochrome Volume: Spatial Interventions in White Cube Galleries",
       "buttonText": "Read More",
-      "imageSrc": "/images/gallery-3.jpg",
+      "imageSrc": "/images/library/art-spatial-dimensions.jpg",
       "excerpt": "How contemporary minimalist sculptors deploy scale, tension, and void to recalibrate viewer presence.",
       "content": "By stripping away decorative narrative, minimalist spatial installations force the spectator to confront physical absence, atmospheric acoustics, and subtle gradients of natural daylight filtering through architectural skylights.",
       "tags": "Art, Sculpture, Minimalism, Gallery, Spatial",
       "isFeatured": true,
       "isPublished": true,
       "isDemo": true,
-      "views": 1280
+      "views": 1280,
+      "coverImageId": "media-spatial-dimensions"
     },
     {
       "id": "art-kinetic-shadows",
@@ -164,14 +171,15 @@
       "author": "David Chen",
       "title": "Light as Medium: Ephemeral Projections and Chromatic Space",
       "buttonText": "Read More",
-      "imageSrc": "/images/gallery-4.jpg",
+      "imageSrc": "/images/library/art-kinetic-shadows.jpg",
       "excerpt": "Deconstructing light not merely as illumination, but as tangible architectural material.",
       "content": "Artists who sculpt with pure luminescence dissolve conventional wall boundaries. David Chen analyzes how calibrated color fields and slow chromatic transitions alter circadian perception in gallery environments.",
       "tags": "Art, Light Art, Installations, Color, Perception",
       "isFeatured": false,
       "isPublished": true,
       "isDemo": true,
-      "views": 850
+      "views": 850,
+      "coverImageId": "media-kinetic-shadows"
     },
     {
       "id": "food-slow-harvest",
@@ -181,14 +189,15 @@
       "author": "Luc Mercier",
       "title": "Ancient Grains and Sourdough: The Geometry of Bread",
       "buttonText": "Read More",
-      "imageSrc": "/images/gallery-3.jpg",
+      "imageSrc": "/images/library/food-slow-harvest.jpg",
       "excerpt": "The quiet art of stone-milling heirloom wheat, natural wild fermentation, and wood-fired baking.",
       "content": "Bread is mankind's oldest architectural food—composed of cellular crusts, steam chambers, and structural crumb. Luc Mercier spends a week with artisanal bakers reviving heritage grains and wood-stoked ovens.",
       "tags": "Food, Bakery, Sourdough, Heritage, Artisanal",
       "isFeatured": true,
       "isPublished": true,
       "isDemo": true,
-      "views": 1090
+      "views": 1090,
+      "coverImageId": "media-slow-harvest"
     },
     {
       "id": "food-dashi-traditions",
@@ -198,14 +207,15 @@
       "author": "Yoko Sato",
       "title": "The Architecture of Umami: Mineral Broths & Seasonal Restraint",
       "buttonText": "Read More",
-      "imageSrc": "/images/gallery-1.jpg",
+      "imageSrc": "/images/library/food-dashi-traditions.jpg",
       "excerpt": "A study in elemental balance: aged kombu, hand-shaved katsuobushi, and soft spring waters.",
       "content": "In traditional culinary philosophy, peak refinement is achieved by subtraction rather than addition. Yoko Sato reveals how mineral-rich waters extract clarity and umami depth without masking the seasonal qualities of ingredients.",
       "tags": "Food, Umami, Broth, Gastronomy, Culture",
       "isFeatured": false,
       "isPublished": true,
       "isDemo": true,
-      "views": 940
+      "views": 940,
+      "coverImageId": "media-dashi-traditions"
     }
   ],
   "cards": [
@@ -274,6 +284,78 @@
       "order": 4,
       "isPublished": true,
       "isDemo": false
+    },
+    {
+      "id": "gallery-5",
+      "src": "/images/library/travel-kyoto-pavilions.jpg",
+      "alt": "Traditional Japanese wooden pavilion in Kyoto",
+      "title": "Whispering Cedar & Moss",
+      "categorySlug": "travel",
+      "description": "Weathered hinoki cypress and cedar garden in the historic foothills of Kyoto.",
+      "order": 5,
+      "isPublished": true,
+      "isDemo": true,
+      "mediaAssetId": "media-kyoto-pavilions"
+    },
+    {
+      "id": "gallery-6",
+      "src": "/images/library/travel-aegean-dwellings.jpg",
+      "alt": "Aegean sea cliffside white lime terraces",
+      "title": "Limestone Cliff Terraces",
+      "categorySlug": "travel",
+      "description": "Sun-washed white cubic architecture carved into seaside cliffs of the Aegean archipelago.",
+      "order": 6,
+      "isPublished": true,
+      "isDemo": true,
+      "mediaAssetId": "media-aegean-dwellings"
+    },
+    {
+      "id": "gallery-7",
+      "src": "/images/library/art-spatial-dimensions.jpg",
+      "alt": "Minimalist white cube sculpture",
+      "title": "Monochrome Void & Volume",
+      "categorySlug": "art",
+      "description": "Contemporary minimalist spatial intervention exploring acoustic void and natural light.",
+      "order": 7,
+      "isPublished": true,
+      "isDemo": true,
+      "mediaAssetId": "media-spatial-dimensions"
+    },
+    {
+      "id": "gallery-8",
+      "src": "/images/library/art-kinetic-shadows.jpg",
+      "alt": "Chromatic light projection installation",
+      "title": "Chromatic Spectrum Space",
+      "categorySlug": "art",
+      "description": "Calibrated color field projection transforming perceptual architectural boundaries.",
+      "order": 8,
+      "isPublished": true,
+      "isDemo": true,
+      "mediaAssetId": "media-kinetic-shadows"
+    },
+    {
+      "id": "gallery-9",
+      "src": "/images/library/food-slow-harvest.jpg",
+      "alt": "Artisan sourdough loaf on dark slate",
+      "title": "Hearth & Ancient Grain",
+      "categorySlug": "food",
+      "description": "Naturally fermented wild sourdough with deep scored crust, baked in a wood-fired hearth.",
+      "order": 9,
+      "isPublished": true,
+      "isDemo": true,
+      "mediaAssetId": "media-slow-harvest"
+    },
+    {
+      "id": "gallery-10",
+      "src": "/images/library/food-dashi-traditions.jpg",
+      "alt": "Japanese dashi broth with kombu in ceramic bowl",
+      "title": "Elemental Umami Infusion",
+      "categorySlug": "food",
+      "description": "Clarified kombu and katsuobushi mineral broth, honoring peak seasonal subtraction.",
+      "order": 10,
+      "isPublished": true,
+      "isDemo": true,
+      "mediaAssetId": "media-dashi-traditions"
     }
   ],
   "footer": {
@@ -281,6 +363,314 @@
     "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, necessitatibus!"
   },
   "auditLogs": [
+    {
+      "id": 1792542639517,
+      "action": "DELETE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1792542639513",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:30:39.517Z"
+    },
+    {
+      "id": 1792542639514,
+      "action": "CREATE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1792542639513",
+      "details": {
+        "src": "/images/uploads/test-sample.jpg",
+        "filename": "test-sample.jpg",
+        "categorySlug": "architecture",
+        "title": "Nordic Timber Architecture",
+        "alt": "Nordic Timber Architecture",
+        "photographer": "Editorial Photographer",
+        "sourceName": "External Library",
+        "sourceUrl": "/images/uploads/test-sample.jpg",
+        "licenseType": "Unsplash License",
+        "licenseUrl": "",
+        "licenseVerifiedAt": "2026-10-21T00:30:39.513Z",
+        "width": 0,
+        "height": 0,
+        "mimeType": "image/jpeg",
+        "fileSize": 0,
+        "isOriginal": false,
+        "isApproved": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:30:39.514Z"
+    },
+    {
+      "id": 1792542639496,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792542639490",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:30:39.496Z"
+    },
+    {
+      "id": 1792542639491,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792542639490",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:30:39.491Z"
+    },
+    {
+      "id": 1792542202187,
+      "action": "DELETE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1792542202184",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:23:22.187Z"
+    },
+    {
+      "id": 1792542202184,
+      "action": "CREATE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1792542202184",
+      "details": {
+        "src": "/images/uploads/test-sample.jpg",
+        "filename": "test-sample.jpg",
+        "categorySlug": "architecture",
+        "title": "Nordic Timber Architecture",
+        "alt": "Nordic Timber Architecture",
+        "photographer": "Editorial Photographer",
+        "sourceName": "External Library",
+        "sourceUrl": "/images/uploads/test-sample.jpg",
+        "licenseType": "Unsplash License",
+        "licenseUrl": "",
+        "licenseVerifiedAt": "2026-10-21T00:23:22.183Z",
+        "width": 0,
+        "height": 0,
+        "mimeType": "image/jpeg",
+        "fileSize": 0,
+        "isOriginal": false,
+        "isApproved": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:23:22.184Z"
+    },
+    {
+      "id": 1792542202167,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792542202163",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:23:22.167Z"
+    },
+    {
+      "id": 1792542202164,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792542202163",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:23:22.164Z"
+    },
+    {
+      "id": 1792541795166,
+      "action": "DELETE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1792541795158",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:16:35.166Z"
+    },
+    {
+      "id": 1792541795159,
+      "action": "CREATE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1792541795158",
+      "details": {
+        "src": "/images/uploads/test-sample.jpg",
+        "filename": "test-sample.jpg",
+        "categorySlug": "architecture",
+        "title": "Nordic Timber Architecture",
+        "alt": "Nordic Timber Architecture",
+        "photographer": "Editorial Photographer",
+        "sourceName": "External Library",
+        "sourceUrl": "/images/uploads/test-sample.jpg",
+        "licenseType": "Unsplash License",
+        "licenseUrl": "",
+        "licenseVerifiedAt": "2026-10-21T00:16:35.158Z",
+        "width": 0,
+        "height": 0,
+        "mimeType": "image/jpeg",
+        "fileSize": 0,
+        "isOriginal": false,
+        "isApproved": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:16:35.159Z"
+    },
+    {
+      "id": 1792541795139,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792541795135",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:16:35.139Z"
+    },
+    {
+      "id": 1792541795136,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792541795135",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:16:35.136Z"
+    },
+    {
+      "id": 1792541750673,
+      "action": "DELETE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1792541750669",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:15:50.673Z"
+    },
+    {
+      "id": 1792541750669,
+      "action": "CREATE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1792541750669",
+      "details": {
+        "src": "/images/uploads/test-sample.jpg",
+        "filename": "test-sample.jpg",
+        "categorySlug": "architecture",
+        "title": "Nordic Timber Architecture",
+        "alt": "Nordic Timber Architecture",
+        "photographer": "Editorial Photographer",
+        "sourceName": "External Library",
+        "sourceUrl": "/images/uploads/test-sample.jpg",
+        "licenseType": "Unsplash License",
+        "licenseUrl": "",
+        "licenseVerifiedAt": "2026-10-21T00:15:50.669Z",
+        "width": 0,
+        "height": 0,
+        "mimeType": "image/jpeg",
+        "fileSize": 0,
+        "isOriginal": false,
+        "isApproved": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:15:50.669Z"
+    },
+    {
+      "id": 1792541750650,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792541750646",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:15:50.650Z"
+    },
+    {
+      "id": 1792541750647,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792541750646",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:15:50.647Z"
+    },
+    {
+      "id": 1792541671207,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792541671177",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:14:31.207Z"
+    },
+    {
+      "id": 1792541671204,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792541671177",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-21T00:14:31.204Z"
+    },
+    {
+      "id": 1792485569789,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792485569784",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T08:39:29.789Z"
+    },
+    {
+      "id": 1792485569786,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1792485569784",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-10-20T08:39:29.786Z"
+    },
     {
       "id": 1792475617459,
       "action": "DELETE_ARTICLE",
@@ -464,7 +854,8 @@
       "description": "Monographs, structural forms, and spatial discourse defining modern metropolises and organic architecture.",
       "heroImage": "/images/hero.jpg",
       "order": 1,
-      "isActive": true
+      "isActive": true,
+      "heroImageId": "asset-hero"
     },
     {
       "id": "cat-travel",
@@ -473,25 +864,324 @@
       "description": "Contemplative journeys, cultural terrains, and geographic narratives across continents and historic cities.",
       "heroImage": "/images/gallery-2.jpg",
       "order": 2,
-      "isActive": true
+      "isActive": true,
+      "heroImageId": "asset-gal-2"
     },
     {
       "id": "cat-art",
       "slug": "art",
       "name": "Art",
       "description": "Contemporary spatial installations, sculptural minimalism, and visual critiques in modern galleries.",
-      "heroImage": "/images/gallery-1.jpg",
+      "heroImage": "/images/library/hero-art-exhibition.jpg",
       "order": 3,
-      "isActive": true
+      "isActive": true,
+      "heroImageId": "media-hero-art"
     },
     {
       "id": "cat-food",
       "slug": "food",
       "name": "Food",
       "description": "Culinary heritage, artisanal gastronomy, and the thoughtful intersection of taste, culture, and aesthetics.",
-      "heroImage": "/images/gallery-3.jpg",
+      "heroImage": "/images/library/hero-food-gastronomy.jpg",
       "order": 4,
-      "isActive": true
+      "isActive": true,
+      "heroImageId": "media-hero-food"
+    }
+  ],
+  "mediaAssets": [
+    {
+      "id": "asset-logo",
+      "src": "/images/logo.png",
+      "filename": "logo.png",
+      "categorySlug": "architecture",
+      "title": "PRISM Brand Identity Logo",
+      "alt": "PRISM Brand Logo",
+      "photographer": "PRISM Studio",
+      "sourceName": "Internal Brand",
+      "sourceUrl": "/images/logo.png",
+      "licenseType": "Brand Proprietary",
+      "licenseUrl": "",
+      "licenseVerifiedAt": "2026-10-20T00:00:00.000Z",
+      "width": 240,
+      "height": 60,
+      "mimeType": "image/png",
+      "fileSize": 3200,
+      "isOriginal": true,
+      "isApproved": true,
+      "createdAt": "2026-10-20T00:00:00.000Z"
+    },
+    {
+      "id": "asset-hero",
+      "src": "/images/hero.jpg",
+      "filename": "hero.jpg",
+      "categorySlug": "architecture",
+      "title": "Urban Strorkes Facade Geometry",
+      "alt": "Urban Strorkes architectural facade by Sebastian Weiss",
+      "photographer": "Sebastian Weiss",
+      "sourceName": "Founding Commission",
+      "sourceUrl": "/images/hero.jpg",
+      "licenseType": "Editorial Rights",
+      "licenseUrl": "",
+      "licenseVerifiedAt": "2026-10-20T00:00:00.000Z",
+      "width": 1920,
+      "height": 1080,
+      "mimeType": "image/jpeg",
+      "fileSize": 312500,
+      "isOriginal": true,
+      "isApproved": true,
+      "createdAt": "2026-10-20T00:00:00.000Z"
+    },
+    {
+      "id": "asset-gal-1",
+      "src": "/images/gallery-1.jpg",
+      "filename": "gallery-1.jpg",
+      "categorySlug": "architecture",
+      "title": "Spiral Concrete Dynamics",
+      "alt": "Spiral architectural concrete staircase",
+      "photographer": "Elena Rostova",
+      "sourceName": "Founding Collection",
+      "sourceUrl": "/images/gallery-1.jpg",
+      "licenseType": "Permanent Collection",
+      "licenseUrl": "",
+      "licenseVerifiedAt": "2026-10-20T00:00:00.000Z",
+      "width": 1200,
+      "height": 800,
+      "mimeType": "image/jpeg",
+      "fileSize": 185400,
+      "isOriginal": true,
+      "isApproved": true,
+      "createdAt": "2026-10-20T00:00:00.000Z"
+    },
+    {
+      "id": "asset-gal-2",
+      "src": "/images/gallery-2.jpg",
+      "filename": "gallery-2.jpg",
+      "categorySlug": "travel",
+      "title": "Suspension Bridge Geometry at Dawn",
+      "alt": "Suspension bridge perspective view at dawn",
+      "photographer": "Clara Lindqvist",
+      "sourceName": "Founding Collection",
+      "sourceUrl": "/images/gallery-2.jpg",
+      "licenseType": "Permanent Collection",
+      "licenseUrl": "",
+      "licenseVerifiedAt": "2026-10-20T00:00:00.000Z",
+      "width": 1200,
+      "height": 800,
+      "mimeType": "image/jpeg",
+      "fileSize": 198200,
+      "isOriginal": true,
+      "isApproved": true,
+      "createdAt": "2026-10-20T00:00:00.000Z"
+    },
+    {
+      "id": "asset-gal-3",
+      "src": "/images/gallery-3.jpg",
+      "filename": "gallery-3.jpg",
+      "categorySlug": "architecture",
+      "title": "Angular Facade Rhythms",
+      "alt": "Geometric angular modern building facade",
+      "photographer": "Marcus Vance",
+      "sourceName": "Founding Collection",
+      "sourceUrl": "/images/gallery-3.jpg",
+      "licenseType": "Permanent Collection",
+      "licenseUrl": "",
+      "licenseVerifiedAt": "2026-10-20T00:00:00.000Z",
+      "width": 1200,
+      "height": 800,
+      "mimeType": "image/jpeg",
+      "fileSize": 215600,
+      "isOriginal": true,
+      "isApproved": true,
+      "createdAt": "2026-10-20T00:00:00.000Z"
+    },
+    {
+      "id": "asset-gal-4",
+      "src": "/images/gallery-4.jpg",
+      "filename": "gallery-4.jpg",
+      "categorySlug": "architecture",
+      "title": "Curvilinear Verticality Glass Grid",
+      "alt": "Curved skyscraper glass window grid reflections",
+      "photographer": "Marcus Vance",
+      "sourceName": "Founding Collection",
+      "sourceUrl": "/images/gallery-4.jpg",
+      "licenseType": "Permanent Collection",
+      "licenseUrl": "",
+      "licenseVerifiedAt": "2026-10-20T00:00:00.000Z",
+      "width": 1200,
+      "height": 800,
+      "mimeType": "image/jpeg",
+      "fileSize": 178900,
+      "isOriginal": true,
+      "isApproved": true,
+      "createdAt": "2026-10-20T00:00:00.000Z"
+    },
+    {
+      "id": "media-kyoto-pavilions",
+      "src": "/images/library/travel-kyoto-pavilions.jpg",
+      "filename": "travel-kyoto-pavilions.jpg",
+      "categorySlug": "travel",
+      "title": "Timber and Moss: Whispering Kyoto Pavilions",
+      "alt": "Traditional Japanese wooden pavilion amidst cedar trees and moss gardens in Kyoto",
+      "photographer": "Su San Lee",
+      "sourceName": "Unsplash",
+      "sourceUrl": "https://unsplash.com/photos/g3vhDgNQkEQ",
+      "licenseType": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license",
+      "licenseVerifiedAt": "2026-10-20T08:25:00.000Z",
+      "width": 1200,
+      "height": 801,
+      "mimeType": "image/jpeg",
+      "fileSize": 250100,
+      "isOriginal": false,
+      "isApproved": true,
+      "createdAt": "2026-10-20T08:25:00.000Z"
+    },
+    {
+      "id": "media-aegean-dwellings",
+      "src": "/images/library/travel-aegean-dwellings.jpg",
+      "filename": "travel-aegean-dwellings.jpg",
+      "categorySlug": "travel",
+      "title": "Limestone Horizons: Vernacular Aegean Coastal Dwellings",
+      "alt": "Whitewashed cubic architecture and stone terraces overlooking the Aegean sea",
+      "photographer": "Jonathan Gallegos",
+      "sourceName": "Unsplash",
+      "sourceUrl": "https://unsplash.com/photos/G2-i16Hw80s",
+      "licenseType": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license",
+      "licenseVerifiedAt": "2026-10-20T08:25:00.000Z",
+      "width": 1200,
+      "height": 831,
+      "mimeType": "image/jpeg",
+      "fileSize": 217243,
+      "isOriginal": false,
+      "isApproved": true,
+      "createdAt": "2026-10-20T08:25:00.000Z"
+    },
+    {
+      "id": "media-spatial-dimensions",
+      "src": "/images/library/art-spatial-dimensions.jpg",
+      "filename": "art-spatial-dimensions.jpg",
+      "categorySlug": "art",
+      "title": "Monochrome Volume: Spatial Sculpture in White Cube Gallery",
+      "alt": "Monochromatic minimalist sculptural volume displayed in a serene contemporary gallery space",
+      "photographer": "Birmingham Museums Trust",
+      "sourceName": "Unsplash",
+      "sourceUrl": "https://unsplash.com/photos/wud-95e0bks",
+      "licenseType": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license",
+      "licenseVerifiedAt": "2026-10-20T08:25:00.000Z",
+      "width": 1200,
+      "height": 1707,
+      "mimeType": "image/jpeg",
+      "fileSize": 453480,
+      "isOriginal": false,
+      "isApproved": true,
+      "createdAt": "2026-10-20T08:25:00.000Z"
+    },
+    {
+      "id": "media-kinetic-shadows",
+      "src": "/images/library/art-kinetic-shadows.jpg",
+      "filename": "art-kinetic-shadows.jpg",
+      "categorySlug": "art",
+      "title": "Light as Medium: Chromatic Spectrum & Spatial Projections",
+      "alt": "Dynamic geometric light installation casting gradients of color in an exhibition space",
+      "photographer": "Jr Korpa",
+      "sourceName": "Unsplash",
+      "sourceUrl": "https://unsplash.com/photos/9XngoIpxcEo",
+      "licenseType": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license",
+      "licenseVerifiedAt": "2026-10-20T08:25:00.000Z",
+      "width": 1200,
+      "height": 800,
+      "mimeType": "image/jpeg",
+      "fileSize": 186598,
+      "isOriginal": false,
+      "isApproved": true,
+      "createdAt": "2026-10-20T08:25:00.000Z"
+    },
+    {
+      "id": "media-slow-harvest",
+      "src": "/images/library/food-slow-harvest.jpg",
+      "filename": "food-slow-harvest.jpg",
+      "categorySlug": "food",
+      "title": "Ancient Grains and Sourdough: The Geometry of Bread",
+      "alt": "Freshly baked artisan sourdough loaf with deep rustic crust and dusted flour on dark stone",
+      "photographer": "Wesual Click",
+      "sourceName": "Unsplash",
+      "sourceUrl": "https://unsplash.com/photos/rsWZPEAaSDU",
+      "licenseType": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license",
+      "licenseVerifiedAt": "2026-10-20T08:25:00.000Z",
+      "width": 1200,
+      "height": 798,
+      "mimeType": "image/jpeg",
+      "fileSize": 336098,
+      "isOriginal": false,
+      "isApproved": true,
+      "createdAt": "2026-10-20T08:25:00.000Z"
+    },
+    {
+      "id": "media-dashi-traditions",
+      "src": "/images/library/food-dashi-traditions.jpg",
+      "filename": "food-dashi-traditions.jpg",
+      "categorySlug": "food",
+      "title": "The Architecture of Umami: Mineral Broths & Elemental Restraint",
+      "alt": "Elemental Japanese broth with kombu sea kelp served in a minimalist ceramic bowl",
+      "photographer": "Mae Mu",
+      "sourceName": "Unsplash",
+      "sourceUrl": "https://unsplash.com/photos/PvAAYZx-ykE",
+      "licenseType": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license",
+      "licenseVerifiedAt": "2026-10-20T08:25:00.000Z",
+      "width": 1200,
+      "height": 800,
+      "mimeType": "image/jpeg",
+      "fileSize": 240815,
+      "isOriginal": false,
+      "isApproved": true,
+      "createdAt": "2026-10-20T08:25:00.000Z"
+    },
+    {
+      "id": "media-hero-food",
+      "src": "/images/library/hero-food-gastronomy.jpg",
+      "filename": "hero-food-gastronomy.jpg",
+      "categorySlug": "food",
+      "title": "Artisanal Gastronomy & Culinary Plating Architecture",
+      "alt": "Elegantly plated modern gastronomy dish showcasing culinary craftsmanship on textured dark slate",
+      "photographer": "Jay Wennington",
+      "sourceName": "Unsplash",
+      "sourceUrl": "https://unsplash.com/photos/N_Y88TWmGwA",
+      "licenseType": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license",
+      "licenseVerifiedAt": "2026-10-20T08:25:00.000Z",
+      "width": 1200,
+      "height": 800,
+      "mimeType": "image/jpeg",
+      "fileSize": 165964,
+      "isOriginal": false,
+      "isApproved": true,
+      "createdAt": "2026-10-20T08:25:00.000Z"
+    },
+    {
+      "id": "media-hero-art",
+      "src": "/images/library/hero-art-exhibition.jpg",
+      "filename": "hero-art-exhibition.jpg",
+      "categorySlug": "art",
+      "title": "Contemporary Museum Architecture & Spatial Atrium",
+      "alt": "Sunlit museum atrium with skylight and minimalist contemporary sculpture installation",
+      "photographer": "Stephanie Klepacki",
+      "sourceName": "Unsplash",
+      "sourceUrl": "https://unsplash.com/photos/gODb9ceDTkM",
+      "licenseType": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license",
+      "licenseVerifiedAt": "2026-10-20T08:25:00.000Z",
+      "width": 1200,
+      "height": 800,
+      "mimeType": "image/jpeg",
+      "fileSize": 90333,
+      "isOriginal": false,
+      "isApproved": true,
+      "createdAt": "2026-10-20T08:25:00.000Z"
     }
   ]
 }

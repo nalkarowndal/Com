@@ -35,9 +35,10 @@ async function initFileDb() {
     const raw = await fs.readFile(PERSISTENT_DB_FILE, 'utf-8');
     fileDbCache = JSON.parse(raw);
     // Ensure all collections exist
-    if (!fileDbCache.categories) {
+    if (!fileDbCache.categories || !fileDbCache.mediaAssets) {
       const seed = await loadSeedData();
-      fileDbCache.categories = seed.categories || [];
+      fileDbCache.categories = seed.categories || fileDbCache.categories || [];
+      fileDbCache.mediaAssets = seed.mediaAssets || fileDbCache.mediaAssets || [];
       fileDbCache.articles = seed.articles || fileDbCache.articles;
       fileDbCache.gallery = seed.gallery || fileDbCache.gallery;
       await saveFileDb();
@@ -174,6 +175,37 @@ async function seedPostgres(client, data) {
     }
   }
 
+  // 7. Media Assets
+  if (Array.isArray(data.mediaAssets)) {
+    for (const m of data.mediaAssets) {
+      await client.query(
+        `INSERT INTO media_assets (id, src, filename, category_slug, title, alt, photographer, source_name, source_url, license_type, license_url, license_verified_at, width, height, mime_type, file_size, is_original, is_approved)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+         ON CONFLICT (id) DO NOTHING`,
+        [
+          m.id,
+          m.src,
+          m.filename || path.basename(m.src),
+          m.categorySlug || 'architecture',
+          m.title || m.alt,
+          m.alt,
+          m.photographer || 'PRISM Archive',
+          m.sourceName || 'Internal',
+          m.sourceUrl || m.src,
+          m.licenseType || 'Editorial Rights',
+          m.licenseUrl || '',
+          m.licenseVerifiedAt || null,
+          m.width || 0,
+          m.height || 0,
+          m.mimeType || 'image/jpeg',
+          m.fileSize || 0,
+          Boolean(m.isOriginal),
+          m.isApproved !== false
+        ]
+      );
+    }
+  }
+
   console.info('[Storage] PostgreSQL seeded successfully.');
 }
 
@@ -201,7 +233,11 @@ export async function initDatabase() {
         const mig2 = path.resolve(__dirname, '../../db/migrations/002_multipage_extension.sql');
         const mig2Sql = await fs.readFile(mig2, 'utf-8');
         await client.query(mig2Sql);
-        console.info('[Storage] PostgreSQL migrations 001 & 002 executed.');
+
+        const mig3 = path.resolve(__dirname, '../../db/migrations/003_media_system_enhancement.sql');
+        const mig3Sql = await fs.readFile(mig3, 'utf-8');
+        await client.query(mig3Sql);
+        console.info('[Storage] PostgreSQL migrations 001, 002 & 003 executed.');
 
         // Seed initial data if empty
         const seedData = await loadSeedData();

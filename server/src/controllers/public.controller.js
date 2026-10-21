@@ -191,6 +191,27 @@ export class PublicController {
       next(err);
     }
   }
+
+  async getMedia(req, res, next) {
+    try {
+      const { category, search, page = 1, limit = 50 } = req.query;
+      const result = await contentService.getMediaAssets({
+        category,
+        search,
+        isApproved: true,
+        page: parseInt(page, 10) || 1,
+        limit: Math.min(100, parseInt(limit, 10) || 50)
+      });
+      res.json({
+        success: true,
+        data: result.items,
+        pagination: result.pagination,
+        meta: { timestamp: new Date().toISOString() }
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 export const publicController = new PublicController();

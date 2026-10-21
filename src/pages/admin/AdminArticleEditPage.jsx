@@ -4,7 +4,10 @@ import LoadingSpinner from '../../components/common/LoadingSpinner';
 import {
   fetchArticles,
   apiAdminCreateArticle,
-  apiAdminUpdateArticle
+  apiAdminUpdateArticle,
+  apiAdminGetMedia,
+  apiAdminRecommendMedia,
+  apiAdminRollbackMedia
 } from '../../services/api';
 
 export default function AdminArticleEditPage() {
@@ -27,10 +30,32 @@ export default function AdminArticleEditPage() {
     isDemo: true
   });
 
+  const [availableMedia, setAvailableMedia] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
+  const [recommending, setRecommending] = useState(false);
+  const [recommendNotice, setRecommendNotice] = useState(null);
+
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  const [actionNotice, setActionNotice] = useState(null);
 
+  // Load available media assets from API
+  useEffect(() => {
+    let isMounted = true;
+    async function loadMediaLibrary() {
+      try {
+        const res = await apiAdminGetMedia({ limit: 100 });
+        if (isMounted) setAvailableMedia(res.items || []);
+      } catch (err) {
+        console.warn('Could not load media library:', err);
+      }
+    }
+    loadMediaLibrary();
+    return () => { isMounted = false; };
+  }, []);
+
+  // Load article data if editing
   useEffect(() => {
     if (isNew) return;
 
@@ -92,6 +117,64 @@ export default function AdminArticleEditPage() {
     });
   };
 
+  const handleRecommendMedia = async () => {
+    if (!formData.title && !formData.content) {
+      alert('Please provide a monograph title or content before requesting recommendations.');
+      return;
+    }
+
+    setRecommending(true);
+    setRecommendNotice(null);
+    try {
+      const recs = await apiAdminRecommendMedia({
+        title: formData.title,
+        content: formData.content,
+        tags: formData.tags,
+        categorySlug: formData.categorySlug
+      });
+      setRecommendations(recs || []);
+      if (recs && recs.length > 0) {
+        setRecommendNotice(`Discovered ${recs.length} relevant photographic candidates for "${formData.title}".`);
+      } else {
+        setRecommendNotice('No direct keyword matches found. Showing general discipline photography.');
+      }
+    } catch (err) {
+      setRecommendNotice(`Recommendation failed: ${err.message}`);
+    } finally {
+      setRecommending(false);
+    }
+  };
+
+  const handleApplyRecommendation = (rec) => {
+    const asset = rec.asset;
+    setFormData((prev) => ({
+      ...prev,
+      imageSrc: asset.src
+    }));
+    setActionNotice({ type: 'success', text: `Assigned photography: "${asset.title}" (${asset.photographer})` });
+    setTimeout(() => setActionNotice(null), 3500);
+  };
+
+  const handleRollbackToBaseline = async () => {
+    if (isNew) {
+      setFormData((prev) => ({ ...prev, imageSrc: '/images/hero.jpg' }));
+      return;
+    }
+
+    if (!window.confirm('Reset this article\'s image to the permanent baseline asset (/images/hero.jpg)?')) {
+      return;
+    }
+
+    try {
+      await apiAdminRollbackMedia({ targetType: 'article', targetId: id });
+      setFormData((prev) => ({ ...prev, imageSrc: '/images/hero.jpg' }));
+      setActionNotice({ type: 'success', text: 'Monograph cover image rolled back to baseline (/images/hero.jpg).' });
+      setTimeout(() => setActionNotice(null), 3500);
+    } catch (err) {
+      alert(`Rollback failed: ${err.message}`);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -110,6 +193,9 @@ export default function AdminArticleEditPage() {
       setSaving(false);
     }
   };
+
+  // Find currently selected asset details for live preview
+  const currentAsset = availableMedia.find((m) => m.src === formData.imageSrc);
 
   if (loading) {
     return (
@@ -137,6 +223,12 @@ export default function AdminArticleEditPage() {
           </Link>
         </div>
       </div>
+
+      {actionNotice && (
+        <div className={`admin-alert-${actionNotice.type}`} role="alert">
+          {actionNotice.text}
+        </div>
+      )}
 
       {error && (
         <div className="admin-alert-error" role="alert">
@@ -214,20 +306,131 @@ export default function AdminArticleEditPage() {
           </div>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="article-image">Cover Image Path / URL</label>
-          <select
-            id="article-image"
-            name="imageSrc"
-            value={formData.imageSrc}
-            onChange={handleChange}
-          >
-            <option value="/images/hero.jpg">/images/hero.jpg (Architectural Facade)</option>
-            <option value="/images/gallery-1.jpg">/images/gallery-1.jpg (Concrete Spiral)</option>
-            <option value="/images/gallery-2.jpg">/images/gallery-2.jpg (Suspension Bridge)</option>
-            <option value="/images/gallery-3.jpg">/images/gallery-3.jpg (Angular Pavilion)</option>
-            <option value="/images/gallery-4.jpg">/images/gallery-4.jpg (Curved Glass Tower)</option>
-          </select>
+        {/* Enhanced Media Curation & Recommendation Section */}
+        <div className="form-media-curation-box">
+          <div className="curation-box-header">
+            <div>
+              <label htmlFor="article-image" className="curation-box-title">
+                Cover Photography & Media Curation
+              </label>
+              <p className="curation-box-desc">
+                Select an editorial asset or run AI keyword matching against the curated library.
+              </p>
+            </div>
+
+            <div className="curation-header-actions">
+              <button
+                type="button"
+                className="btn-admin-recommend"
+                onClick={handleRecommendMedia}
+                disabled={recommending}
+              >
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                </svg>
+                <span>{recommending ? 'Analyzing Monograph...' : 'Suggest Media'}</span>
+              </button>
+
+              <button
+                type="button"
+                className="btn-admin-rollback"
+                onClick={handleRollbackToBaseline}
+                title="Reset to permanent baseline /images/hero.jpg"
+              >
+                Rollback to Baseline
+              </button>
+            </div>
+          </div>
+
+          {recommendNotice && (
+            <div className="curation-notice">
+              {recommendNotice}
+            </div>
+          )}
+
+          {/* Recommendations Shelf */}
+          {recommendations.length > 0 && (
+            <div className="recommendations-shelf">
+              <h4 className="shelf-title">Curated Matches:</h4>
+              <div className="shelf-grid">
+                {recommendations.map((rec, idx) => (
+                  <div
+                    key={rec.asset.id || idx}
+                    className={`shelf-item ${formData.imageSrc === rec.asset.src ? 'active-selection' : ''}`}
+                    onClick={() => handleApplyRecommendation(rec)}
+                  >
+                    <div className="shelf-thumb">
+                      <img src={rec.asset.src} alt={rec.asset.title} />
+                      <span className="shelf-score">Score: {rec.score}</span>
+                    </div>
+                    <div className="shelf-details">
+                      <h5>{rec.asset.title}</h5>
+                      <p className="shelf-photog">By {rec.asset.photographer}</p>
+                      <p className="shelf-reason">{rec.matchReason}</p>
+                      <button
+                        type="button"
+                        className="btn-apply-rec"
+                        onClick={(e) => { e.stopPropagation(); handleApplyRecommendation(rec); }}
+                      >
+                        {formData.imageSrc === rec.asset.src ? '✓ Selected' : 'Apply Photography'}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Media Select Dropdown and Live Preview */}
+          <div className="form-media-selector-row">
+            <div className="form-group flex-1">
+              <label htmlFor="article-image">Active Image Path</label>
+              <select
+                id="article-image"
+                name="imageSrc"
+                value={formData.imageSrc}
+                onChange={handleChange}
+              >
+                <optgroup label="Permanent Baseline Invariants">
+                  <option value="/images/hero.jpg">/images/hero.jpg — Urban Strorkes (Sebastian Weiss)</option>
+                  <option value="/images/gallery-1.jpg">/images/gallery-1.jpg — Concrete Spiral Staircase</option>
+                  <option value="/images/gallery-2.jpg">/images/gallery-2.jpg — Suspension Bridge at Dawn</option>
+                  <option value="/images/gallery-3.jpg">/images/gallery-3.jpg — Angular Modern Pavilion</option>
+                  <option value="/images/gallery-4.jpg">/images/gallery-4.jpg — Curved Skyscraper Reflections</option>
+                </optgroup>
+
+                {availableMedia.filter((m) => !m.isOriginal).length > 0 && (
+                  <optgroup label="Curated Library Photography">
+                    {availableMedia
+                      .filter((m) => !m.isOriginal)
+                      .map((m) => (
+                        <option key={m.id} value={m.src}>
+                          {m.src} — {m.title} ({m.photographer})
+                        </option>
+                      ))}
+                  </optgroup>
+                )}
+              </select>
+            </div>
+
+            {/* Live Media Card Preview */}
+            <div className="media-live-preview-box">
+              <div className="preview-thumb">
+                <img src={formData.imageSrc} alt="Selected cover preview" />
+              </div>
+              <div className="preview-meta">
+                <span className="preview-filename">{formData.imageSrc.split('/').pop()}</span>
+                {currentAsset ? (
+                  <>
+                    <span className="preview-author">Photo: {currentAsset.photographer}</span>
+                    <span className="preview-license">{currentAsset.licenseType}</span>
+                  </>
+                ) : (
+                  <span className="preview-author">Baseline Monograph</span>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="form-group">

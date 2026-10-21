@@ -2,7 +2,7 @@ import { contentRepository } from '../repositories/content.repository.js';
 
 export class ContentService {
   async getHomePayload() {
-    const [site, navigation, articlesData, cards, gallery, footer] = await Promise.all([
+    const [site, navigation, articlesData, cards, galleryItems, footer] = await Promise.all([
       contentRepository.getSiteSettings(),
       contentRepository.getNavigation(),
       contentRepository.getArticles({ limit: 10 }),
@@ -13,6 +13,7 @@ export class ContentService {
 
     const articles = articlesData.items || articlesData;
     const hero = articles.find((a) => a.isFeatured) || articles[0];
+    const gallery = (galleryItems || []).slice(0, 4);
 
     return {
       site,
@@ -97,6 +98,55 @@ export class ContentService {
 
   async getAdminStats() {
     return contentRepository.getAdminStats();
+  }
+
+  // ==========================================
+  // Media Service Methods
+  // ==========================================
+  async getMediaAssets(params = {}) {
+    return contentRepository.getMediaAssets(params);
+  }
+
+  async getMediaAssetById(id) {
+    return contentRepository.getMediaAssetById(id);
+  }
+
+  async createMediaAsset(data, performedBy = 'admin') {
+    const created = await contentRepository.createMediaAsset(data);
+    await contentRepository.createAuditLog('CREATE_MEDIA', 'media', created.id, data, performedBy);
+    return created;
+  }
+
+  async updateMediaAsset(id, updates, performedBy = 'admin') {
+    const updated = await contentRepository.updateMediaAsset(id, updates);
+    if (updated) {
+      await contentRepository.createAuditLog('UPDATE_MEDIA', 'media', id, updates, performedBy);
+    }
+    return updated;
+  }
+
+  async deleteMediaAsset(id, performedBy = 'admin') {
+    const res = await contentRepository.deleteMediaAsset(id);
+    if (res.success) {
+      await contentRepository.createAuditLog('DELETE_MEDIA', 'media', id, { deleted: true }, performedBy);
+    }
+    return res;
+  }
+
+  async detectDuplicateMedia(params) {
+    return contentRepository.detectDuplicateMedia(params);
+  }
+
+  async rollbackEntityMedia(targetType, targetId, performedBy = 'admin') {
+    const res = await contentRepository.rollbackEntityMedia(targetType, targetId);
+    if (res) {
+      await contentRepository.createAuditLog('ROLLBACK_MEDIA', targetType, targetId, { restoredToBaseline: true }, performedBy);
+    }
+    return res;
+  }
+
+  async recommendMedia(params) {
+    return contentRepository.recommendMedia(params);
   }
 }
 

@@ -93,7 +93,7 @@ export default function TravelPage() {
           <section className="travel-hero-panorama" aria-label="Featured Travel Expedition">
             <div className="travel-panorama-inner">
               <img
-                src={featuredStory.imageSrc || '/images/gallery-2.jpg'}
+                src={featuredStory.imageSrc || category?.heroImage || '/images/library/travel-kyoto-pavilions.jpg'}
                 alt={featuredStory.title}
                 className="travel-panorama-img"
               />
@@ -238,11 +238,11 @@ export default function TravelPage() {
               <span>Steel in Amber Mist</span>
             </div>
             <div className="strip-item">
-              <img src="/images/gallery-3.jpg" alt="Pavilion timber reflections" />
+              <img src="/images/library/travel-kyoto-pavilions.jpg" alt="Pavilion timber reflections" />
               <span>Cypress Sanctuary</span>
             </div>
             <div className="strip-item">
-              <img src="/images/gallery-1.jpg" alt="Aegean lime terraces" />
+              <img src="/images/library/travel-aegean-dwellings.jpg" alt="Aegean lime terraces" />
               <span>Limestone & Sea</span>
             </div>
           </div>

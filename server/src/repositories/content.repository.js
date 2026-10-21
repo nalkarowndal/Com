@@ -1,3 +1,4 @@
+import path from 'path';
 import { getFileDbCache, saveFileDb, getPgPool, getDbStatus } from '../config/database.js';
 
 export class ContentRepository {
@@ -431,6 +432,8 @@ export class ContentRepository {
       categoryCounts[c.slug] = articles.filter((a) => a.categorySlug === c.slug).length;
     });
 
+    const media = db.mediaAssets || [];
+
     return {
       totalArticles: articles.length,
       publishedArticles: articles.filter((a) => a.isPublished !== false).length,
@@ -438,8 +441,312 @@ export class ContentRepository {
       totalCategories: categories.length,
       totalGalleryItems: gallery.length,
       totalAuditLogs: logs.length,
+      totalMediaAssets: media.length,
       categoryBreakdown: categoryCounts
     };
+  }
+
+  // ==========================================
+  // Media Asset Management
+  // ==========================================
+  async getMediaAssets({ category = null, search = null, isApproved = null, isOriginal = null, page = 1, limit = 50 } = {}) {
+    const status = getDbStatus();
+    if (status.activeEngine === 'postgres') {
+      const pool = getPgPool();
+      const conditions = [];
+      const values = [];
+
+      if (category && category !== 'all') {
+        values.push(category);
+        conditions.push(`category_slug = $${values.length}`);
+      }
+      if (search) {
+        values.push(`%${search}%`);
+        conditions.push(`(title ILIKE $${values.length} OR alt ILIKE $${values.length} OR photographer ILIKE $${values.length} OR filename ILIKE $${values.length})`);
+      }
+      if (isApproved !== null) {
+        values.push(Boolean(isApproved));
+        conditions.push(`is_approved = $${values.length}`);
+      }
+      if (isOriginal !== null) {
+        values.push(Boolean(isOriginal));
+        conditions.push(`is_original = $${values.length}`);
+      }
+
+      const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+      const countRes = await pool.query(`SELECT COUNT(*) FROM media_assets ${whereClause}`, values);
+      const total = parseInt(countRes.rows[0].count, 10);
+      const totalPages = Math.ceil(total / limit) || 1;
+      const offset = (page - 1) * limit;
+
+      const queryValues = [...values, limit, offset];
+      const query = `
+        SELECT * FROM media_assets
+        ${whereClause}
+        ORDER BY is_original DESC, created_at DESC
+        LIMIT $${values.length + 1} OFFSET $${values.length + 2}
+      `;
+      const res = await pool.query(query, queryValues);
+      const items = res.rows.map(r => ({
+        id: r.id,
+        src: r.src,
+        filename: r.filename,
+        categorySlug: r.category_slug,
+        title: r.title,
+        alt: r.alt,
+        photographer: r.photographer,
+        sourceName: r.source_name,
+        sourceUrl: r.source_url,
+        licenseType: r.license_type,
+        licenseUrl: r.license_url,
+        licenseVerifiedAt: r.license_verified_at,
+        width: r.width,
+        height: r.height,
+        mimeType: r.mime_type,
+        fileSize: r.file_size,
+        isOriginal: r.is_original,
+        isApproved: r.is_approved,
+        createdAt: r.created_at
+      }));
+
+      return { items, pagination: { page, limit, total, totalPages } };
+    }
+
+    const db = getFileDbCache();
+    let media = [...(db.mediaAssets || [])];
+
+    if (category && category !== 'all') {
+      media = media.filter(m => m.categorySlug === category);
+    }
+    if (search) {
+      const q = search.toLowerCase();
+      media = media.filter(m =>
+        (m.title && m.title.toLowerCase().includes(q)) ||
+        (m.alt && m.alt.toLowerCase().includes(q)) ||
+        (m.photographer && m.photographer.toLowerCase().includes(q)) ||
+        (m.filename && m.filename.toLowerCase().includes(q))
+      );
+    }
+    if (isApproved !== null) {
+      const approvedBool = isApproved === 'true' || isApproved === true;
+      media = media.filter(m => Boolean(m.isApproved) === approvedBool);
+    }
+    if (isOriginal !== null) {
+      const originalBool = isOriginal === 'true' || isOriginal === true;
+      media = media.filter(m => Boolean(m.isOriginal) === originalBool);
+    }
+
+    media.sort((a, b) => (b.isOriginal ? 1 : 0) - (a.isOriginal ? 1 : 0));
+    const total = media.length;
+    const totalPages = Math.ceil(total / limit) || 1;
+    const offset = (page - 1) * limit;
+    const items = media.slice(offset, offset + limit);
+
+    return { items, pagination: { page, limit, total, totalPages } };
+  }
+
+  async getMediaAssetById(id) {
+    const db = getFileDbCache();
+    const asset = (db.mediaAssets || []).find(m => m.id === id || m.filename === id);
+    if (!asset) return null;
+
+    // Calculate usage references
+    const articles = (db.articles || [])
+      .filter(a => a.coverImageId === asset.id || a.imageSrc === asset.src)
+      .map(a => ({ id: a.id, slug: a.slug, title: a.title, categorySlug: a.categorySlug }));
+
+    const categories = (db.categories || [])
+      .filter(c => c.heroImageId === asset.id || c.heroImage === asset.src)
+      .map(c => ({ id: c.id, slug: c.slug, name: c.name }));
+
+    const gallery = (db.gallery || [])
+      .filter(g => g.mediaAssetId === asset.id || g.src === asset.src)
+      .map(g => ({ id: g.id, title: g.title, categorySlug: g.categorySlug }));
+
+    return {
+      ...asset,
+      usage: {
+        articles,
+        categories,
+        gallery,
+        totalUsage: articles.length + categories.length + gallery.length
+      }
+    };
+  }
+
+  async createMediaAsset(data) {
+    const asset = {
+      id: data.id || `media-${Date.now()}`,
+      src: data.src,
+      filename: data.filename || path.basename(data.src),
+      categorySlug: data.categorySlug || 'architecture',
+      title: data.title || '',
+      alt: data.alt || '',
+      photographer: data.photographer || 'PRISM Archive',
+      sourceName: data.sourceName || 'Internal',
+      sourceUrl: data.sourceUrl || data.src,
+      licenseType: data.licenseType || 'Editorial Rights',
+      licenseUrl: data.licenseUrl || '',
+      licenseVerifiedAt: data.licenseVerifiedAt || new Date().toISOString(),
+      width: Number(data.width) || 0,
+      height: Number(data.height) || 0,
+      mimeType: data.mimeType || 'image/jpeg',
+      fileSize: Number(data.fileSize) || 0,
+      isOriginal: Boolean(data.isOriginal),
+      isApproved: data.isApproved !== false,
+      createdAt: new Date().toISOString()
+    };
+
+    const status = getDbStatus();
+    if (status.activeEngine === 'postgres') {
+      const pool = getPgPool();
+      await pool.query(
+        `INSERT INTO media_assets (id, src, filename, category_slug, title, alt, photographer, source_name, source_url, license_type, license_url, license_verified_at, width, height, mime_type, file_size, is_original, is_approved, created_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)`,
+        [
+          asset.id, asset.src, asset.filename, asset.categorySlug, asset.title, asset.alt,
+          asset.photographer, asset.sourceName, asset.sourceUrl, asset.licenseType, asset.licenseUrl,
+          asset.licenseVerifiedAt, asset.width, asset.height, asset.mimeType, asset.fileSize,
+          asset.isOriginal, asset.isApproved, asset.createdAt
+        ]
+      );
+    }
+
+    const db = getFileDbCache();
+    if (!db.mediaAssets) db.mediaAssets = [];
+    db.mediaAssets.unshift(asset);
+    await saveFileDb();
+    return asset;
+  }
+
+  async updateMediaAsset(id, updates) {
+    const db = getFileDbCache();
+    const asset = (db.mediaAssets || []).find(m => m.id === id);
+    if (!asset) return null;
+
+    if (asset.isOriginal && updates.isOriginal === false) {
+      delete updates.isOriginal;
+    }
+
+    Object.assign(asset, updates);
+
+    const status = getDbStatus();
+    if (status.activeEngine === 'postgres') {
+      const pool = getPgPool();
+      await pool.query(
+        `UPDATE media_assets SET
+          category_slug = COALESCE($1, category_slug),
+          title = COALESCE($2, title),
+          alt = COALESCE($3, alt),
+          photographer = COALESCE($4, photographer),
+          license_type = COALESCE($5, license_type),
+          license_url = COALESCE($6, license_url),
+          is_approved = COALESCE($7, is_approved)
+         WHERE id = $8`,
+        [
+          updates.categorySlug, updates.title, updates.alt, updates.photographer,
+          updates.licenseType, updates.licenseUrl, updates.isApproved, id
+        ]
+      );
+    }
+
+    await saveFileDb();
+    return asset;
+  }
+
+  async deleteMediaAsset(id) {
+    const db = getFileDbCache();
+    const idx = (db.mediaAssets || []).findIndex(m => m.id === id);
+    if (idx === -1) return { success: false, reason: 'NOT_FOUND' };
+
+    const asset = db.mediaAssets[idx];
+    if (asset.isOriginal) {
+      return { success: false, reason: 'ORIGINAL_PROTECTED', message: 'Original baseline asset is permanent and protected.' };
+    }
+
+    db.mediaAssets.splice(idx, 1);
+
+    const status = getDbStatus();
+    if (status.activeEngine === 'postgres') {
+      const pool = getPgPool();
+      await pool.query('DELETE FROM media_assets WHERE id = $1', [id]);
+    }
+
+    await saveFileDb();
+    return { success: true };
+  }
+
+  async detectDuplicateMedia({ filename, fileSize }) {
+    const db = getFileDbCache();
+    const match = (db.mediaAssets || []).find(m =>
+      (fileSize && m.fileSize === Number(fileSize)) ||
+      (filename && m.filename.toLowerCase() === filename.toLowerCase())
+    );
+    return match || null;
+  }
+
+  async rollbackEntityMedia(targetType, targetId) {
+    const db = getFileDbCache();
+    if (targetType === 'article') {
+      const article = (db.articles || []).find(a => a.id === targetId || a.slug === targetId);
+      if (!article) return null;
+      article.imageSrc = '/images/hero.jpg';
+      article.coverImageId = 'asset-hero';
+      await saveFileDb();
+      return article;
+    } else if (targetType === 'category') {
+      const cat = (db.categories || []).find(c => c.id === targetId || c.slug === targetId);
+      if (!cat) return null;
+      cat.heroImage = '/images/hero.jpg';
+      cat.heroImageId = 'asset-hero';
+      await saveFileDb();
+      return cat;
+    }
+    return null;
+  }
+
+  async recommendMedia({ title = '', content = '', tags = '', categorySlug = '' }) {
+    const db = getFileDbCache();
+    const assets = (db.mediaAssets || []).filter(m => m.isApproved !== false);
+
+    const queryTokens = `${title} ${tags} ${categorySlug} ${content.slice(0, 300)}`
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .filter(w => w.length > 2);
+
+    const scored = assets.map(asset => {
+      let score = 0;
+      const reasons = [];
+
+      if (asset.categorySlug && asset.categorySlug.toLowerCase() === categorySlug.toLowerCase()) {
+        score += 30;
+        reasons.push(`Category match (${asset.categorySlug})`);
+      }
+
+      const targetText = `${asset.title || ''} ${asset.alt || ''} ${asset.filename || ''} ${asset.categorySlug || ''}`.toLowerCase();
+      const matchedWords = [];
+
+      queryTokens.forEach(token => {
+        if (targetText.includes(token)) {
+          score += 10;
+          if (!matchedWords.includes(token)) matchedWords.push(token);
+        }
+      });
+
+      if (matchedWords.length > 0) {
+        reasons.push(`Matched keywords: ${matchedWords.slice(0, 4).join(', ')}`);
+      }
+
+      return {
+        asset,
+        score,
+        matchReason: reasons.join('; ') || 'General thematic candidate'
+      };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+    return scored.slice(0, 6);
   }
 }
 
