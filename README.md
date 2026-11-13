@@ -46,15 +46,64 @@
 
 ---
 
-## 🔐 보안 및 인증 아키텍처
+## 🔐 보안 및 인증 아키텍처 (M29~M34 Google & Kakao 소셜 로그인 통합)
 
 1. **단방향 암호화**: `crypto.scryptSync` (16바이트 난수 솔트, 64바이트 파생 키).
 2. **타이밍 공격 방어**: `crypto.timingSafeEqual` 비교.
 3. **세션 보안**: HttpOnly Cookie 및 HMAC-SHA256 서명 JWT (24시간 만료).
-4. **CORS & CSP**: 허가된 클라이언트 오리진으로 제한.
-5. **관리자 계정**:
+4. **CORS & CSP**: 허가된 클라이언트 오리진으로 제한 (`http://localhost:5173`).
+5. **소셜 인증 (OAuth 2.0 & GIS)**:
+   - **Google Identity Services**: Google 공식 GSI 클라이언트 라이브러리 및 다색 G 로고 버튼 적용. 서버 측 ID Token 서명, 발행자, 만료 검증.
+   - **Kakao Login**: 공식 `#FEE500` 배경, 12px 모서리 반경, 공식 말풍선 심볼, 85% 블랙 텍스트 적용. 인가 코드 교환 및 프로필 동기화.
+   - **RBAC 보안**: 소셜 로그인 사용자는 기본적으로 일반 독자(`USER`) 권한으로만 생성/로그인되며, 관리자(`ADMIN`) 계정으로의 무단 승격이나 자동 병합이 원천 차단됩니다.
+6. **관리자 계정**:
    - Username: `admin`
    - Access Key: `AdminSecurePassword2026!` (또는 개발 환경 `prism-admin-2026!`)
+
+---
+
+## 🛠️ 환경 변수 및 소셜 OAuth 설정 가이드
+
+`.env.example`을 참고하여 `server/.env` 파일을 설정합니다.
+
+```dotenv
+# 포트 및 오리진
+PORT=4000
+NODE_ENV=development
+CLIENT_ORIGIN=http://localhost:5173
+FRONTEND_ORIGIN=http://localhost:5173
+
+# 데이터베이스
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/company_db
+
+# 암호화 시크릿
+JWT_SECRET=super_secret_editorial_prism_company_jwt_key_2026
+SESSION_SECRET=super_secret_editorial_prism_session_key_2026
+
+# 관리자 기본 계정
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=AdminSecurePassword2026!
+
+# Google Identity Services (Google Cloud Console 발급)
+# 1. Google Cloud Console > API 및 서비스 > 사용자 인증 정보
+# 2. OAuth 2.0 클라이언트 ID (웹 애플리케이션) 생성
+# 3. 승인된 자바스크립트 원본: http://localhost:5173
+# 4. 승인된 리디렉션 URI: http://localhost:5173/oauth/callback/google
+GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# Kakao Developers (Kakao Developers 콘솔 발급)
+# 1. Kakao Developers 콘솔 > 내 애플리케이션 생성
+# 2. 앱 키 > REST API 키 복사
+# 3. 카카오 로그인 활성화 (ON)
+# 4. 카카오 로그인 > Redirect URI 등록: http://localhost:5173/oauth/callback/kakao
+# 5. 보안 > Client Secret 발급 및 활성화
+KAKAO_REST_API_KEY=your_kakao_rest_api_key
+KAKAO_CLIENT_SECRET=your_kakao_client_secret
+KAKAO_REDIRECT_URI=http://localhost:5173/oauth/callback/kakao
+```
+
+> **개발 환경 안내**: 외부 OAuth 키(`GOOGLE_CLIENT_ID`, `KAKAO_REST_API_KEY`)가 설정되지 않은 로컬 개발 환경에서도 로그인 화면에서 공식 가이드 팝업 및 '시뮬레이션 로그인' 기능을 통해 백엔드 연동과 계정 프로비저닝 흐름을 100% 테스트할 수 있습니다.
 
 ---
 

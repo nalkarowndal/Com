@@ -6,7 +6,9 @@ import {
   apiAuthRegister,
   apiAuthLogout,
   apiAuthUpdateProfile,
-  apiAuthChangePassword
+  apiAuthChangePassword,
+  apiAuthGoogle,
+  apiAuthKakao
 } from '../services/api';
 
 export function AuthProvider({ children }) {
@@ -116,6 +118,26 @@ export function AuthProvider({ children }) {
     return await apiAuthChangePassword({ currentPassword, newPassword });
   }, []);
 
+  const loginWithGoogle = useCallback(async (idToken, testProfile = null) => {
+    const data = await apiAuthGoogle(idToken, testProfile);
+    if (data?.user) {
+      setUser(data.user);
+      setRole(data.user.role || 'user');
+      setIsAuthenticated(true);
+    }
+    return data;
+  }, []);
+
+  const loginWithKakao = useCallback(async ({ code, state, redirectUri, testProfile = null }) => {
+    const data = await apiAuthKakao({ code, state, redirectUri, testProfile });
+    if (data?.user) {
+      setUser(data.user);
+      setRole(data.user.role || 'user');
+      setIsAuthenticated(true);
+    }
+    return data;
+  }, []);
+
   const value = useMemo(
     () => ({
       user,
@@ -127,9 +149,24 @@ export function AuthProvider({ children }) {
       logout,
       refreshSession,
       updateProfile,
-      changePassword
+      changePassword,
+      loginWithGoogle,
+      loginWithKakao
     }),
-    [user, role, isAuthenticated, isLoading, login, register, logout, refreshSession, updateProfile, changePassword]
+    [
+      user,
+      role,
+      isAuthenticated,
+      isLoading,
+      login,
+      register,
+      logout,
+      refreshSession,
+      updateProfile,
+      changePassword,
+      loginWithGoogle,
+      loginWithKakao
+    ]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

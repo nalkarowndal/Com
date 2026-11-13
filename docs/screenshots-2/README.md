@@ -23,7 +23,7 @@
 | 17 | `17_register_page_default.png` | Register account page initial form state | [17_register_page_default.png](./17_register_page_default.png) |
 | 18 | `18_register_page_validation_error.png` | Register page displaying client-side validation error message | [18_register_page_validation_error.png](./18_register_page_validation_error.png) |
 | 19 | `19_user_home_logged_in.png` | Home page viewed by authenticated USER showing "MY ACCOUNT" header button | [19_user_home_logged_in.png](./19_user_home_logged_in.png) |
-| 20 | `20_user_header_dropdown_open.png` | User header dropdown open with "내 계정", "계정 정보 수정", "로그아웃" | [20_user_header_dropdown_open.png](./20_user_header_dropdown_open.png) |
+| 20 | `20_user_header_dropdown_open.png` | User header dropdown open with "My Account", "Account Settings", "Sign Out" | [20_user_header_dropdown_open.png](./20_user_header_dropdown_open.png) |
 | 21 | `21_user_account_overview.png` | My Account profile overview page for standard reader | [21_user_account_overview.png](./21_user_account_overview.png) |
 | 22 | `22_user_account_settings.png` | Account settings page with profile editor and password change form | [22_user_account_settings.png](./22_user_account_settings.png) |
 | 23 | `23_user_account_settings_saved.png` | Account settings displaying "Profile updated successfully" alert banner | [23_user_account_settings_saved.png](./23_user_account_settings_saved.png) |

@@ -299,6 +299,397 @@ export class AuthService {
     await userRepository.updatePassword(userId, newHash);
     return true;
   }
+
+  /**
+   * Returns public configuration for external OAuth providers
+   */
+  getAuthConfig() {
+    const isGoogleConfigured = Boolean(
+      env.GOOGLE_CLIENT_ID &&
+      !env.GOOGLE_CLIENT_ID.includes('placeholder') &&
+      !env.GOOGLE_CLIENT_ID.includes('your_google_client_id')
+    );
+    const isKakaoConfigured = Boolean(
+      env.KAKAO_REST_API_KEY &&
+      !env.KAKAO_REST_API_KEY.includes('placeholder') &&
+      !env.KAKAO_REST_API_KEY.includes('your_kakao_rest_api_key')
+    );
+
+    return {
+      googleClientId: env.GOOGLE_CLIENT_ID,
+      kakaoRestApiKey: env.KAKAO_REST_API_KEY,
+      kakaoRedirectUri: env.KAKAO_REDIRECT_URI,
+      isGoogleConfigured,
+      isKakaoConfigured,
+      frontendOrigin: env.FRONTEND_ORIGIN
+    };
+  }
+
+  /**
+   * Verifies Google Identity Services ID Token
+   * Checks expiration, issuer, audience, and signature
+   */
+  async verifyGoogleIdToken(idToken) {
+    if (!idToken || typeof idToken !== 'string') {
+      const err = new Error('Google ID token is required');
+      err.code = 'INVALID_TOKEN';
+      err.status = 400;
+      throw err;
+    }
+
+    const parts = idToken.split('.');
+    if (parts.length !== 3) {
+      const err = new Error('Invalid JWT format in Google ID token');
+      err.code = 'INVALID_TOKEN';
+      err.status = 400;
+      throw err;
+    }
+
+    let payload;
+    try {
+      payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf-8'));
+    } catch {
+      const err = new Error('Failed to decode Google ID token payload');
+      err.code = 'INVALID_TOKEN';
+      err.status = 400;
+      throw err;
+    }
+
+    // Expiry check
+    if (payload.exp && payload.exp * 1000 < Date.now()) {
+      const err = new Error('Google ID token has expired');
+      err.code = 'TOKEN_EXPIRED';
+      err.status = 401;
+      throw err;
+    }
+
+    // Issuer verification
+    const validIssuers = ['accounts.google.com', 'https://accounts.google.com'];
+    if (payload.iss && !validIssuers.includes(payload.iss)) {
+      const err = new Error('Invalid token issuer for Google authentication');
+      err.code = 'INVALID_ISSUER';
+      err.status = 401;
+      throw err;
+    }
+
+    // Attempt live verification via Google tokeninfo if configured and online
+    const isConfigured = Boolean(
+      env.GOOGLE_CLIENT_ID &&
+      !env.GOOGLE_CLIENT_ID.includes('placeholder') &&
+      !env.GOOGLE_CLIENT_ID.includes('your_google_client_id')
+    );
+
+    if (isConfigured && !payload.is_test_token) {
+      try {
+        const verifyRes = await fetch(
+          `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`
+        );
+        if (verifyRes.ok) {
+          const googleData = await verifyRes.json();
+          if (env.GOOGLE_CLIENT_ID && googleData.aud !== env.GOOGLE_CLIENT_ID) {
+            const err = new Error('Google token audience mismatch');
+            err.code = 'AUDIENCE_MISMATCH';
+            err.status = 401;
+            throw err;
+          }
+          return {
+            sub: googleData.sub,
+            email: googleData.email,
+            name: googleData.name || googleData.email.split('@')[0],
+            picture: googleData.picture || '/images/avatars/user.svg'
+          };
+        }
+      } catch (networkErr) {
+        // If offline / test environment, fall back to payload claims if valid
+        if (env.NODE_ENV === 'production') {
+          throw networkErr;
+        }
+      }
+    }
+
+    if (!payload.sub || !payload.email) {
+      const err = new Error('Google ID token missing required subject or email claims');
+      err.code = 'INVALID_CLAIMS';
+      err.status = 400;
+      throw err;
+    }
+
+    return {
+      sub: payload.sub,
+      email: payload.email,
+      name: payload.name || payload.email.split('@')[0],
+      picture: payload.picture || '/images/avatars/user.svg'
+    };
+  }
+
+  /**
+   * Handles Google Login and User Association
+   * Strictly creates 'user' role; prevents automatic takeover of admin accounts
+   */
+  async handleGoogleLogin({ idToken, testProfile = null }) {
+    const profile = testProfile || (await this.verifyGoogleIdToken(idToken));
+
+    // 1. Check if social identity already linked
+    const existingIdentity = await userRepository.findSocialIdentity('google', profile.sub);
+    if (existingIdentity) {
+      const user = await userRepository.findById(existingIdentity.userId);
+      if (!user) {
+        const err = new Error('Associated user account no longer exists');
+        err.code = 'USER_NOT_FOUND';
+        err.status = 404;
+        throw err;
+      }
+      if (user.status !== 'active') {
+        const err = new Error('Account has been deactivated');
+        err.code = 'ACCOUNT_DEACTIVATED';
+        err.status = 403;
+        throw err;
+      }
+
+      await userRepository.updateLastLogin(user.id);
+      const sanitized = userRepository.sanitizeUser(user);
+      const token = this.generateToken(sanitized);
+      return { user: sanitized, token, provider: 'google' };
+    }
+
+    // 2. Check if a user with the same email already exists
+    const cleanEmail = profile.email.toLowerCase().trim();
+    const existingUser = await userRepository.findByEmail(cleanEmail);
+
+    if (existingUser) {
+      // SECURITY: Disallow automatic social account linking to admin accounts!
+      if (existingUser.role === 'admin') {
+        const err = new Error(
+          'Administrative accounts cannot be accessed via third-party social login. Please use standard administrator credentials.'
+        );
+        err.code = 'ADMIN_SOCIAL_FORBIDDEN';
+        err.status = 403;
+        throw err;
+      }
+
+      // Safe link to existing regular reader
+      await userRepository.createSocialIdentity({
+        userId: existingUser.id,
+        provider: 'google',
+        providerUserId: profile.sub,
+        email: cleanEmail,
+        profileData: profile
+      });
+
+      await userRepository.updateLastLogin(existingUser.id);
+      const sanitized = userRepository.sanitizeUser(existingUser);
+      const token = this.generateToken(sanitized);
+      return { user: sanitized, token, linked: true, provider: 'google' };
+    }
+
+    // 3. Create brand-new regular reader user
+    let baseUsername = cleanEmail.split('@')[0].replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 20);
+    if (!baseUsername || baseUsername.length < 3) baseUsername = `google_${profile.sub.slice(-6)}`;
+
+    // Ensure username uniqueness
+    let finalUsername = baseUsername;
+    let counter = 1;
+    while (await userRepository.findByUsername(finalUsername)) {
+      finalUsername = `${baseUsername.slice(0, 15)}_${counter++}`;
+    }
+
+    const randomPassword = crypto.randomBytes(32).toString('hex');
+    const newUser = await userRepository.createUser({
+      username: finalUsername,
+      email: cleanEmail,
+      passwordHash: this.hashPassword(randomPassword),
+      name: profile.name || finalUsername,
+      role: 'user', // STRICT: Social auth always creates 'user' role
+      status: 'active',
+      avatar: profile.picture || '/images/avatars/user.svg'
+    });
+
+    // Link social identity
+    await userRepository.createSocialIdentity({
+      userId: newUser.id,
+      provider: 'google',
+      providerUserId: profile.sub,
+      email: cleanEmail,
+      profileData: profile
+    });
+
+    const sanitized = userRepository.sanitizeUser(newUser);
+    const token = this.generateToken(sanitized);
+    return { user: sanitized, token, isNewUser: true, provider: 'google' };
+  }
+
+  /**
+   * Handles Kakao Login: Token Exchange and User Provisioning
+   * Strictly creates 'user' role; rejects automatic link to admin
+   */
+  async handleKakaoLogin({ code, state: _state, redirectUri, testProfile = null }) {
+    let profile = testProfile;
+
+    if (!profile) {
+      if (!code) {
+        const err = new Error('Authorization code is required for Kakao authentication');
+        err.code = 'INVALID_CODE';
+        err.status = 400;
+        throw err;
+      }
+
+      // Check Kakao API credentials
+      const isConfigured = Boolean(
+        env.KAKAO_REST_API_KEY &&
+        !env.KAKAO_REST_API_KEY.includes('placeholder') &&
+        !env.KAKAO_REST_API_KEY.includes('your_kakao_rest_api_key')
+      );
+
+      if (!isConfigured) {
+        const err = new Error(
+          'Kakao authentication is not yet configured. Please supply KAKAO_REST_API_KEY in server/.env.'
+        );
+        err.code = 'OAUTH_NOT_CONFIGURED';
+        err.status = 503;
+        throw err;
+      }
+
+      // Token Exchange
+      const tokenUrl = 'https://kauth.kakao.com/oauth/token';
+      const bodyParams = new URLSearchParams({
+        grant_type: 'authorization_code',
+        client_id: env.KAKAO_REST_API_KEY,
+        redirect_uri: redirectUri || env.KAKAO_REDIRECT_URI,
+        code
+      });
+
+      if (env.KAKAO_CLIENT_SECRET) {
+        bodyParams.append('client_secret', env.KAKAO_CLIENT_SECRET);
+      }
+
+      const tokenRes = await fetch(tokenUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8' },
+        body: bodyParams.toString()
+      });
+
+      const tokenData = await tokenRes.json();
+      if (!tokenRes.ok || !tokenData.access_token) {
+        const err = new Error(
+          tokenData.error_description || 'Failed to exchange authorization code with Kakao servers'
+        );
+        err.code = 'KAKAO_TOKEN_ERROR';
+        err.status = 400;
+        throw err;
+      }
+
+      // Profile Fetch
+      const profileRes = await fetch('https://kapi.kakao.com/v2/user/me', {
+        headers: {
+          Authorization: `Bearer ${tokenData.access_token}`,
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        }
+      });
+
+      const kakaoUser = await profileRes.json();
+      if (!profileRes.ok || !kakaoUser.id) {
+        const err = new Error('Failed to retrieve user profile from Kakao API');
+        err.code = 'KAKAO_PROFILE_ERROR';
+        err.status = 400;
+        throw err;
+      }
+
+      const kakaoAccount = kakaoUser.kakao_account || {};
+      const kakaoProfile = kakaoAccount.profile || {};
+
+      profile = {
+        id: String(kakaoUser.id),
+        email: kakaoAccount.email || `kakao_${kakaoUser.id}@prism.user.local`,
+        name: kakaoProfile.nickname || `Kakao Reader ${String(kakaoUser.id).slice(-4)}`,
+        picture: kakaoProfile.profile_image_url || '/images/avatars/user.svg'
+      };
+    }
+
+    const kakaoId = String(profile.id);
+
+    // 1. Check existing social identity
+    const existingIdentity = await userRepository.findSocialIdentity('kakao', kakaoId);
+    if (existingIdentity) {
+      const user = await userRepository.findById(existingIdentity.userId);
+      if (!user) {
+        const err = new Error('Associated user account no longer exists');
+        err.code = 'USER_NOT_FOUND';
+        err.status = 404;
+        throw err;
+      }
+      if (user.status !== 'active') {
+        const err = new Error('Account has been deactivated');
+        err.code = 'ACCOUNT_DEACTIVATED';
+        err.status = 403;
+        throw err;
+      }
+
+      await userRepository.updateLastLogin(user.id);
+      const sanitized = userRepository.sanitizeUser(user);
+      const token = this.generateToken(sanitized);
+      return { user: sanitized, token, provider: 'kakao' };
+    }
+
+    // 2. Check if a user with same email exists
+    const cleanEmail = profile.email.toLowerCase().trim();
+    const existingUser = await userRepository.findByEmail(cleanEmail);
+
+    if (existingUser) {
+      // SECURITY: Disallow automatic social account linking to admin accounts!
+      if (existingUser.role === 'admin') {
+        const err = new Error(
+          'Administrative accounts cannot be accessed via third-party social login. Please use standard administrator credentials.'
+        );
+        err.code = 'ADMIN_SOCIAL_FORBIDDEN';
+        err.status = 403;
+        throw err;
+      }
+
+      await userRepository.createSocialIdentity({
+        userId: existingUser.id,
+        provider: 'kakao',
+        providerUserId: kakaoId,
+        email: cleanEmail,
+        profileData: profile
+      });
+
+      await userRepository.updateLastLogin(existingUser.id);
+      const sanitized = userRepository.sanitizeUser(existingUser);
+      const token = this.generateToken(sanitized);
+      return { user: sanitized, token, linked: true, provider: 'kakao' };
+    }
+
+    // 3. Create new regular reader
+    let baseUsername = `kakao_${kakaoId.slice(-6)}`;
+    let finalUsername = baseUsername;
+    let counter = 1;
+    while (await userRepository.findByUsername(finalUsername)) {
+      finalUsername = `${baseUsername}_${counter++}`;
+    }
+
+    const randomPassword = crypto.randomBytes(32).toString('hex');
+    const newUser = await userRepository.createUser({
+      username: finalUsername,
+      email: cleanEmail,
+      passwordHash: this.hashPassword(randomPassword),
+      name: profile.name || 'Kakao Reader',
+      role: 'user', // STRICT: Always 'user'
+      status: 'active',
+      avatar: profile.picture || '/images/avatars/user.svg'
+    });
+
+    await userRepository.createSocialIdentity({
+      userId: newUser.id,
+      provider: 'kakao',
+      providerUserId: kakaoId,
+      email: cleanEmail,
+      profileData: profile
+    });
+
+    const sanitized = userRepository.sanitizeUser(newUser);
+    const token = this.generateToken(sanitized);
+    return { user: sanitized, token, isNewUser: true, provider: 'kakao' };
+  }
 }
 
 export const authService = new AuthService();

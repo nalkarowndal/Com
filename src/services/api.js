@@ -243,6 +243,36 @@ export async function apiAuthChangePassword({ currentPassword, newPassword }) {
 }
 
 /**
+ * Social & Federated Authentication API (Google, Kakao)
+ */
+export async function apiAuthGetConfig() {
+  const json = await request('/auth/config');
+  return json.data;
+}
+
+export async function apiAuthGoogle(idToken, testProfile = null) {
+  const json = await request('/auth/google', {
+    method: 'POST',
+    body: { idToken, testProfile }
+  });
+  if (json.data?.token) {
+    localStorage.setItem('prism_auth_token', json.data.token);
+  }
+  return json.data;
+}
+
+export async function apiAuthKakao({ code, state, redirectUri, testProfile = null }) {
+  const json = await request('/auth/kakao', {
+    method: 'POST',
+    body: { code, state, redirectUri, testProfile }
+  });
+  if (json.data?.token) {
+    localStorage.setItem('prism_auth_token', json.data.token);
+  }
+  return json.data;
+}
+
+/**
  * Admin User Management API
  */
 export async function apiAdminGetUsers({ page = 1, limit = 50, search = '', role = '' } = {}) {

@@ -179,32 +179,32 @@ export default function MobileNav({ isOpen, onClose, navigation = [], triggerRef
                 <li className="mobile-section-heading">ADMINISTRATION</li>
                 <li>
                   <NavLink to="/admin/dashboard" onClick={onClose}>
-                    관리자 대시보드
+                    Admin Dashboard
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/admin/articles" onClick={onClose}>
-                    기사 관리
+                    Article Management
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/admin/media" onClick={onClose}>
-                    이미지 관리
+                    Media Library
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/admin/categories" onClick={onClose}>
-                    카테고리 관리
+                    Category Management
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/admin/users" onClick={onClose}>
-                    사용자 관리
+                    User Management
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/account" onClick={onClose}>
-                    계정 정보
+                    Account Settings
                   </NavLink>
                 </li>
                 <li>
@@ -213,7 +213,7 @@ export default function MobileNav({ isOpen, onClose, navigation = [], triggerRef
                     className="mobile-logout-btn"
                     onClick={handleLogout}
                   >
-                    로그아웃
+                    Sign Out
                   </button>
                 </li>
               </>
@@ -222,12 +222,12 @@ export default function MobileNav({ isOpen, onClose, navigation = [], triggerRef
                 <li className="mobile-section-heading">MY ACCOUNT</li>
                 <li>
                   <NavLink to="/account" onClick={onClose}>
-                    내 계정
+                    My Account
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/account/settings" onClick={onClose}>
-                    계정 정보 수정
+                    Account Settings
                   </NavLink>
                 </li>
                 <li>
@@ -236,7 +236,7 @@ export default function MobileNav({ isOpen, onClose, navigation = [], triggerRef
                     className="mobile-logout-btn"
                     onClick={handleLogout}
                   >
-                    로그아웃
+                    Sign Out
                   </button>
                 </li>
               </>

@@ -31,7 +31,7 @@
 	}
 }
 
-/*@media (min-width:768px){//최소 768px이상부터 태블릿일때
+/*@media (min-width:768px){// Minimum 768px tablet viewport
  
 
         body{
@@ -50,7 +50,7 @@
         }
 
        .col-md-one-half{
-            //모바일에서 사용하지 x 여기에 표기하니 이해상도에서 보입니다
+            // Not used in mobile; rendered on tablet and higher viewports
             width:50%;
            }
            .col{

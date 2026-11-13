@@ -160,6 +160,137 @@ export class AuthController {
       next(err);
     }
   }
+
+  async getConfig(req, res) {
+    const config = authService.getAuthConfig();
+    return res.json({
+      success: true,
+      data: config
+    });
+  }
+
+  async googleLogin(req, res, next) {
+    try {
+      const idToken = req.body.idToken || req.body.credential;
+      const testProfile = req.body.testProfile;
+
+      if (!idToken && !testProfile) {
+        return res.status(400).json({
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Google ID token credential is required'
+          }
+        });
+      }
+
+      const result = await authService.handleGoogleLogin({ idToken, testProfile });
+
+      res.cookie('prism_auth_token', result.token, getCookieOptions());
+      res.cookie('auth_token', result.token, getCookieOptions());
+
+      return res.json({
+        success: true,
+        data: {
+          user: result.user,
+          token: result.token,
+          linked: result.linked || false,
+          isNewUser: result.isNewUser || false,
+          provider: 'google'
+        },
+        meta: { timestamp: new Date().toISOString() }
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async kakaoLogin(req, res, next) {
+    try {
+      const { code, state, redirectUri, testProfile } = req.body;
+
+      if (!code && !testProfile) {
+        return res.status(400).json({
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Kakao authorization code is required'
+          }
+        });
+      }
+
+      const result = await authService.handleKakaoLogin({
+        code,
+        state,
+        redirectUri,
+        testProfile
+      });
+
+      res.cookie('prism_auth_token', result.token, getCookieOptions());
+      res.cookie('auth_token', result.token, getCookieOptions());
+
+      return res.json({
+        success: true,
+        data: {
+          user: result.user,
+          token: result.token,
+          linked: result.linked || false,
+          isNewUser: result.isNewUser || false,
+          provider: 'kakao'
+        },
+        meta: { timestamp: new Date().toISOString() }
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async kakaoAuthorize(req, res) {
+    const config = authService.getAuthConfig();
+    if (!config.isKakaoConfigured) {
+      return res.status(503).json({
+        success: false,
+        error: {
+          code: 'OAUTH_NOT_CONFIGURED',
+          message: 'Kakao OAuth is not configured yet. Set KAKAO_REST_API_KEY in server/.env'
+        }
+      });
+    }
+
+    const state = Math.random().toString(36).substring(2, 15);
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${config.kakaoRestApiKey}&redirect_uri=${encodeURIComponent(config.kakaoRedirectUri)}&response_type=code&state=${state}`;
+
+    return res.redirect(kakaoAuthUrl);
+  }
+
+  async kakaoCallback(req, res, _next) {
+    try {
+      const { code, state, error, error_description } = req.query;
+      const config = authService.getAuthConfig();
+
+      if (error) {
+        return res.redirect(`${config.frontendOrigin}/login?error=${encodeURIComponent(error_description || error)}`);
+      }
+
+      if (!code) {
+        return res.redirect(`${config.frontendOrigin}/login?error=missing_code`);
+      }
+
+      const result = await authService.handleKakaoLogin({
+        code,
+        state,
+        redirectUri: config.kakaoRedirectUri
+      });
+
+      res.cookie('prism_auth_token', result.token, getCookieOptions());
+      res.cookie('auth_token', result.token, getCookieOptions());
+
+      return res.redirect(`${config.frontendOrigin}/account`);
+    } catch (err) {
+      const config = authService.getAuthConfig();
+      return res.redirect(`${config.frontendOrigin}/login?error=${encodeURIComponent(err.message)}`);
+    }
+  }
 }
 
 export const authController = new AuthController();

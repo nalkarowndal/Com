@@ -351,6 +351,115 @@ export class UserRepository {
     }
     return false;
   }
+
+  async findSocialIdentity(provider, providerUserId) {
+    if (!provider || !providerUserId) return null;
+    const status = getDbStatus();
+    if (status.activeEngine === 'postgres') {
+      const pool = getPgPool();
+      const res = await pool.query(
+        'SELECT * FROM social_identities WHERE provider = $1 AND provider_user_id = $2 LIMIT 1',
+        [provider, String(providerUserId)]
+      );
+      if (res.rows.length === 0) return null;
+      const r = res.rows[0];
+      return {
+        id: r.id,
+        userId: r.user_id,
+        provider: r.provider,
+        providerUserId: r.provider_user_id,
+        email: r.email,
+        profileData: r.profile_data,
+        createdAt: r.created_at,
+        updatedAt: r.updated_at
+      };
+    }
+
+    const db = getFileDbCache();
+    const list = db.socialIdentities || [];
+    const found = list.find((s) => s.provider === provider && s.providerUserId === String(providerUserId));
+    return found ? { ...found } : null;
+  }
+
+  async createSocialIdentity({ userId, provider, providerUserId, email, profileData = {} }) {
+    const status = getDbStatus();
+    const now = new Date().toISOString();
+    const identity = {
+      id: `soc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      userId,
+      provider,
+      providerUserId: String(providerUserId),
+      email: email ? email.toLowerCase().trim() : null,
+      profileData,
+      createdAt: now,
+      updatedAt: now
+    };
+
+    if (status.activeEngine === 'postgres') {
+      const pool = getPgPool();
+      await pool.query(
+        `INSERT INTO social_identities (id, user_id, provider, provider_user_id, email, profile_data, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         ON CONFLICT (provider, provider_user_id) DO UPDATE
+         SET email = EXCLUDED.email, profile_data = EXCLUDED.profile_data, updated_at = EXCLUDED.updated_at`,
+        [
+          identity.id,
+          identity.userId,
+          identity.provider,
+          identity.providerUserId,
+          identity.email,
+          JSON.stringify(identity.profileData),
+          identity.createdAt,
+          identity.updatedAt
+        ]
+      );
+      return identity;
+    }
+
+    const db = getFileDbCache();
+    if (!db.socialIdentities) db.socialIdentities = [];
+    const idx = db.socialIdentities.findIndex(
+      (s) => s.provider === provider && s.providerUserId === String(providerUserId)
+    );
+    if (idx !== -1) {
+      db.socialIdentities[idx] = {
+        ...db.socialIdentities[idx],
+        userId,
+        email: identity.email,
+        profileData,
+        updatedAt: now
+      };
+    } else {
+      db.socialIdentities.push(identity);
+    }
+    await saveFileDb();
+    return identity;
+  }
+
+  async getSocialIdentitiesForUser(userId) {
+    if (!userId) return [];
+    const status = getDbStatus();
+    if (status.activeEngine === 'postgres') {
+      const pool = getPgPool();
+      const res = await pool.query(
+        'SELECT * FROM social_identities WHERE user_id = $1 ORDER BY created_at ASC',
+        [userId]
+      );
+      return res.rows.map((r) => ({
+        id: r.id,
+        userId: r.user_id,
+        provider: r.provider,
+        providerUserId: r.provider_user_id,
+        email: r.email,
+        createdAt: r.created_at,
+        updatedAt: r.updated_at
+      }));
+    }
+
+    const db = getFileDbCache();
+    const list = db.socialIdentities || [];
+    return list.filter((s) => s.userId === userId).map((s) => ({ ...s }));
+  }
 }
 
 export const userRepository = new UserRepository();

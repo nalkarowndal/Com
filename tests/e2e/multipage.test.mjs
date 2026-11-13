@@ -25,7 +25,7 @@ const PAGES_TO_TEST = [
   { path: '/stories/urban-strorkes', name: 'article_detail', expectedText: 'Sebastian Weiss' },
   { path: '/gallery', name: 'gallery', expectedText: 'Visual Archive' },
   { path: '/search', name: 'search', expectedText: 'Search Collection' },
-  { path: '/admin/login', name: 'admin_login', expectedText: 'Editorial Management Portal' },
+  { path: '/admin/login', name: 'admin_login', expectedText: 'Sign in' },
   { path: '/random-unknown-404', name: 'not_found', expectedText: 'Page Not Found' }
 ];
 

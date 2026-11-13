@@ -123,12 +123,12 @@ async function runAuthRbacSuite() {
     await page.click('.header-actions .user-badge-btn');
     await page.waitForSelector('.header-dropdown-menu', { timeout: 2000 });
     const dropdownText = await page.locator('.header-dropdown-menu').innerText();
-    const hasMyAccountLink = dropdownText.includes('내 계정');
-    const hasSettingsLink = dropdownText.includes('계정 정보 수정');
-    const hasAdminLinksInUserDropdown = dropdownText.includes('관리자 대시보드');
+    const hasMyAccountLink = dropdownText.includes('My Account');
+    const hasSettingsLink = dropdownText.includes('Account Settings');
+    const hasAdminLinksInUserDropdown = dropdownText.includes('Admin Dashboard');
 
-    console.log(`  User Dropdown contains "내 계정": ${hasMyAccountLink ? 'PASS' : 'FAIL'}`);
-    console.log(`  User Dropdown contains "계정 정보 수정": ${hasSettingsLink ? 'PASS' : 'FAIL'}`);
+    console.log(`  User Dropdown contains "My Account": ${hasMyAccountLink ? 'PASS' : 'FAIL'}`);
+    console.log(`  User Dropdown contains "Account Settings": ${hasSettingsLink ? 'PASS' : 'FAIL'}`);
     console.log(`  User Dropdown excludes Admin links: ${!hasAdminLinksInUserDropdown ? 'PASS' : 'FAIL'}`);
 
     // Critical Security Check: Regular USER accessing /admin should get 403 Forbidden Page!
@@ -182,17 +182,17 @@ async function runAuthRbacSuite() {
     await page.click('.header-actions .admin-badge-btn');
     await page.waitForSelector('.header-dropdown-menu', { timeout: 2000 });
     const adminDropdownText = await page.locator('.header-dropdown-menu').innerText();
-    const hasAdminDashboard = adminDropdownText.includes('관리자 대시보드');
-    const hasArticleManagement = adminDropdownText.includes('기사 관리');
-    const hasMediaManagement = adminDropdownText.includes('이미지 관리');
-    const hasCategoryManagement = adminDropdownText.includes('카테고리 관리');
-    const hasUserManagement = adminDropdownText.includes('사용자 관리');
+    const hasAdminDashboard = adminDropdownText.includes('Admin Dashboard');
+    const hasArticleManagement = adminDropdownText.includes('Article Management');
+    const hasMediaManagement = adminDropdownText.includes('Media Library');
+    const hasCategoryManagement = adminDropdownText.includes('Category Management');
+    const hasUserManagement = adminDropdownText.includes('User Management');
 
-    console.log(`  Admin Dropdown contains "관리자 대시보드": ${hasAdminDashboard ? 'PASS' : 'FAIL'}`);
-    console.log(`  Admin Dropdown contains "기사 관리": ${hasArticleManagement ? 'PASS' : 'FAIL'}`);
-    console.log(`  Admin Dropdown contains "이미지 관리": ${hasMediaManagement ? 'PASS' : 'FAIL'}`);
-    console.log(`  Admin Dropdown contains "카테고리 관리": ${hasCategoryManagement ? 'PASS' : 'FAIL'}`);
-    console.log(`  Admin Dropdown contains "사용자 관리": ${hasUserManagement ? 'PASS' : 'FAIL'}`);
+    console.log(`  Admin Dropdown contains "Admin Dashboard": ${hasAdminDashboard ? 'PASS' : 'FAIL'}`);
+    console.log(`  Admin Dropdown contains "Article Management": ${hasArticleManagement ? 'PASS' : 'FAIL'}`);
+    console.log(`  Admin Dropdown contains "Media Library": ${hasMediaManagement ? 'PASS' : 'FAIL'}`);
+    console.log(`  Admin Dropdown contains "Category Management": ${hasCategoryManagement ? 'PASS' : 'FAIL'}`);
+    console.log(`  Admin Dropdown contains "User Management": ${hasUserManagement ? 'PASS' : 'FAIL'}`);
 
     // Admin Logout
     await page.click('.dropdown-logout-btn');

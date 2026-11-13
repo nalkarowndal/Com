@@ -18,6 +18,7 @@ import NotFoundPage from '../pages/NotFoundPage';
 // Auth Pages
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
+import OAuthCallbackPage from '../pages/auth/OAuthCallbackPage';
 import AccountPage from '../pages/user/AccountPage';
 import AccountSettingsPage from '../pages/user/AccountSettingsPage';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
@@ -50,6 +51,8 @@ export const router = createBrowserRouter([
       // Auth routes
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
+      { path: 'oauth/callback/kakao', element: <OAuthCallbackPage /> },
+      { path: 'oauth/callback/google', element: <OAuthCallbackPage /> },
 
       // Protected Account routes for USER & ADMIN
       {

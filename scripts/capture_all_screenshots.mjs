@@ -194,7 +194,7 @@ async function captureAll() {
     await userPage.waitForSelector('.header-dropdown-menu', { timeout: 3000 });
     await userPage.waitForTimeout(200);
     await userPage.screenshot({ path: path.join(outputDir, '20_user_header_dropdown_open.png') });
-    recordScreenshot('20_user_header_dropdown_open.png', 'User header dropdown open with "내 계정", "계정 정보 수정", "로그아웃"');
+    recordScreenshot('20_user_header_dropdown_open.png', 'User header dropdown open with "My Account", "Account Settings", "Sign Out"');
 
     // User Account Page
     await userPage.goto('http://localhost:5173/account', { waitUntil: 'networkidle' });

@@ -36,10 +36,10 @@ export function configureSecurity(app) {
     })
   );
 
-  // Global rate limiter (500 requests per 15 minutes)
+  // Global rate limiter (10000 in dev/test, 500 in prod)
   const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 500,
+    max: env.NODE_ENV === 'production' ? 500 : 10000,
     standardHeaders: true,
     legacyHeaders: false,
     message: {

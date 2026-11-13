@@ -1,0 +1,43 @@
+{
+  "timestamp": "2026-11-13T08:28:45.241Z",
+  "englishUiChecks": {
+    "guestHeaderButton": true,
+    "userDropdownPurity": true,
+    "adminDropdownPurity": true,
+    "mobileDrawerPurity": true
+  },
+  "socialButtonDesign": {
+    "hasWelcomeBack": true,
+    "hasSubtitle": true,
+    "hasDivider": true,
+    "googleText": true,
+    "kakaoText": true,
+    "kakaoStylesVerified": true
+  },
+  "googleAuthFlow": {
+    "modalOpened": true,
+    "loginSucceeded": true,
+    "strictlyUserRole": true
+  },
+  "kakaoAuthFlow": {
+    "modalOpened": true,
+    "loginSucceeded": true,
+    "strictlyUserRole": true,
+    "accessDenied403": true
+  },
+  "responsiveViewports": {
+    "mobile_375x812": true,
+    "tablet_768x1024": true,
+    "desktop_1280x800": true,
+    "wide_1440x900": true
+  },
+  "screenshots": [
+    "01_enhanced_login_page.png",
+    "02_google_oauth_modal.png",
+    "03_google_reader_account.png",
+    "04_kakao_user_403_denied.png",
+    "05_admin_header_dropdown_english.png",
+    "06_mobile_drawer_guest_english.png",
+    "07_mobile_login_social_layout.png"
+  ]
+}

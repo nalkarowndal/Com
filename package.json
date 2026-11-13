@@ -14,6 +14,7 @@
     "test:e2e": "node tests/e2e/comprehensive.test.mjs",
     "test:multipage": "node tests/e2e/multipage.test.mjs",
     "test:rbac": "node tests/e2e/auth_rbac_suite.test.mjs",
+    "test:social": "node tests/e2e/social_auth_english_suite.test.mjs",
     "test": "node --test tests/unit/*.test.js && node --test server/tests/*.test.js"
   },
   "dependencies": {
