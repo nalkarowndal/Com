@@ -31,6 +31,11 @@ router.post('/media/upload', requireAdmin, upload.single('file'), (req, res, nex
 router.put('/media/:id', requireAdmin, (req, res, next) => adminController.updateMedia(req, res, next));
 router.delete('/media/:id', requireAdmin, (req, res, next) => adminController.deleteMedia(req, res, next));
 
+// Users Management
+router.get('/users', requireAdmin, (req, res, next) => adminController.getUsers(req, res, next));
+router.patch('/users/:id/status', requireAdmin, (req, res, next) => adminController.updateUserStatus(req, res, next));
+router.delete('/users/:id', requireAdmin, (req, res, next) => adminController.deleteUser(req, res, next));
+
 // Audit Logs
 router.get('/audit-logs', requireAdmin, (req, res, next) => adminController.getAuditLogs(req, res, next));
 

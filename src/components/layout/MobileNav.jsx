@@ -1,11 +1,15 @@
 import { useEffect, useRef } from 'react';
-import { NavLink, Link, useLocation } from 'react-router-dom';
+import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function MobileNav({ isOpen, onClose, navigation = [], triggerRef }) {
   const drawerRef = useRef(null);
   const closeBtnRef = useRef(null);
   const previousFocusRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const { role, isAuthenticated, logout } = useAuth();
 
   // Auto-close on route change
   useEffect(() => {
@@ -72,13 +76,18 @@ export default function MobileNav({ isOpen, onClose, navigation = [], triggerRef
       document.body.style.overflow = '';
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('resize', handleResize);
-      // Restore focus to triggering button
       const restoreTarget = triggerEl || previousFocusRef.current;
       if (restoreTarget && typeof restoreTarget.focus === 'function') {
         restoreTarget.focus();
       }
     };
   }, [isOpen, onClose, triggerRef]);
+
+  const handleLogout = async () => {
+    onClose();
+    await logout();
+    navigate('/');
+  };
 
   return (
     <>
@@ -151,15 +160,87 @@ export default function MobileNav({ isOpen, onClose, navigation = [], triggerRef
                 Search
               </NavLink>
             </li>
-            <li style={{ marginTop: '16px' }}>
-              <Link
-                to="/admin/dashboard"
-                onClick={onClose}
-                style={{ color: 'var(--color-accent-champagne)' }}
-              >
-                Admin Panel &rarr;
-              </Link>
-            </li>
+
+            {/* Auth section */}
+            <li className="mobile-auth-divider" />
+
+            {!isAuthenticated ? (
+              <li>
+                <Link
+                  to="/login"
+                  onClick={onClose}
+                  className="mobile-login-link"
+                >
+                  LOGIN &rarr;
+                </Link>
+              </li>
+            ) : role === 'admin' ? (
+              <>
+                <li className="mobile-section-heading">ADMINISTRATION</li>
+                <li>
+                  <NavLink to="/admin/dashboard" onClick={onClose}>
+                    관리자 대시보드
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/admin/articles" onClick={onClose}>
+                    기사 관리
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/admin/media" onClick={onClose}>
+                    이미지 관리
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/admin/categories" onClick={onClose}>
+                    카테고리 관리
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/admin/users" onClick={onClose}>
+                    사용자 관리
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/account" onClick={onClose}>
+                    계정 정보
+                  </NavLink>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    className="mobile-logout-btn"
+                    onClick={handleLogout}
+                  >
+                    로그아웃
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="mobile-section-heading">MY ACCOUNT</li>
+                <li>
+                  <NavLink to="/account" onClick={onClose}>
+                    내 계정
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/account/settings" onClick={onClose}>
+                    계정 정보 수정
+                  </NavLink>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    className="mobile-logout-btn"
+                    onClick={handleLogout}
+                  >
+                    로그아웃
+                  </button>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
 

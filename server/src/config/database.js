@@ -35,10 +35,11 @@ async function initFileDb() {
     const raw = await fs.readFile(PERSISTENT_DB_FILE, 'utf-8');
     fileDbCache = JSON.parse(raw);
     // Ensure all collections exist
-    if (!fileDbCache.categories || !fileDbCache.mediaAssets) {
+    if (!fileDbCache.categories || !fileDbCache.mediaAssets || !fileDbCache.users) {
       const seed = await loadSeedData();
       fileDbCache.categories = seed.categories || fileDbCache.categories || [];
       fileDbCache.mediaAssets = seed.mediaAssets || fileDbCache.mediaAssets || [];
+      fileDbCache.users = fileDbCache.users || seed.users || [];
       fileDbCache.articles = seed.articles || fileDbCache.articles;
       fileDbCache.gallery = seed.gallery || fileDbCache.gallery;
       await saveFileDb();
@@ -206,6 +207,29 @@ async function seedPostgres(client, data) {
     }
   }
 
+  // 8. Users
+  if (Array.isArray(data.users)) {
+    for (const u of data.users) {
+      await client.query(
+        `INSERT INTO users (id, username, email, password_hash, name, role, status, avatar, bookmarks, created_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+         ON CONFLICT (id) DO NOTHING`,
+        [
+          u.id,
+          u.username,
+          u.email,
+          u.passwordHash || u.password_hash,
+          u.name || u.displayName || u.username,
+          u.role || 'user',
+          u.status || 'active',
+          u.avatar || '/images/avatars/user.svg',
+          JSON.stringify(u.bookmarks || []),
+          u.createdAt || new Date().toISOString()
+        ]
+      );
+    }
+  }
+
   console.info('[Storage] PostgreSQL seeded successfully.');
 }
 
@@ -237,7 +261,11 @@ export async function initDatabase() {
         const mig3 = path.resolve(__dirname, '../../db/migrations/003_media_system_enhancement.sql');
         const mig3Sql = await fs.readFile(mig3, 'utf-8');
         await client.query(mig3Sql);
-        console.info('[Storage] PostgreSQL migrations 001, 002 & 003 executed.');
+
+        const mig4 = path.resolve(__dirname, '../../db/migrations/004_create_users_table.sql');
+        const mig4Sql = await fs.readFile(mig4, 'utf-8');
+        await client.query(mig4Sql);
+        console.info('[Storage] PostgreSQL migrations 001, 002, 003 & 004 executed.');
 
         // Seed initial data if empty
         const seedData = await loadSeedData();

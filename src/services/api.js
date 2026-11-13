@@ -7,8 +7,10 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000
  */
 async function request(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint}`;
+  const token = localStorage.getItem('prism_auth_token') || localStorage.getItem('prism_admin_token');
   const headers = {
     'Accept': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
     ...(options.headers || {})
   };
 
@@ -18,7 +20,7 @@ async function request(endpoint, options = {}) {
   }
 
   const response = await fetch(url, {
-    credentials: 'include', // Support HttpOnly admin cookie
+    credentials: 'include', // Support HttpOnly cookie
     ...options,
     headers
   });
@@ -166,30 +168,126 @@ export async function searchArticles({ q, category, page = 1, limit = 12, signal
 }
 
 /**
- * Admin Authentication
+ * Unified Authentication API (USER & ADMIN)
  */
-export async function apiAdminLogin(username, password) {
-  const json = await request('/admin/login', {
+export async function apiAuthLogin({ identifier, password }) {
+  const json = await request('/auth/login', {
     method: 'POST',
-    body: { username, password }
+    body: { identifier, password }
   });
   if (json.data?.token) {
-    localStorage.setItem('prism_admin_token', json.data.token);
+    localStorage.setItem('prism_auth_token', json.data.token);
+    if (json.data?.user?.role === 'admin') {
+      localStorage.setItem('prism_admin_token', json.data.token);
+    }
   }
   return json.data;
 }
 
-export async function apiAdminLogout() {
+export async function apiAuthRegister({ username, email, password, name }) {
+  const json = await request('/auth/register', {
+    method: 'POST',
+    body: { username, email, password, name }
+  });
+  if (json.data?.token) {
+    localStorage.setItem('prism_auth_token', json.data.token);
+  }
+  return json.data;
+}
+
+export async function apiAuthLogout() {
+  localStorage.removeItem('prism_auth_token');
   localStorage.removeItem('prism_admin_token');
   try {
-    await request('/admin/logout', { method: 'POST' });
+    await request('/auth/logout', { method: 'POST' });
   } catch {
     // Ignore logout errors
   }
 }
 
+export async function apiAuthGetSession() {
+  try {
+    const json = await request('/auth/session');
+    return json.data;
+  } catch {
+    return {
+      isAuthenticated: false,
+      user: null,
+      role: 'guest'
+    };
+  }
+}
+
+export async function apiAuthGetMe() {
+  const json = await request('/auth/me');
+  return json.data?.user;
+}
+
+export async function apiAuthUpdateProfile(updates) {
+  const json = await request('/auth/profile', {
+    method: 'PUT',
+    body: updates
+  });
+  if (json.data?.token) {
+    localStorage.setItem('prism_auth_token', json.data.token);
+  }
+  return json.data?.user;
+}
+
+export async function apiAuthChangePassword({ currentPassword, newPassword }) {
+  const json = await request('/auth/password', {
+    method: 'PUT',
+    body: { currentPassword, newPassword }
+  });
+  return json.data;
+}
+
+/**
+ * Admin User Management API
+ */
+export async function apiAdminGetUsers({ page = 1, limit = 50, search = '', role = '' } = {}) {
+  const params = new URLSearchParams();
+  if (page) params.append('page', page);
+  if (limit) params.append('limit', limit);
+  if (search) params.append('search', search);
+  if (role && role !== 'all') params.append('role', role);
+
+  const queryStr = params.toString() ? `?${params.toString()}` : '';
+  const json = await request(`/admin/users${queryStr}`);
+  return {
+    users: json.data || [],
+    pagination: json.pagination || { total: json.data?.length || 0, page: 1, totalPages: 1 }
+  };
+}
+
+export async function apiAdminUpdateUserStatus(id, { status, role }) {
+  const json = await request(`/admin/users/${id}/status`, {
+    method: 'PATCH',
+    body: { status, role }
+  });
+  return json.data;
+}
+
+export async function apiAdminDeleteUser(id) {
+  const json = await request(`/admin/users/${id}`, {
+    method: 'DELETE'
+  });
+  return json.data;
+}
+
+/**
+ * Admin Authentication (Backward Compatibility)
+ */
+export async function apiAdminLogin(username, password) {
+  return await apiAuthLogin({ identifier: username, password });
+}
+
+export async function apiAdminLogout() {
+  return await apiAuthLogout();
+}
+
 export async function apiAdminGetMe() {
-  const token = localStorage.getItem('prism_admin_token');
+  const token = localStorage.getItem('prism_admin_token') || localStorage.getItem('prism_auth_token');
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const json = await request('/admin/me', { headers });
   return json.data?.user;

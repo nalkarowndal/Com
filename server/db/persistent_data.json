@@ -364,6 +364,262 @@
   },
   "auditLogs": [
     {
+      "id": 1794551014509,
+      "action": "DELETE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1794551014505",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:23:34.509Z"
+    },
+    {
+      "id": 1794551014506,
+      "action": "CREATE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1794551014505",
+      "details": {
+        "src": "/images/uploads/test-sample.jpg",
+        "filename": "test-sample.jpg",
+        "categorySlug": "architecture",
+        "title": "Nordic Timber Architecture",
+        "alt": "Nordic Timber Architecture",
+        "photographer": "Editorial Photographer",
+        "sourceName": "External Library",
+        "sourceUrl": "/images/uploads/test-sample.jpg",
+        "licenseType": "Unsplash License",
+        "licenseUrl": "",
+        "licenseVerifiedAt": "2026-11-13T06:23:34.505Z",
+        "width": 0,
+        "height": 0,
+        "mimeType": "image/jpeg",
+        "fileSize": 0,
+        "isOriginal": false,
+        "isApproved": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:23:34.506Z"
+    },
+    {
+      "id": 1794551014490,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1794551014486",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:23:34.490Z"
+    },
+    {
+      "id": 1794551014487,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1794551014486",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:23:34.487Z"
+    },
+    {
+      "id": 1794550474410,
+      "action": "DELETE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1794550474406",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:14:34.410Z"
+    },
+    {
+      "id": 1794550474407,
+      "action": "CREATE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1794550474406",
+      "details": {
+        "src": "/images/uploads/test-sample.jpg",
+        "filename": "test-sample.jpg",
+        "categorySlug": "architecture",
+        "title": "Nordic Timber Architecture",
+        "alt": "Nordic Timber Architecture",
+        "photographer": "Editorial Photographer",
+        "sourceName": "External Library",
+        "sourceUrl": "/images/uploads/test-sample.jpg",
+        "licenseType": "Unsplash License",
+        "licenseUrl": "",
+        "licenseVerifiedAt": "2026-11-13T06:14:34.406Z",
+        "width": 0,
+        "height": 0,
+        "mimeType": "image/jpeg",
+        "fileSize": 0,
+        "isOriginal": false,
+        "isApproved": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:14:34.407Z"
+    },
+    {
+      "id": 1794550474386,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1794550474379",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:14:34.386Z"
+    },
+    {
+      "id": 1794550474383,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1794550474379",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:14:34.383Z"
+    },
+    {
+      "id": 1794550060104,
+      "action": "DELETE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1794550060099",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:07:40.104Z"
+    },
+    {
+      "id": 1794550060100,
+      "action": "CREATE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1794550060099",
+      "details": {
+        "src": "/images/uploads/test-sample.jpg",
+        "filename": "test-sample.jpg",
+        "categorySlug": "architecture",
+        "title": "Nordic Timber Architecture",
+        "alt": "Nordic Timber Architecture",
+        "photographer": "Editorial Photographer",
+        "sourceName": "External Library",
+        "sourceUrl": "/images/uploads/test-sample.jpg",
+        "licenseType": "Unsplash License",
+        "licenseUrl": "",
+        "licenseVerifiedAt": "2026-11-13T06:07:40.099Z",
+        "width": 0,
+        "height": 0,
+        "mimeType": "image/jpeg",
+        "fileSize": 0,
+        "isOriginal": false,
+        "isApproved": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:07:40.100Z"
+    },
+    {
+      "id": 1794550060083,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1794550060078",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:07:40.083Z"
+    },
+    {
+      "id": 1794550060079,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1794550060078",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:07:40.079Z"
+    },
+    {
+      "id": 1794549812795,
+      "action": "DELETE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1794549812790",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:03:32.795Z"
+    },
+    {
+      "id": 1794549812790,
+      "action": "CREATE_MEDIA",
+      "entity": "media",
+      "targetId": "media-1794549812790",
+      "details": {
+        "src": "/images/uploads/test-sample.jpg",
+        "filename": "test-sample.jpg",
+        "categorySlug": "architecture",
+        "title": "Nordic Timber Architecture",
+        "alt": "Nordic Timber Architecture",
+        "photographer": "Editorial Photographer",
+        "sourceName": "External Library",
+        "sourceUrl": "/images/uploads/test-sample.jpg",
+        "licenseType": "Unsplash License",
+        "licenseUrl": "",
+        "licenseVerifiedAt": "2026-11-13T06:03:32.790Z",
+        "width": 0,
+        "height": 0,
+        "mimeType": "image/jpeg",
+        "fileSize": 0,
+        "isOriginal": false,
+        "isApproved": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:03:32.790Z"
+    },
+    {
+      "id": 1794549812774,
+      "action": "DELETE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1794549812769",
+      "details": {
+        "deleted": true
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:03:32.774Z"
+    },
+    {
+      "id": 1794549812770,
+      "action": "CREATE_ARTICLE",
+      "entity": "article",
+      "targetId": "art-1794549812769",
+      "details": {
+        "title": "Ephemeral Pavilions of Venice",
+        "categorySlug": "architecture",
+        "author": "Test Architect",
+        "content": "Temporary bamboo and recycled membrane installations along the Grand Canal.",
+        "imageSrc": "/images/gallery-1.jpg"
+      },
+      "performedBy": "admin",
+      "timestamp": "2026-11-13T06:03:32.770Z"
+    },
+    {
       "id": 1792542639517,
       "action": "DELETE_MEDIA",
       "entity": "media",
@@ -1182,6 +1438,99 @@
       "isOriginal": false,
       "isApproved": true,
       "createdAt": "2026-10-20T08:25:00.000Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "usr-admin-001",
+      "username": "admin",
+      "passwordHash": "f6a11340b11b52da74e303cb004c2391:6904c7525ec6ec84ce412fbfdcd8f5f6c5c0618b707605e87e57c34f36f13e71a51540dfe26376c26f4f1b7887a1b4757e40182ce62408a6209c7c4e30fa07a5",
+      "name": "Chief Editorial Curator",
+      "email": "admin@prism.company.io",
+      "role": "admin",
+      "avatar": "/images/avatars/admin.svg",
+      "bookmarks": [],
+      "createdAt": "2026-10-20T10:00:00.000Z",
+      "lastLoginAt": "2026-11-13T06:42:47.283Z"
+    },
+    {
+      "id": "usr-member-001",
+      "username": "user",
+      "passwordHash": "ba0fed152645a5b04c6ffe816ce6e712:49f1e92eecd368c5706a7638eb86ae21cc8f4bc297d85f0a3362fc370ec7fef15f55fb1aa11ab988426f127b61d020ebf3963225723ad1ab795138b3f63ac373",
+      "name": "Jane Reader (Verified)",
+      "email": "reader@prism.company.io",
+      "role": "user",
+      "avatar": "/images/avatars/user.svg",
+      "bookmarks": [
+        "art-001"
+      ],
+      "createdAt": "2026-11-13T15:00:00.000Z",
+      "lastLoginAt": "2026-11-13T06:42:45.418Z",
+      "updatedAt": "2026-11-13T06:42:28.433Z"
+    },
+    {
+      "id": "usr-1794550079290-visl",
+      "username": "testreader_1794550079250",
+      "email": "testreader_1794550079250@example.com",
+      "passwordHash": "77cbdd041617bc771a9f84399a8777b3:2b7a9021abb5f68a60f935866d32ced1f837e474bd92e3445f3e7d20fcac885e6f1edbd11829063c5a77c466665ccb685e8aebf30e3160d17cd2fe5d8c76740f",
+      "name": "New Test Reader",
+      "role": "user",
+      "avatar": "/images/avatars/user.svg",
+      "bookmarks": [],
+      "createdAt": "2026-11-13T06:07:59.290Z"
+    },
+    {
+      "id": "usr-1794550327721-1s5g",
+      "username": "testreader_1794550327679",
+      "email": "testreader_1794550327679@example.com",
+      "passwordHash": "43ff6da7441670a597aa1718362afe21:0a8200c4fc39f30e26f8c8e7615238e9a3bf72e0fed4a218c440ea4eec0d67cf2bdf7d3c01cef84426084abaee3038cb8108e629c431a8f390d941720eb13aca",
+      "name": "New Test Reader",
+      "role": "user",
+      "avatar": "/images/avatars/user.svg",
+      "bookmarks": [],
+      "createdAt": "2026-11-13T06:12:07.721Z"
+    },
+    {
+      "id": "usr-1794551176107-aw3f",
+      "username": "test_1794551176071",
+      "email": "test_1794551176071@test.com",
+      "passwordHash": "42294a2bbc7c85235d4f68442bff7741:9acb15767adf41331687fb1ef09d0ea8f47a451a8209643dfb8995cc754a61e4cd438bdab997951afba634ec6286d610a58d19cdde6cb63a4320a0b7ae5e00a9",
+      "name": "Test Regular User",
+      "role": "user",
+      "status": "active",
+      "avatar": "/images/avatars/user.svg",
+      "bookmarks": [],
+      "createdAt": "2026-11-13T06:26:16.107Z",
+      "updatedAt": "2026-11-13T06:26:16.107Z",
+      "lastLoginAt": null
+    },
+    {
+      "id": "usr-1794551656719-6krd",
+      "username": "reader_1794551656574",
+      "email": "reader_1794551656574@prism.io",
+      "passwordHash": "41c0aaf6b2ba54cf6abb9fecb11def82:b4e304f12894803818477c3474e03c704935dfd7ccf6bd6f3742c04e9c1ca705db7cd14c684ef5ce3937bc46e3bc2e8afec7e13c38d2187664448299172f1318",
+      "name": "Alex New Reader",
+      "role": "user",
+      "status": "active",
+      "avatar": "/images/avatars/user.svg",
+      "bookmarks": [],
+      "createdAt": "2026-11-13T06:34:16.719Z",
+      "updatedAt": "2026-11-13T06:34:16.719Z",
+      "lastLoginAt": null
+    },
+    {
+      "id": "usr-1794551692981-bmjb",
+      "username": "reader_1794551692843",
+      "email": "reader_1794551692843@prism.io",
+      "passwordHash": "84a773b6eb3b07fe6eb388b94959dfa2:1525489c30f6c13163dc4423de842626c12dfeb0338d27914fcfc59e27252ed9886a80c247ab9555aafd5d928a997bd5328bdf51f7a9c1557c51b54de26acaab",
+      "name": "Alex New Reader",
+      "role": "user",
+      "status": "active",
+      "avatar": "/images/avatars/user.svg",
+      "bookmarks": [],
+      "createdAt": "2026-11-13T06:34:52.981Z",
+      "updatedAt": "2026-11-13T06:34:52.981Z",
+      "lastLoginAt": null
     }
   ]
 }

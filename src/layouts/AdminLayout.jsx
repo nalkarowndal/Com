@@ -1,45 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Outlet, NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-import { apiAdminGetMe, apiAdminLogout } from '../services/api';
+import { useAuth } from '../hooks/useAuth';
+import AccessDeniedPage from '../pages/auth/AccessDeniedPage';
 
 export default function AdminLayout() {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user, role, isAuthenticated, isLoading, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    let isMounted = true;
-    async function checkAuth() {
-      try {
-        const user = await apiAdminGetMe();
-        if (isMounted) {
-          if (!user) {
-            navigate('/admin/login', { replace: true, state: { from: location.pathname } });
-          } else {
-            setCurrentUser(user);
-          }
-        }
-      } catch {
-        if (isMounted) {
-          navigate('/admin/login', { replace: true, state: { from: location.pathname } });
-        }
-      } finally {
-        if (isMounted) setLoading(false);
-      }
+    if (!isLoading && !isAuthenticated) {
+      navigate('/login', { replace: true, state: { from: location.pathname } });
     }
-
-    checkAuth();
-    return () => { isMounted = false; };
-  }, [navigate, location.pathname]);
+  }, [isLoading, isAuthenticated, navigate, location.pathname]);
 
   const handleLogout = async () => {
-    await apiAdminLogout();
-    navigate('/admin/login', { replace: true });
+    await logout();
+    navigate('/login', { replace: true });
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="admin-loading-screen">
         <LoadingSpinner />
@@ -48,7 +29,11 @@ export default function AdminLayout() {
     );
   }
 
-  if (!currentUser) return null;
+  if (!isAuthenticated) return null;
+
+  if (role !== 'admin') {
+    return <AccessDeniedPage />;
+  }
 
   return (
     <div className="admin-dashboard-layout">
@@ -59,7 +44,7 @@ export default function AdminLayout() {
             <span className="brand-dot" />
             <span className="brand-text">PRISM ADMIN</span>
           </Link>
-          <span className="admin-role-badge">{currentUser.role || 'Superuser'}</span>
+          <span className="admin-role-badge">Administrator</span>
         </div>
 
         <nav className="admin-nav-menu">
@@ -110,6 +95,17 @@ export default function AdminLayout() {
               </NavLink>
             </li>
             <li>
+              <NavLink to="/admin/users" className={({ isActive }) => (isActive ? 'active' : '')}>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                <span>Users</span>
+              </NavLink>
+            </li>
+            <li>
               <NavLink to="/admin/settings" className={({ isActive }) => (isActive ? 'active' : '')}>
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="12" cy="12" r="3" />
@@ -141,7 +137,7 @@ export default function AdminLayout() {
           </div>
 
           <div className="topbar-right">
-            <span className="user-greeting">Signed in as <strong>{currentUser.username}</strong></span>
+            <span className="user-greeting">Signed in as <strong>{user?.name || user?.username}</strong></span>
             <button
               type="button"
               className="btn-admin-logout"
@@ -154,7 +150,7 @@ export default function AdminLayout() {
         </header>
 
         <main className="admin-page-content">
-          <Outlet context={{ currentUser }} />
+          <Outlet context={{ currentUser: user }} />
         </main>
       </div>
     </div>

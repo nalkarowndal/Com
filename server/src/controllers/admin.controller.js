@@ -3,6 +3,7 @@ import path from 'path';
 import { imageSize } from 'image-size';
 import { authService } from '../services/auth.service.js';
 import { contentService } from '../services/content.service.js';
+import { userRepository } from '../repositories/user.repository.js';
 
 export class AdminController {
   async login(req, res, next) {
@@ -18,7 +19,7 @@ export class AdminController {
         });
       }
 
-      const authResult = authService.authenticate(username, password);
+      const authResult = await authService.authenticate(username, password);
       if (!authResult) {
         return res.status(401).json({
           success: false,
@@ -29,12 +30,26 @@ export class AdminController {
         });
       }
 
-      res.cookie('admin_token', authResult.token, {
+      if (authResult.user.role !== 'admin') {
+        return res.status(403).json({
+          success: false,
+          error: {
+            code: 'FORBIDDEN',
+            message: 'Administrative privileges required'
+          }
+        });
+      }
+
+      const cookieOpts = {
         httpOnly: true,
-        sameSite: 'strict',
+        sameSite: 'lax',
         secure: process.env.NODE_ENV === 'production',
         maxAge: 24 * 60 * 60 * 1000
-      });
+      };
+
+      res.cookie('admin_token', authResult.token, cookieOpts);
+      res.cookie('prism_auth_token', authResult.token, cookieOpts);
+      res.cookie('auth_token', authResult.token, cookieOpts);
 
       res.json({
         success: true,
@@ -51,6 +66,8 @@ export class AdminController {
 
   async logout(req, res) {
     res.clearCookie('admin_token');
+    res.clearCookie('prism_auth_token');
+    res.clearCookie('auth_token');
     res.json({
       success: true,
       data: { message: 'Successfully logged out' }
@@ -392,6 +409,81 @@ export class AdminController {
         success: true,
         data: recommendations,
         meta: { timestamp: new Date().toISOString() }
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getUsers(req, res, next) {
+    try {
+      const { page = 1, limit = 50, search = '', role = '' } = req.query;
+      const result = await userRepository.listUsers({
+        page: parseInt(page, 10) || 1,
+        limit: parseInt(limit, 10) || 50,
+        search,
+        role
+      });
+      res.json({
+        success: true,
+        data: result.users,
+        pagination: {
+          total: result.total,
+          page: result.page,
+          totalPages: result.totalPages
+        }
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async updateUserStatus(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { status, role } = req.body;
+      const updates = {};
+      if (status) updates.status = status;
+      if (role) updates.role = role;
+
+      const updated = await userRepository.updateUser(id, updates);
+      if (!updated) {
+        return res.status(404).json({
+          success: false,
+          error: { code: 'NOT_FOUND', message: 'User not found' }
+        });
+      }
+
+      res.json({
+        success: true,
+        data: userRepository.sanitizeUser(updated)
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteUser(req, res, next) {
+    try {
+      const { id } = req.params;
+      if (id === 'usr-admin-001' || req.user.id === id) {
+        return res.status(403).json({
+          success: false,
+          error: { code: 'FORBIDDEN', message: 'Cannot delete primary admin or currently active user' }
+        });
+      }
+
+      const deleted = await userRepository.deleteUser(id);
+      if (!deleted) {
+        return res.status(404).json({
+          success: false,
+          error: { code: 'NOT_FOUND', message: 'User not found' }
+        });
+      }
+
+      res.json({
+        success: true,
+        data: { message: 'User successfully removed' }
       });
     } catch (err) {
       next(err);

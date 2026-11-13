@@ -15,13 +15,20 @@ import GalleryPage from '../pages/GalleryPage';
 import SearchPage from '../pages/SearchPage';
 import NotFoundPage from '../pages/NotFoundPage';
 
+// Auth Pages
+import LoginPage from '../pages/auth/LoginPage';
+import RegisterPage from '../pages/auth/RegisterPage';
+import AccountPage from '../pages/user/AccountPage';
+import AccountSettingsPage from '../pages/user/AccountSettingsPage';
+import ProtectedRoute from '../components/auth/ProtectedRoute';
+
 // Admin Pages
-import AdminLoginPage from '../pages/admin/AdminLoginPage';
 import AdminDashboardPage from '../pages/admin/AdminDashboardPage';
 import AdminArticlesPage from '../pages/admin/AdminArticlesPage';
 import AdminArticleEditPage from '../pages/admin/AdminArticleEditPage';
 import AdminCategoriesPage from '../pages/admin/AdminCategoriesPage';
 import AdminMediaPage from '../pages/admin/AdminMediaPage';
+import AdminUsersPage from '../pages/admin/AdminUsersPage';
 import AdminSettingsPage from '../pages/admin/AdminSettingsPage';
 
 export const router = createBrowserRouter([
@@ -39,20 +46,47 @@ export const router = createBrowserRouter([
       { path: 'stories/:slug', element: <ArticleDetailPage /> },
       { path: 'gallery', element: <GalleryPage /> },
       { path: 'search', element: <SearchPage /> },
+
+      // Auth routes
+      { path: 'login', element: <LoginPage /> },
+      { path: 'register', element: <RegisterPage /> },
+
+      // Protected Account routes for USER & ADMIN
+      {
+        path: 'account',
+        element: (
+          <ProtectedRoute allowedRoles={['user', 'admin']}>
+            <AccountPage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'account/settings',
+        element: (
+          <ProtectedRoute allowedRoles={['user', 'admin']}>
+            <AccountSettingsPage />
+          </ProtectedRoute>
+        )
+      },
+
       { path: '*', element: <NotFoundPage /> }
     ]
   },
 
-  // Admin Login (Standalone)
+  // Admin Login Route (Unified with /login)
   {
     path: '/admin/login',
-    element: <AdminLoginPage />
+    element: <LoginPage />
   },
 
-  // Admin Portal Routes (Guarded by AdminLayout)
+  // Admin Portal Routes (Guarded by AdminLayout and ProtectedRoute)
   {
     path: '/admin',
-    element: <AdminLayout />,
+    element: (
+      <ProtectedRoute allowedRoles={['admin']}>
+        <AdminLayout />
+      </ProtectedRoute>
+    ),
     children: [
       { index: true, element: <Navigate to="/admin/dashboard" replace /> },
       { path: 'dashboard', element: <AdminDashboardPage /> },
@@ -61,6 +95,7 @@ export const router = createBrowserRouter([
       { path: 'articles/:id/edit', element: <AdminArticleEditPage /> },
       { path: 'categories', element: <AdminCategoriesPage /> },
       { path: 'media', element: <AdminMediaPage /> },
+      { path: 'users', element: <AdminUsersPage /> },
       { path: 'settings', element: <AdminSettingsPage /> }
     ]
   }

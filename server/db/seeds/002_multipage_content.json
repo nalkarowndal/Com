@@ -699,5 +699,31 @@
       "isApproved": true,
       "createdAt": "2026-10-20T08:25:00.000Z"
     }
+  ],
+  "users": [
+    {
+      "id": "usr-admin-001",
+      "username": "admin",
+      "passwordHash": "f6a11340b11b52da74e303cb004c2391:6904c7525ec6ec84ce412fbfdcd8f5f6c5c0618b707605e87e57c34f36f13e71a51540dfe26376c26f4f1b7887a1b4757e40182ce62408a6209c7c4e30fa07a5",
+      "name": "Chief Editorial Curator",
+      "email": "admin@prism.company.io",
+      "role": "admin",
+      "avatar": "/images/avatars/admin.svg",
+      "bookmarks": [],
+      "createdAt": "2026-10-20T10:00:00.000Z"
+    },
+    {
+      "id": "usr-member-001",
+      "username": "user",
+      "passwordHash": "ba0fed152645a5b04c6ffe816ce6e712:49f1e92eecd368c5706a7638eb86ae21cc8f4bc297d85f0a3362fc370ec7fef15f55fb1aa11ab988426f127b61d020ebf3963225723ad1ab795138b3f63ac373",
+      "name": "Jane Reader",
+      "email": "reader@prism.company.io",
+      "role": "user",
+      "avatar": "/images/avatars/user.svg",
+      "bookmarks": [
+        "art-001"
+      ],
+      "createdAt": "2026-11-13T15:00:00.000Z"
+    }
   ]
 }
