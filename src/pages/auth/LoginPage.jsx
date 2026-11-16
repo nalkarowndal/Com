@@ -71,40 +71,80 @@ export default function LoginPage() {
   // Initialize official Google Identity Services if client ID is configured and SDK is loaded
   useEffect(() => {
     if (!authConfig.isGoogleConfigured || !authConfig.googleClientId) return;
-    if (typeof window === 'undefined' || !window.google?.accounts?.id) return;
     if (!googleBtnContainerRef.current) return;
 
-    try {
-      window.google.accounts.id.initialize({
-        client_id: authConfig.googleClientId,
-        callback: async (response) => {
-          if (!response?.credential) return;
-          setSocialLoading(true);
-          setError(null);
-          try {
-            const data = await loginWithGoogle(response.credential);
-            handlePostLoginNavigation(data?.user?.role);
-          } catch (err) {
-            setError(err.message || 'Google authentication failed.');
-          } finally {
-            setSocialLoading(false);
-          }
-        },
-      });
+    let isCancelled = false;
 
-      // Clear any prior rendered element before re-rendering
-      googleBtnContainerRef.current.innerHTML = '';
-      window.google.accounts.id.renderButton(googleBtnContainerRef.current, {
-        theme: 'outline',
-        size: 'large',
-        text: 'signin_with',
-        shape: 'rectangular',
-        logo_alignment: 'left',
-        width: 380,
-      });
-    } catch (err) {
-      console.warn('Google Identity Services render failed:', err);
+    const renderGoogleButton = () => {
+      if (isCancelled || !googleBtnContainerRef.current) return false;
+      if (typeof window === 'undefined' || !window.google?.accounts?.id) return false;
+
+      try {
+        window.google.accounts.id.initialize({
+          client_id: authConfig.googleClientId,
+          callback: async (response) => {
+            if (!response?.credential) return;
+            setSocialLoading(true);
+            setError(null);
+            try {
+              const data = await loginWithGoogle(response.credential);
+              handlePostLoginNavigation(data?.user?.role);
+            } catch (err) {
+              setError(err.message || 'Google authentication failed.');
+            } finally {
+              setSocialLoading(false);
+            }
+          },
+        });
+
+        // Compute current container width to match Kakao button exactly
+        const containerWidth = googleBtnContainerRef.current.offsetWidth || 350;
+        const targetWidth = Math.max(200, Math.min(Math.floor(containerWidth), 400));
+
+        googleBtnContainerRef.current.innerHTML = '';
+        window.google.accounts.id.renderButton(googleBtnContainerRef.current, {
+          theme: 'outline',
+          size: 'large',
+          text: 'signin_with',
+          shape: 'rectangular',
+          logo_alignment: 'left',
+          width: targetWidth,
+          locale: 'en',
+        });
+        return true;
+      } catch (err) {
+        console.warn('Google Identity Services render failed:', err);
+        return false;
+      }
+    };
+
+    if (!renderGoogleButton()) {
+      const interval = setInterval(() => {
+        if (renderGoogleButton()) {
+          clearInterval(interval);
+        }
+      }, 100);
+
+      const timeout = setTimeout(() => {
+        clearInterval(interval);
+      }, 5000);
+
+      return () => {
+        isCancelled = true;
+        clearInterval(interval);
+        clearTimeout(timeout);
+      };
     }
+
+    const handleResize = () => {
+      renderGoogleButton();
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      isCancelled = true;
+      window.removeEventListener('resize', handleResize);
+    };
   }, [authConfig.isGoogleConfigured, authConfig.googleClientId, loginWithGoogle, handlePostLoginNavigation]);
 
   const handleSubmit = async (e) => {
