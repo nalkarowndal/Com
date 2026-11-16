@@ -385,7 +385,7 @@ export default function LoginPage() {
             </div>
 
             <div className="modal-body">
-              <p className="modal-desc">
+              <div className="modal-desc">
                 {activeModalProvider === 'google' ? (
                   <>
                     The Google Client ID is not configured yet in <code>server/.env</code>.
@@ -409,7 +409,7 @@ export default function LoginPage() {
                     </ol>
                   </>
                 )}
-              </p>
+              </div>
 
               <div className="modal-dev-note">
                 <strong>Development &amp; Verification Mode</strong>
