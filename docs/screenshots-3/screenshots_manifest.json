@@ -1,0 +1,303 @@
+[
+  {
+    "filename": "01_home_guest.png",
+    "category": "Public Pages",
+    "route": "/",
+    "viewport": "1280x800",
+    "description": "Home page (Guest) with brand header, LOGIN button, hero section, and cards"
+  },
+  {
+    "filename": "02_home_hero_synopsis_modal.png",
+    "category": "Public Interactions",
+    "route": "/",
+    "viewport": "1280x800",
+    "description": "Home page with Quick Synopsis modal dialog open"
+  },
+  {
+    "filename": "03_home_gallery_lightbox.png",
+    "category": "Public Interactions",
+    "route": "/",
+    "viewport": "1280x800",
+    "description": "Home page with Gallery Lightbox modal dialog open"
+  },
+  {
+    "filename": "04_architecture_page.png",
+    "category": "Category Pages",
+    "route": "/architecture",
+    "viewport": "1280x800",
+    "description": "Architecture Category page showing hero banner and editorial collection grid"
+  },
+  {
+    "filename": "05_travel_page.png",
+    "category": "Category Pages",
+    "route": "/travel",
+    "viewport": "1280x800",
+    "description": "Travel Category page showing hero banner and editorial collection grid"
+  },
+  {
+    "filename": "06_art_page.png",
+    "category": "Category Pages",
+    "route": "/art",
+    "viewport": "1280x800",
+    "description": "Art Category page showing hero banner and editorial collection grid"
+  },
+  {
+    "filename": "07_food_page.png",
+    "category": "Category Pages",
+    "route": "/food",
+    "viewport": "1280x800",
+    "description": "Food Category page showing hero banner and editorial collection grid"
+  },
+  {
+    "filename": "08_story_detail_urban_strorkes.png",
+    "category": "Story Detail",
+    "route": "/stories/urban-strorkes",
+    "viewport": "1280x800",
+    "description": "Article detail page for \"Urban Strorkes\" monograph"
+  },
+  {
+    "filename": "09_gallery_archive_page.png",
+    "category": "Gallery",
+    "route": "/gallery",
+    "viewport": "1280x800",
+    "description": "Gallery archive page with category filtering tabs and full photo collection"
+  },
+  {
+    "filename": "10_gallery_archive_lightbox.png",
+    "category": "Gallery Interactions",
+    "route": "/gallery",
+    "viewport": "1280x800",
+    "description": "Gallery archive page with Lightbox image viewer active"
+  },
+  {
+    "filename": "11_search_page_default.png",
+    "category": "Search",
+    "route": "/search",
+    "viewport": "1280x800",
+    "description": "Search page initial state with search query input"
+  },
+  {
+    "filename": "12_search_page_with_query.png",
+    "category": "Search Interactions",
+    "route": "/search?q=concrete",
+    "viewport": "1280x800",
+    "description": "Search page with filtered query \"concrete\" and matched articles"
+  },
+  {
+    "filename": "13_not_found_404.png",
+    "category": "Error Pages",
+    "route": "/404",
+    "viewport": "1280x800",
+    "description": "404 Not Found error page with return to homepage button"
+  },
+  {
+    "filename": "14_login_page_default.png",
+    "category": "Authentication",
+    "route": "/login",
+    "viewport": "1280x800",
+    "description": "Unified Login page default state showing centered Google & Kakao buttons"
+  },
+  {
+    "filename": "15_login_page_password_revealed.png",
+    "category": "Authentication Interactions",
+    "route": "/login",
+    "viewport": "1280x800",
+    "description": "Login page with credentials filled and password visibility toggled on"
+  },
+  {
+    "filename": "16_login_page_error_state.png",
+    "category": "Authentication Interactions",
+    "route": "/login",
+    "viewport": "1280x800",
+    "description": "Login page displaying invalid credentials error alert"
+  },
+  {
+    "filename": "17_login_page_social_buttons_detail.png",
+    "category": "Social Authentication",
+    "route": "/login",
+    "viewport": "Element",
+    "description": "Close-up of unified Google and Kakao login buttons with matching 40px height, 4px radius, and centered icons"
+  },
+  {
+    "filename": "18_register_page_default.png",
+    "category": "Authentication",
+    "route": "/register",
+    "viewport": "1280x800",
+    "description": "Register account page initial form state"
+  },
+  {
+    "filename": "19_register_page_validation_error.png",
+    "category": "Authentication Interactions",
+    "route": "/register",
+    "viewport": "1280x800",
+    "description": "Register page displaying client-side validation error message"
+  },
+  {
+    "filename": "20_user_home_logged_in.png",
+    "category": "User Experience",
+    "route": "/",
+    "viewport": "1280x800",
+    "description": "Home page viewed by authenticated USER showing \"MY ACCOUNT\" header button"
+  },
+  {
+    "filename": "21_user_header_dropdown_open.png",
+    "category": "User Interactions",
+    "route": "/",
+    "viewport": "1280x800",
+    "description": "User header dropdown open with \"My Account\", \"Account Settings\", \"Sign Out\""
+  },
+  {
+    "filename": "22_user_account_overview.png",
+    "category": "User Pages",
+    "route": "/account",
+    "viewport": "1280x800",
+    "description": "My Account profile overview page for standard reader"
+  },
+  {
+    "filename": "23_user_account_settings.png",
+    "category": "User Pages",
+    "route": "/account/settings",
+    "viewport": "1280x800",
+    "description": "Account settings page with profile editor and password change form"
+  },
+  {
+    "filename": "24_user_account_settings_saved.png",
+    "category": "User Interactions",
+    "route": "/account/settings",
+    "viewport": "1280x800",
+    "description": "Account settings displaying \"Profile updated successfully\" alert banner"
+  },
+  {
+    "filename": "25_user_admin_access_denied_403.png",
+    "category": "Security / RBAC",
+    "route": "/admin/dashboard",
+    "viewport": "1280x800",
+    "description": "403 Forbidden Access Denied page when regular USER attempts to access /admin"
+  },
+  {
+    "filename": "26_admin_home_logged_in.png",
+    "category": "Admin Experience",
+    "route": "/",
+    "viewport": "1280x800",
+    "description": "Home page viewed by ADMIN with \"ADMIN DASHBOARD\" gold button in header"
+  },
+  {
+    "filename": "27_admin_header_dropdown_open.png",
+    "category": "Admin Interactions",
+    "route": "/",
+    "viewport": "1280x800",
+    "description": "Admin header dropdown open with full CMS navigation links"
+  },
+  {
+    "filename": "28_admin_dashboard.png",
+    "category": "Admin CMS",
+    "route": "/admin/dashboard",
+    "viewport": "1280x800",
+    "description": "Admin CMS Dashboard with system analytics and editorial metrics"
+  },
+  {
+    "filename": "29_admin_articles_list.png",
+    "category": "Admin CMS",
+    "route": "/admin/articles",
+    "viewport": "1280x800",
+    "description": "Admin Monograph / Articles management data table"
+  },
+  {
+    "filename": "30_admin_article_new_editor.png",
+    "category": "Admin CMS",
+    "route": "/admin/articles/new",
+    "viewport": "1280x800",
+    "description": "Admin article creation and editorial drafting workspace"
+  },
+  {
+    "filename": "31_admin_categories_list.png",
+    "category": "Admin CMS",
+    "route": "/admin/categories",
+    "viewport": "1280x800",
+    "description": "Admin editorial categories management page"
+  },
+  {
+    "filename": "32_admin_media_assets.png",
+    "category": "Admin CMS",
+    "route": "/admin/media",
+    "viewport": "1280x800",
+    "description": "Admin Media Assets catalog with metadata inspection and upload"
+  },
+  {
+    "filename": "33_admin_users_management.png",
+    "category": "Admin CMS",
+    "route": "/admin/users",
+    "viewport": "1280x800",
+    "description": "Admin User Directory and RBAC management table"
+  },
+  {
+    "filename": "34_admin_system_settings.png",
+    "category": "Admin CMS",
+    "route": "/admin/settings",
+    "viewport": "1280x800",
+    "description": "Admin platform and database storage settings"
+  },
+  {
+    "filename": "35_tablet_login_page.png",
+    "category": "Responsive Tablet",
+    "route": "/login",
+    "viewport": "768x1024",
+    "description": "Tablet (768x1024) Login page showing responsive centered Google and Kakao buttons"
+  },
+  {
+    "filename": "36_mobile_home_guest.png",
+    "category": "Responsive Mobile",
+    "route": "/",
+    "viewport": "375x812",
+    "description": "Mobile Home page (375px) showing responsive header and hamburger toggle"
+  },
+  {
+    "filename": "37_mobile_drawer_guest.png",
+    "category": "Mobile Interactions",
+    "route": "/",
+    "viewport": "375x812",
+    "description": "Mobile navigation drawer for Guest showing \"LOGIN →\" link"
+  },
+  {
+    "filename": "38_mobile_login_page.png",
+    "category": "Responsive Mobile",
+    "route": "/login",
+    "viewport": "375x812",
+    "description": "Mobile Login page with touch-optimized input layout and centered social buttons"
+  },
+  {
+    "filename": "39_mobile_account_page.png",
+    "category": "Responsive Mobile",
+    "route": "/account",
+    "viewport": "375x812",
+    "description": "Mobile My Account page view"
+  },
+  {
+    "filename": "40_mobile_drawer_user.png",
+    "category": "Mobile Interactions",
+    "route": "/account",
+    "viewport": "375x812",
+    "description": "Mobile navigation drawer for logged-in USER showing \"MY ACCOUNT\" and settings"
+  },
+  {
+    "filename": "41_mobile_admin_dashboard.png",
+    "category": "Responsive Mobile",
+    "route": "/admin/dashboard",
+    "viewport": "375x812",
+    "description": "Mobile Admin Dashboard responsive view"
+  },
+  {
+    "filename": "42_mobile_drawer_admin.png",
+    "category": "Mobile Interactions",
+    "route": "/architecture",
+    "viewport": "375x812",
+    "description": "Mobile navigation drawer for logged-in ADMIN showing \"ADMINISTRATION\" section"
+  },
+  {
+    "filename": "43_kakao_oauth_redirect_screen.png",
+    "category": "Social OAuth Flow",
+    "route": "Kakao Authorize",
+    "viewport": "1280x800",
+    "description": "Live official Kakao OAuth login and consent authentication page"
+  }
+]

@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-11-16T00:28:10.375Z",
+  "platform": "PRISM Editorial & Architecture Magazine",
+  "testSuites": {
+    "unitTests": {
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "status": "PASS"
+    },
+    "apiTests": {
+      "total": 29,
+      "passed": 29,
+      "failed": 0,
+      "status": "PASS"
+    },
+    "multipageRoutes": {
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "status": "PASS"
+    },
+    "responsiveViewports": {
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "maxOverflowPx": 0,
+      "status": "PASS"
+    },
+    "rbacSecurity": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "status": "PASS"
+    },
+    "socialAuthDesign": {
+      "googleText": "Sign in with Google",
+      "kakaoText": "Login with Kakao",
+      "googleHeight": "40px",
+      "kakaoHeight": "40px",
+      "googleBorderRadius": "4px",
+      "kakaoBorderRadius": "4px",
+      "iconAlignment": "center",
+      "antiHijack403Enforced": true,
+      "status": "PASS"
+    },
+    "accessibilityWcag22": {
+      "violations": 0,
+      "status": "PASS"
+    }
+  },
+  "screenshotsCount": 43,
+  "manifestFile": "screenshots_manifest.json"
+}

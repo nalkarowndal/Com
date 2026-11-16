@@ -458,10 +458,10 @@
 
     .google-auth-wrap {
       min-height: 40px;
+      position: relative;
 
-      /* Ensure Google GIS standard button element fills container width and matches 40px height */
-      > div,
-      iframe,
+      /* Ensure Google GIS visible button container fills width and matches 40px height */
+      .S9gUrf-YoZ4jf,
       .nsm7Bb-HzV7m-LgbsSe,
       [role="button"] {
         width: 100% !important;
@@ -469,6 +469,16 @@
         height: 40px !important;
         box-sizing: border-box !important;
         border-radius: 4px !important;
+      }
+
+      /* Ensure hidden Google helper communication iframes do not expand or intercept clicks */
+      iframe[style*="height: 0px"],
+      iframe[style*="width: 0px"],
+      iframe.L5Fo6c-PQbLGe {
+        height: 0px !important;
+        width: 0px !important;
+        pointer-events: none !important;
+        opacity: 0 !important;
       }
     }
 
