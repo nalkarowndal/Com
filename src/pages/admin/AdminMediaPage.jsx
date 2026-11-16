@@ -491,7 +491,7 @@ export default function AdminMediaPage() {
                 <p className="media-alt-text">"{asset.alt || 'No alt text provided'}"</p>
 
                 <div className="media-meta-bottom">
-                  <span className="media-author-tag">By {asset.photographer || 'PRISM Archive'}</span>
+                  <span className="media-author-tag">By {asset.photographer || 'HBK Archive'}</span>
                   <span className="media-license-tag">{asset.licenseType || 'Editorial'}</span>
                 </div>
               </div>

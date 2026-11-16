@@ -59,7 +59,7 @@ export default function Header({
           <Link
             to="/"
             className="logo-link"
-            aria-label="PRISM Home"
+            aria-label="HBK Home"
           >
             <img
               src={brandLogoSrc}
@@ -118,7 +118,7 @@ export default function Header({
               <Link
                 to="/login"
                 className="auth-badge-btn login-btn"
-                title="Sign in to PRISM"
+                title="Sign in to HBK"
                 aria-label="Sign In"
               >
                 <span>LOGIN</span>
@@ -251,7 +251,7 @@ export default function Header({
                   <div className="header-dropdown-menu" role="menu" aria-label="Account Options">
                     <div className="dropdown-user-info">
                       <span className="dropdown-user-name">{user?.name || user?.username}</span>
-                      <span className="dropdown-user-badge user">PRISM Reader</span>
+                      <span className="dropdown-user-badge user">HBK Reader</span>
                     </div>
                     <div className="dropdown-divider" />
                     <Link

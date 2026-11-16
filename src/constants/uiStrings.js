@@ -1,5 +1,5 @@
 /**
- * PRISM Editorial Platform - System UI String Dictionary
+ * HBK Editorial Platform - System UI String Dictionary
  * Provides centralized English localization for all navigation, authentication,
  * user profile, and administrative CMS interfaces.
  * Supports future multi-language expansion (i18n).
@@ -7,9 +7,9 @@
 
 export const UI_STRINGS = {
   brand: {
-    name: 'PRISM',
+    name: 'HBK',
     tagline: 'Reflecting the Many Facets of Culture & Design',
-    curation: 'PRISM Editorial Collection',
+    curation: 'HBK Editorial Collection',
     copyright: '© 2026 Green Systems Incorporated. All rights reserved.',
   },
   nav: {
@@ -28,7 +28,7 @@ export const UI_STRINGS = {
     loginTitle: 'LOGIN',
     loginSubtitle: 'Sign in to continue exploring',
     welcomeBack: 'Welcome Back',
-    welcomeBackDesc: 'Sign in to your PRISM reader or administrative account.',
+    welcomeBackDesc: 'Sign in to your HBK reader or administrative account.',
     emailOrUsername: 'Email Address or Username',
     password: 'Password',
     signIn: 'Sign In',
@@ -36,7 +36,7 @@ export const UI_STRINGS = {
     signOut: 'Sign Out',
     createAccount: 'Create Account',
     registerTitle: 'Create an Account',
-    registerSubtitle: 'Join the PRISM editorial community for curated monographs.',
+    registerSubtitle: 'Join the HBK editorial community for curated monographs.',
     dontHaveAccount: "Don't have an account?",
     alreadyHaveAccount: 'Already have an account?',
     orDivider: 'or',

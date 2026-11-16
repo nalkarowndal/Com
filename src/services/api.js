@@ -5,9 +5,23 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000
 /**
  * Helper to fetch with JSON parsing and error handling
  */
+function getStoredToken() {
+  return localStorage.getItem('hbk_auth_token') ||
+    localStorage.getItem('prism_auth_token') ||
+    localStorage.getItem('hbk_admin_token') ||
+    localStorage.getItem('prism_admin_token');
+}
+
+function getStoredAdminToken() {
+  return localStorage.getItem('hbk_admin_token') ||
+    localStorage.getItem('prism_admin_token') ||
+    localStorage.getItem('hbk_auth_token') ||
+    localStorage.getItem('prism_auth_token');
+}
+
 async function request(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint}`;
-  const token = localStorage.getItem('prism_auth_token') || localStorage.getItem('prism_admin_token');
+  const token = getStoredToken();
   const headers = {
     'Accept': 'application/json',
     ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
@@ -48,7 +62,7 @@ export async function fetchHomeContent() {
     }
     throw new Error('Invalid home payload');
   } catch (err) {
-    console.info('[PRISM API] Home fallback engaged:', err.message);
+    console.info('[HBK API] Home fallback engaged:', err.message);
     return { data: defaultContent, source: 'fallback' };
   }
 }
@@ -61,7 +75,7 @@ export async function fetchCategories() {
     const json = await request('/categories');
     return json.data || [];
   } catch (err) {
-    console.warn('[PRISM API] Categories fallback:', err.message);
+    console.warn('[HBK API] Categories fallback:', err.message);
     return [
       { id: 'cat-arch', slug: 'architecture', name: 'Architecture', description: 'Monographs and structural forms.' },
       { id: 'cat-travel', slug: 'travel', name: 'Travel', description: 'Contemplative journeys and historic landscapes.' },
@@ -79,7 +93,7 @@ export async function fetchCategoryDetail(slug) {
     const json = await request(`/categories/${slug}`);
     return json.data;
   } catch (err) {
-    console.warn(`[PRISM API] Category '${slug}' fallback:`, err.message);
+    console.warn(`[HBK API] Category '${slug}' fallback:`, err.message);
     return null;
   }
 }
@@ -144,7 +158,7 @@ export async function fetchGallery(category = null, options = {}) {
     return json.data || [];
   } catch (err) {
     if (err.name === 'AbortError') throw err;
-    console.warn('[PRISM API] Gallery fallback:', err.message);
+    console.warn('[HBK API] Gallery fallback:', err.message);
     return defaultContent.gallery;
   }
 }
@@ -176,8 +190,10 @@ export async function apiAuthLogin({ identifier, password }) {
     body: { identifier, password }
   });
   if (json.data?.token) {
+    localStorage.setItem('hbk_auth_token', json.data.token);
     localStorage.setItem('prism_auth_token', json.data.token);
     if (json.data?.user?.role === 'admin') {
+      localStorage.setItem('hbk_admin_token', json.data.token);
       localStorage.setItem('prism_admin_token', json.data.token);
     }
   }
@@ -190,13 +206,16 @@ export async function apiAuthRegister({ username, email, password, name }) {
     body: { username, email, password, name }
   });
   if (json.data?.token) {
+    localStorage.setItem('hbk_auth_token', json.data.token);
     localStorage.setItem('prism_auth_token', json.data.token);
   }
   return json.data;
 }
 
 export async function apiAuthLogout() {
+  localStorage.removeItem('hbk_auth_token');
   localStorage.removeItem('prism_auth_token');
+  localStorage.removeItem('hbk_admin_token');
   localStorage.removeItem('prism_admin_token');
   try {
     await request('/auth/logout', { method: 'POST' });
@@ -229,6 +248,7 @@ export async function apiAuthUpdateProfile(updates) {
     body: updates
   });
   if (json.data?.token) {
+    localStorage.setItem('hbk_auth_token', json.data.token);
     localStorage.setItem('prism_auth_token', json.data.token);
   }
   return json.data?.user;
@@ -256,6 +276,7 @@ export async function apiAuthGoogle(idToken, testProfile = null) {
     body: { idToken, testProfile }
   });
   if (json.data?.token) {
+    localStorage.setItem('hbk_auth_token', json.data.token);
     localStorage.setItem('prism_auth_token', json.data.token);
   }
   return json.data;
@@ -267,6 +288,7 @@ export async function apiAuthKakao({ code, state, redirectUri, testProfile = nul
     body: { code, state, redirectUri, testProfile }
   });
   if (json.data?.token) {
+    localStorage.setItem('hbk_auth_token', json.data.token);
     localStorage.setItem('prism_auth_token', json.data.token);
   }
   return json.data;
@@ -317,21 +339,21 @@ export async function apiAdminLogout() {
 }
 
 export async function apiAdminGetMe() {
-  const token = localStorage.getItem('prism_admin_token') || localStorage.getItem('prism_auth_token');
+  const token = getStoredAdminToken();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const json = await request('/admin/me', { headers });
   return json.data?.user;
 }
 
 export async function apiAdminGetStats() {
-  const token = localStorage.getItem('prism_admin_token');
+  const token = getStoredAdminToken();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const json = await request('/admin/stats', { headers });
   return json.data;
 }
 
 export async function apiAdminCreateArticle(data) {
-  const token = localStorage.getItem('prism_admin_token');
+  const token = getStoredAdminToken();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const json = await request('/admin/articles', {
     method: 'POST',
@@ -342,7 +364,7 @@ export async function apiAdminCreateArticle(data) {
 }
 
 export async function apiAdminUpdateArticle(id, updates) {
-  const token = localStorage.getItem('prism_admin_token');
+  const token = getStoredAdminToken();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const json = await request(`/admin/articles/${id}`, {
     method: 'PATCH',
@@ -353,7 +375,7 @@ export async function apiAdminUpdateArticle(id, updates) {
 }
 
 export async function apiAdminDeleteArticle(id) {
-  const token = localStorage.getItem('prism_admin_token');
+  const token = getStoredAdminToken();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const json = await request(`/admin/articles/${id}`, {
     method: 'DELETE',
@@ -363,7 +385,7 @@ export async function apiAdminDeleteArticle(id) {
 }
 
 export async function apiAdminGetAuditLogs() {
-  const token = localStorage.getItem('prism_admin_token');
+  const token = getStoredAdminToken();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const json = await request('/admin/audit-logs', { headers });
   return json.data || [];
@@ -391,7 +413,7 @@ export async function fetchMediaAssets({ category, search, page = 1, limit = 50 
  * Admin Media Management API
  */
 export async function apiAdminGetMedia({ category, search, isApproved, isOriginal, page = 1, limit = 50 } = {}) {
-  const token = localStorage.getItem('prism_admin_token');
+  const token = getStoredAdminToken();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
   const params = new URLSearchParams();
@@ -411,14 +433,14 @@ export async function apiAdminGetMedia({ category, search, isApproved, isOrigina
 }
 
 export async function apiAdminGetMediaById(id) {
-  const token = localStorage.getItem('prism_admin_token');
+  const token = getStoredAdminToken();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const json = await request(`/admin/media/${id}`, { headers });
   return json.data;
 }
 
 export async function apiAdminUploadMedia(formData) {
-  const token = localStorage.getItem('prism_admin_token');
+  const token = getStoredAdminToken();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   // Note: let browser set multipart/form-data boundary
   const json = await request('/admin/media/upload', {
@@ -430,7 +452,7 @@ export async function apiAdminUploadMedia(formData) {
 }
 
 export async function apiAdminUpdateMedia(id, updates) {
-  const token = localStorage.getItem('prism_admin_token');
+  const token = getStoredAdminToken();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const json = await request(`/admin/media/${id}`, {
     method: 'PUT',
@@ -441,7 +463,7 @@ export async function apiAdminUpdateMedia(id, updates) {
 }
 
 export async function apiAdminDeleteMedia(id) {
-  const token = localStorage.getItem('prism_admin_token');
+  const token = getStoredAdminToken();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const json = await request(`/admin/media/${id}`, {
     method: 'DELETE',
@@ -451,7 +473,7 @@ export async function apiAdminDeleteMedia(id) {
 }
 
 export async function apiAdminDetectDuplicateMedia({ filename, fileSize }) {
-  const token = localStorage.getItem('prism_admin_token');
+  const token = getStoredAdminToken();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const json = await request('/admin/media/detect-duplicate', {
     method: 'POST',
@@ -462,7 +484,7 @@ export async function apiAdminDetectDuplicateMedia({ filename, fileSize }) {
 }
 
 export async function apiAdminRecommendMedia({ title, content, tags, categorySlug }) {
-  const token = localStorage.getItem('prism_admin_token');
+  const token = getStoredAdminToken();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const params = new URLSearchParams();
   if (title) params.append('title', title);
@@ -475,7 +497,7 @@ export async function apiAdminRecommendMedia({ title, content, tags, categorySlu
 }
 
 export async function apiAdminRollbackMedia({ targetType, targetId }) {
-  const token = localStorage.getItem('prism_admin_token');
+  const token = getStoredAdminToken();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const json = await request('/admin/media/rollback', {
     method: 'POST',

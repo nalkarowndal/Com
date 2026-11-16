@@ -1,7 +1,7 @@
 export const defaultContent = {
   project: {
     name: "company",
-    brandLogoAlt: "PRISM",
+    brandLogoAlt: "HBK",
     brandLogoSrc: "/images/logo.png"
   },
   navigation: [

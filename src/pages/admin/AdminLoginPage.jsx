@@ -35,11 +35,11 @@ export default function AdminLoginPage() {
       <div className="admin-login-card">
         <div className="login-header">
           <Link to="/" className="login-logo-link" aria-label="Return to Homepage">
-            <img src="/images/logo.png" alt="PRISM Brand" width="120" />
+            <img src="/images/logo.png" alt="HBK Brand" width="120" />
           </Link>
           <h1 className="login-title">Editorial Management Portal</h1>
           <p className="login-subtitle">
-            Authenticated administrative access for PRISM content curators and editors.
+            Authenticated administrative access for HBK content curators and editors.
           </p>
         </div>
 

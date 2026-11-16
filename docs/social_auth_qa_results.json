@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-13T08:28:45.241Z",
+  "timestamp": "2026-11-16T06:09:19.533Z",
   "englishUiChecks": {
     "guestHeaderButton": true,
     "userDropdownPurity": true,
@@ -12,7 +12,7 @@
     "hasDivider": true,
     "googleText": true,
     "kakaoText": true,
-    "kakaoStylesVerified": true
+    "kakaoStylesVerified": false
   },
   "googleAuthFlow": {
     "modalOpened": true,

@@ -12,7 +12,7 @@ if (!fs.existsSync(outputDir)) {
 }
 
 async function captureAll() {
-  console.log('=== Starting PRISM QA Audit Screenshot Capture (screenshots-3) ===');
+  console.log('=== Starting HBK QA Audit Screenshot Capture (screenshots-3) ===');
   console.log(`Target Output Directory: ${outputDir}\n`);
 
   const browser = await chromium.launch({
@@ -414,8 +414,8 @@ async function captureAll() {
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), 'utf-8');
 
     // 2. Write README.md in docs/screenshots-3
-    let readmeContent = `# PRISM Architectural & Editorial Platform — QA Verification Screenshots (screenshots-3)\n\n`;
-    readmeContent += `본 디렉터리는 PRISM 웹 플랫폼의 **영문 UI 전면 통일(M29)**, **Google Identity Services & Kakao 소셜 로그인 연동(M30~M34)**, **소셜 버튼 규격(40px) 및 중앙 정렬 일치**, **사용자(USER) 및 관리자(ADMIN) 권한 분리(RBAC)**, 그리고 **반응형 멀티 뷰포트 검수(M35)**를 위한 공식 QA 검수 산출물 패키지입니다.\n\n`;
+    let readmeContent = `# HBK Architectural & Editorial Platform — QA Verification Screenshots (screenshots-3)\n\n`;
+    readmeContent += `본 디렉터리는 HBK 웹 플랫폼의 **영문 UI 전면 통일(M29)**, **Google Identity Services & Kakao 소셜 로그인 연동(M30~M34)**, **소셜 버튼 규격(40px) 및 중앙 정렬 일치**, **사용자(USER) 및 관리자(ADMIN) 권한 분리(RBAC)**, 그리고 **반응형 멀티 뷰포트 검수(M35)**를 위한 공식 QA 검수 산출물 패키지입니다.\n\n`;
     readmeContent += `총 **${manifest.length}개**의 고해상도 페이지 및 인터랙션 스크린샷과 검수 데이터가 수록되어 있습니다.\n\n`;
 
     readmeContent += `## 📋 QA 검수 카테고리 요약\n\n`;
@@ -443,7 +443,7 @@ async function captureAll() {
     fs.writeFileSync(path.join(outputDir, 'README.md'), readmeContent, 'utf-8');
 
     // 3. Write QA_AUDIT_REPORT.md
-    let auditReport = `# PRISM Web Platform — Comprehensive QA Verification Report\n\n`;
+    let auditReport = `# HBK Web Platform — Comprehensive QA Verification Report\n\n`;
     auditReport += `**Audit Date**: ${new Date().toISOString().split('T')[0]}\n`;
     auditReport += `**Environment**: Node.js v24.16.0 | React 19 + Vite | Express API | PostgreSQL & File Persistence\n`;
     auditReport += `**Target Directory**: \`docs/screenshots-3/\`\n\n`;
@@ -473,7 +473,7 @@ async function captureAll() {
     // 4. Write qa_results.json
     const qaResults = {
       timestamp: new Date().toISOString(),
-      platform: 'PRISM Editorial & Architecture Magazine',
+      platform: 'HBK Editorial & Architecture Magazine',
       testSuites: {
         unitTests: { total: 6, passed: 6, failed: 0, status: 'PASS' },
         apiTests: { total: 29, passed: 29, failed: 0, status: 'PASS' },

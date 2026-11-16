@@ -1,4 +1,4 @@
-# PRISM Web Platform — Comprehensive QA Verification Report
+# HBK Web Platform — Comprehensive QA Verification Report
 
 **Audit Date**: 2026-11-16
 **Environment**: Node.js v24.16.0 | React 19 + Vite | Express API | PostgreSQL & File Persistence

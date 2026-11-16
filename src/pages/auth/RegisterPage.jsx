@@ -79,12 +79,12 @@ export default function RegisterPage() {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-header">
-          <Link to="/" className="auth-logo-link" aria-label="Return to PRISM Homepage">
-            <img src="/images/logo.png" alt="PRISM Brand" width="132" height="30" />
+          <Link to="/" className="auth-logo-link" aria-label="Return to HBK Homepage">
+            <img src="/images/logo.png" alt="HBK Brand" width="132" height="30" />
           </Link>
           <h1 className="auth-title">CREATE ACCOUNT</h1>
           <p className="auth-subtitle">
-            Join the PRISM editorial community for curated architectural stories.
+            Join the HBK editorial community for curated architectural stories.
           </p>
         </div>
 

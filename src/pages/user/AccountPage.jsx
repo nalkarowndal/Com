@@ -94,7 +94,7 @@ export default function AccountPage() {
               <span>&rarr;</span>
             </Link>
             <Link to="/gallery" className="quick-link-item">
-              <span>PRISM Photo Gallery</span>
+              <span>HBK Photo Gallery</span>
               <span>&rarr;</span>
             </Link>
             <Link to="/search" className="quick-link-item">

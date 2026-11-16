@@ -86,7 +86,7 @@ export default function GalleryPage() {
         <PageHeader
           badge="Permanent Collection"
           title="Visual Archive"
-          description="A curated photographic repository of structural forms, cultural landscapes, and sculptural dimensions across PRISM monographs."
+          description="A curated photographic repository of structural forms, cultural landscapes, and sculptural dimensions across HBK monographs."
         />
 
         {/* Category Filter Tabs */}

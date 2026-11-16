@@ -1,6 +1,6 @@
-# PRISM Architectural & Editorial Platform — QA Verification Screenshots (screenshots-3)
+# HBK Architectural & Editorial Platform — QA Verification Screenshots (screenshots-3)
 
-본 디렉터리는 PRISM 웹 플랫폼의 **영문 UI 전면 통일(M29)**, **Google Identity Services & Kakao 소셜 로그인 연동(M30~M34)**, **소셜 버튼 규격(40px) 및 중앙 정렬 일치**, **사용자(USER) 및 관리자(ADMIN) 권한 분리(RBAC)**, 그리고 **반응형 멀티 뷰포트 검수(M35)**를 위한 공식 QA 검수 산출물 패키지입니다.
+본 디렉터리는 HBK 웹 플랫폼의 **영문 UI 전면 통일(M29)**, **Google Identity Services & Kakao 소셜 로그인 연동(M30~M34)**, **소셜 버튼 규격(40px) 및 중앙 정렬 일치**, **사용자(USER) 및 관리자(ADMIN) 권한 분리(RBAC)**, 그리고 **반응형 멀티 뷰포트 검수(M35)**를 위한 공식 QA 검수 산출물 패키지입니다.
 
 총 **43개**의 고해상도 페이지 및 인터랙션 스크린샷과 검수 데이터가 수록되어 있습니다.
 

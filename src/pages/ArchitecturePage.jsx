@@ -233,7 +233,7 @@ export default function ArchitecturePage() {
             <blockquote>
               "Architecture is not simply the art of enclosing volume; it is the choreographic alignment of light, weight, and human memory."
             </blockquote>
-            <cite>— PRISM Editorial Archive</cite>
+            <cite>— HBK Editorial Archive</cite>
           </div>
         </section>
       </div>

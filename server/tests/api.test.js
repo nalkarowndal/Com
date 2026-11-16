@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createApp } from '../src/app.js';
 import { initDatabase } from '../src/config/database.js';
 
-describe('PRISM Company REST API Suite', () => {
+describe('HBK Company REST API Suite', () => {
   let app;
   let server;
   let baseUrl;
@@ -35,7 +35,7 @@ describe('PRISM Company REST API Suite', () => {
     assert.equal(body.data.storage.connected, true);
   });
 
-  it('GET /api/site should return company project and PRISM brand info', async () => {
+  it('GET /api/site should return company project and HBK brand info', async () => {
     const res = await fetch(`${baseUrl}/site`);
     assert.equal(res.status, 200);
     const body = await res.json();

@@ -1451,7 +1451,7 @@
       "avatar": "/images/avatars/admin.svg",
       "bookmarks": [],
       "createdAt": "2026-10-20T10:00:00.000Z",
-      "lastLoginAt": "2026-11-13T08:34:20.392Z"
+      "lastLoginAt": "2026-11-16T06:12:36.539Z"
     },
     {
       "id": "usr-member-001",
@@ -1465,8 +1465,8 @@
         "art-001"
       ],
       "createdAt": "2026-11-13T15:00:00.000Z",
-      "lastLoginAt": "2026-11-13T08:34:18.476Z",
-      "updatedAt": "2026-11-13T08:34:01.129Z"
+      "lastLoginAt": "2026-11-16T06:12:36.498Z",
+      "updatedAt": "2026-11-16T06:10:36.899Z"
     },
     {
       "id": "usr-1794550079290-visl",
@@ -1643,6 +1643,132 @@
       "createdAt": "2026-11-13T08:29:56.627Z",
       "updatedAt": "2026-11-13T08:29:56.627Z",
       "lastLoginAt": null
+    },
+    {
+      "id": "usr-1794808145840-wmc4",
+      "username": "reader_1794808145686",
+      "email": "reader_1794808145686@prism.io",
+      "passwordHash": "0f31c5b418d4bdfb9a5898610e2a1712:35ebcb743be0fd84ea9e8bec286bdc3509d558e56c23507b2462f417d7777991159e7a6059b323e7de5b1245d0db42186638d5c865c10796eea3977779757389",
+      "name": "Alex New Reader",
+      "role": "user",
+      "status": "active",
+      "avatar": "/images/avatars/user.svg",
+      "bookmarks": [],
+      "createdAt": "2026-11-16T05:49:05.840Z",
+      "updatedAt": "2026-11-16T05:49:05.840Z",
+      "lastLoginAt": null
+    },
+    {
+      "id": "usr-1794808298065-6jw1",
+      "username": "googlereader8027",
+      "email": "google.reader.8027@gmail.com",
+      "passwordHash": "ebacf160a51e95eaf7948518e30f0bad:be98ffd11a550718acae8b1b91e990b4b775d57dbd3a6fd94cca995d8a3414f86dfcb107027ab59107534e4f2a1dbd3de0c7c316af666203c437a10f04641da1",
+      "name": "Elena Rostova",
+      "role": "user",
+      "status": "active",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb",
+      "bookmarks": [],
+      "createdAt": "2026-11-16T05:51:38.065Z",
+      "updatedAt": "2026-11-16T05:51:38.065Z",
+      "lastLoginAt": null
+    },
+    {
+      "id": "usr-1794808338614-kpa9",
+      "username": "googlereader8576",
+      "email": "google.reader.8576@gmail.com",
+      "passwordHash": "b3ec55db70797230c67e59c70e2a6e20:70a578aa3ec2db5a60ebef7d2b45a0ac6a0251f1dc3ae419170d5cfa45f0f3b5cf9a46b42f8c71ee800bf726cfb3d4a42e72de83462e3769ea9bb05717b9a1ae",
+      "name": "Elena Rostova",
+      "role": "user",
+      "status": "active",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb",
+      "bookmarks": [],
+      "createdAt": "2026-11-16T05:52:18.614Z",
+      "updatedAt": "2026-11-16T05:52:18.614Z",
+      "lastLoginAt": null
+    },
+    {
+      "id": "usr-1794808340911-3mvi",
+      "username": "kakao_340862",
+      "email": "kakao.reader.0862@kakao.com",
+      "passwordHash": "ded3377c0dfeaf9b88be852e3089928f:f5e8bc7805186a7ac3ffc672d9dcbba43e06635efb7741a40effd40fdf030477e3fa4ce58fec32dd4c647c934e3c5a4dba7a0d9cfcefbf304a24587484cfaab5",
+      "name": "Minji Park",
+      "role": "user",
+      "status": "active",
+      "avatar": "/images/avatars/user.svg",
+      "bookmarks": [],
+      "createdAt": "2026-11-16T05:52:20.911Z",
+      "updatedAt": "2026-11-16T05:52:20.911Z",
+      "lastLoginAt": null
+    },
+    {
+      "id": "usr-1794809189101-a8u8",
+      "username": "reader_1794809188961",
+      "email": "reader_1794809188961@prism.io",
+      "passwordHash": "0795e498f1d609e2964dca33e7e2b14e:d434984999c54610517a878af2c8a7f99ed76330990eb7f5fa85a0fbd0616d91d66b305744e64112bdbcf7dde8d8c7c97c27eb8d12cd31e047563f7277c9b748",
+      "name": "Alex New Reader",
+      "role": "user",
+      "status": "active",
+      "avatar": "/images/avatars/user.svg",
+      "bookmarks": [],
+      "createdAt": "2026-11-16T06:06:29.101Z",
+      "updatedAt": "2026-11-16T06:06:29.101Z",
+      "lastLoginAt": null
+    },
+    {
+      "id": "usr-1794809295275-ep22",
+      "username": "googlereader5229",
+      "email": "google.reader.5229@gmail.com",
+      "passwordHash": "3da21a51079d66b7391c0940b1ddc144:f2f7f0a31f3854854d19df1eb2ed8f5b62b4358f26244d0182c6335a81cb0ec3304aea21258c2d81ea418846b89a7251517d513d4ea05792245315994806188f",
+      "name": "Elena Rostova",
+      "role": "user",
+      "status": "active",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb",
+      "bookmarks": [],
+      "createdAt": "2026-11-16T06:08:15.275Z",
+      "updatedAt": "2026-11-16T06:08:15.275Z",
+      "lastLoginAt": null
+    },
+    {
+      "id": "usr-1794809362259-5ke7",
+      "username": "googlereader2212",
+      "email": "google.reader.2212@gmail.com",
+      "passwordHash": "aaafbac6df073c91fc1ca88a4892974a:5f3280222d29f697af3300623834096aac17998314ebc3b1e3ee09bcb4714cdcff727e80cec04f7466fd7dcbbc9fbe0476a22d56f16f50c7a08276e7ba43df91",
+      "name": "Elena Rostova",
+      "role": "user",
+      "status": "active",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb",
+      "bookmarks": [],
+      "createdAt": "2026-11-16T06:09:22.259Z",
+      "updatedAt": "2026-11-16T06:09:22.259Z",
+      "lastLoginAt": null
+    },
+    {
+      "id": "usr-1794809364608-mvan",
+      "username": "kakao_364563",
+      "email": "kakao.reader.4563@kakao.com",
+      "passwordHash": "1f237bebe4fccf726534772494497b89:fc0c980d09f0e7633b85057a43496c6b71a0244f60a7c0e59594f1289346aee782de973aecabc107c139ffdcfa1dc41ca9b112f81fcfe836e3e3b5a54f11674e",
+      "name": "Minji Park",
+      "role": "user",
+      "status": "active",
+      "avatar": "/images/avatars/user.svg",
+      "bookmarks": [],
+      "createdAt": "2026-11-16T06:09:24.607Z",
+      "updatedAt": "2026-11-16T06:09:24.607Z",
+      "lastLoginAt": null
+    },
+    {
+      "id": "usr-1794809556266-korx",
+      "username": "user_1794809556203",
+      "email": "user_1794809556203@example.com",
+      "passwordHash": "04432f0c877433e368c6f29030e8ef76:ff5ed04eec351e735bc6369dea259b141e98ce6869fb4698977e45a15e2c7da0f28fa77c746bdf9445a54fab7797202a270a768d9dbea2f6ed2270ddd0d8d70c",
+      "name": "Test Reader Member",
+      "role": "user",
+      "status": "active",
+      "avatar": "/images/avatars/user.svg",
+      "bookmarks": [],
+      "createdAt": "2026-11-16T06:12:36.265Z",
+      "updatedAt": "2026-11-16T06:12:36.265Z",
+      "lastLoginAt": null
     }
   ],
   "socialIdentities": [
@@ -1734,6 +1860,96 @@
       },
       "createdAt": "2026-11-13T08:28:49.959Z",
       "updatedAt": "2026-11-13T08:28:49.959Z"
+    },
+    {
+      "id": "soc-1794808298066-m4bt",
+      "userId": "usr-1794808298065-6jw1",
+      "provider": "google",
+      "providerUserId": "g_demo_1794808298027",
+      "email": "google.reader.8027@gmail.com",
+      "profileData": {
+        "sub": "g_demo_1794808298027",
+        "email": "google.reader.8027@gmail.com",
+        "name": "Elena Rostova",
+        "picture": "https://images.unsplash.com/photo-1534528741775-53994a69daeb"
+      },
+      "createdAt": "2026-11-16T05:51:38.066Z",
+      "updatedAt": "2026-11-16T05:51:38.066Z"
+    },
+    {
+      "id": "soc-1794808338615-lq6o",
+      "userId": "usr-1794808338614-kpa9",
+      "provider": "google",
+      "providerUserId": "g_demo_1794808338576",
+      "email": "google.reader.8576@gmail.com",
+      "profileData": {
+        "sub": "g_demo_1794808338576",
+        "email": "google.reader.8576@gmail.com",
+        "name": "Elena Rostova",
+        "picture": "https://images.unsplash.com/photo-1534528741775-53994a69daeb"
+      },
+      "createdAt": "2026-11-16T05:52:18.615Z",
+      "updatedAt": "2026-11-16T05:52:18.615Z"
+    },
+    {
+      "id": "soc-1794808340912-hx05",
+      "userId": "usr-1794808340911-3mvi",
+      "provider": "kakao",
+      "providerUserId": "08340862",
+      "email": "kakao.reader.0862@kakao.com",
+      "profileData": {
+        "id": "08340862",
+        "email": "kakao.reader.0862@kakao.com",
+        "name": "Minji Park",
+        "picture": "/images/avatars/user.svg"
+      },
+      "createdAt": "2026-11-16T05:52:20.912Z",
+      "updatedAt": "2026-11-16T05:52:20.912Z"
+    },
+    {
+      "id": "soc-1794809295276-ll12",
+      "userId": "usr-1794809295275-ep22",
+      "provider": "google",
+      "providerUserId": "g_demo_1794809295229",
+      "email": "google.reader.5229@gmail.com",
+      "profileData": {
+        "sub": "g_demo_1794809295229",
+        "email": "google.reader.5229@gmail.com",
+        "name": "Elena Rostova",
+        "picture": "https://images.unsplash.com/photo-1534528741775-53994a69daeb"
+      },
+      "createdAt": "2026-11-16T06:08:15.276Z",
+      "updatedAt": "2026-11-16T06:08:15.276Z"
+    },
+    {
+      "id": "soc-1794809362259-ro6r",
+      "userId": "usr-1794809362259-5ke7",
+      "provider": "google",
+      "providerUserId": "g_demo_1794809362212",
+      "email": "google.reader.2212@gmail.com",
+      "profileData": {
+        "sub": "g_demo_1794809362212",
+        "email": "google.reader.2212@gmail.com",
+        "name": "Elena Rostova",
+        "picture": "https://images.unsplash.com/photo-1534528741775-53994a69daeb"
+      },
+      "createdAt": "2026-11-16T06:09:22.259Z",
+      "updatedAt": "2026-11-16T06:09:22.259Z"
+    },
+    {
+      "id": "soc-1794809364609-nmbn",
+      "userId": "usr-1794809364608-mvan",
+      "provider": "kakao",
+      "providerUserId": "09364563",
+      "email": "kakao.reader.4563@kakao.com",
+      "profileData": {
+        "id": "09364563",
+        "email": "kakao.reader.4563@kakao.com",
+        "name": "Minji Park",
+        "picture": "/images/avatars/user.svg"
+      },
+      "createdAt": "2026-11-16T06:09:24.609Z",
+      "updatedAt": "2026-11-16T06:09:24.609Z"
     }
   ]
 }

@@ -42,7 +42,7 @@ export default function AdminLayout() {
         <div className="admin-brand">
           <Link to="/" className="admin-brand-link">
             <span className="brand-dot" />
-            <span className="brand-text">PRISM ADMIN</span>
+            <span className="brand-text">HBK ADMIN</span>
           </Link>
           <span className="admin-role-badge">Administrator</span>
         </div>
@@ -133,7 +133,7 @@ export default function AdminLayout() {
       <div className="admin-main-wrap">
         <header className="admin-topbar">
           <div className="topbar-left">
-            <span className="platform-tag">PRISM Editorial CMS v2.0</span>
+            <span className="platform-tag">HBK Editorial CMS v2.0</span>
           </div>
 
           <div className="topbar-right">

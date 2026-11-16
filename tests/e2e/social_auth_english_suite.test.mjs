@@ -37,6 +37,21 @@ async function runSocialAuthEnglishSuite() {
     const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
     const page = await context.newPage();
 
+    // Mock auth/config so test verifies the simulation/fallback modal workflow deterministically
+    await page.route('**/api/auth/config', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          data: {
+            isGoogleConfigured: false,
+            isKakaoConfigured: false
+          }
+        })
+      });
+    });
+
     // 1.1 Home page as Guest
     await page.goto('http://localhost:5173/', { waitUntil: 'networkidle' });
     const guestHeaderBtn = await page.locator('.header-actions .auth-badge-btn').innerText();
@@ -142,6 +157,19 @@ async function runSocialAuthEnglishSuite() {
     // =========================================================================
     console.log('\n[Phase 4] Testing Kakao Social Authentication interaction...');
     const kakaoContext = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+    await kakaoContext.route('**/api/auth/config', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          data: {
+            isGoogleConfigured: false,
+            isKakaoConfigured: false
+          }
+        })
+      });
+    });
     const kakaoPage = await kakaoContext.newPage();
 
     await kakaoPage.goto('http://localhost:5173/login', { waitUntil: 'networkidle' });

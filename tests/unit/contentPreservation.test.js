@@ -13,7 +13,7 @@ describe('Milestone Content Preservation Verification', () => {
   const snapshotRaw = fs.readFileSync(snapshotPath, 'utf-8');
   const snapshot = JSON.parse(snapshotRaw);
 
-  it('Project identity must match snapshot (company name & PRISM logo)', () => {
+  it('Project identity must match snapshot (company name & brand logo)', () => {
     assert.equal(defaultContent.project.name, snapshot.project.name);
     assert.equal(defaultContent.project.name, 'company');
     assert.equal(defaultContent.project.brandLogoSrc, snapshot.project.brandLogoSrc);

@@ -29,7 +29,7 @@ export default function AdminCategoriesPage() {
         <div>
           <h1 className="admin-view-title">Discipline Categories</h1>
           <p className="admin-view-desc">
-            Core editorial branches preserving the architectural and cultural taxonomy of PRISM.
+            Core editorial branches preserving the architectural and cultural taxonomy of HBK.
           </p>
         </div>
       </div>

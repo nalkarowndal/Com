@@ -225,8 +225,8 @@ export default function LoginPage() {
       <div className="auth-card">
         {/* Brand Header */}
         <div className="auth-header">
-          <Link to="/" className="auth-logo-link" aria-label="Return to PRISM Homepage">
-            <img src="/images/logo.png" alt="PRISM Brand" width="132" height="30" />
+          <Link to="/" className="auth-logo-link" aria-label="Return to HBK Homepage">
+            <img src="/images/logo.png" alt="HBK Brand" width="132" height="30" />
           </Link>
           <h1 className="auth-title">Welcome Back</h1>
           <p className="auth-subtitle">
@@ -256,7 +256,7 @@ export default function LoginPage() {
               required
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
-              placeholder="e.g. reader@prism.company.io or admin"
+              placeholder="e.g. reader@hbk.company.io or admin"
               autoComplete="username"
               disabled={loading || socialLoading}
             />

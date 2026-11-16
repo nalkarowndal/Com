@@ -245,7 +245,7 @@ export default function MobileNav({ isOpen, onClose, navigation = [], triggerRef
         </nav>
 
         <div className="mobile-drawer-footer">
-          <p>PRISM Editorial Collection</p>
+          <p>HBK Editorial Collection</p>
           <p>2026 Green Systems Incorporated.</p>
         </div>
       </div>

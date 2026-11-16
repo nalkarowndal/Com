@@ -53,7 +53,7 @@ export default function OAuthCallbackPage() {
         <div className="auth-card">
           <div className="auth-header">
             <Link to="/" className="auth-logo-link">
-              <img src="/images/logo.png" alt="PRISM Brand" width="132" height="30" />
+              <img src="/images/logo.png" alt="HBK Brand" width="132" height="30" />
             </Link>
             <h1 className="auth-title">Sign In Failed</h1>
             <p className="auth-subtitle">We could not complete your social authentication.</p>
@@ -81,7 +81,7 @@ export default function OAuthCallbackPage() {
           Completing Authentication
         </h2>
         <p style={{ color: '#888', marginTop: '8px', fontSize: '0.9rem' }}>
-          Finalizing secure token exchange and provisioning your PRISM reader session...
+          Finalizing secure token exchange and provisioning your HBK reader session...
         </p>
       </div>
     </div>

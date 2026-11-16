@@ -41,14 +41,14 @@ export default function AdminModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="PRISM Content Administration"
+      title="HBK Content Administration"
     >
       <div className="admin-modal-card">
         <div className="admin-header">
           <div>
             <h2>Content Management</h2>
             <p style={{ fontSize: '0.8125rem', color: 'var(--color-text-secondary)', marginTop: '4px' }}>
-              PRISM Editorial System &bull; company Project
+              HBK Editorial System &bull; company Project
             </p>
           </div>
           <span className="status-badge">Authenticated</span>

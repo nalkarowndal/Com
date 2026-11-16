@@ -273,7 +273,7 @@ export class AdminController {
         categorySlug: req.body?.categorySlug || 'architecture',
         title: req.body?.title || req.body?.name || path.basename(src),
         alt: req.body?.alt || req.body?.title || '',
-        photographer: req.body?.photographer || 'PRISM Contributor',
+        photographer: req.body?.photographer || 'HBK Contributor',
         sourceName: req.body?.sourceName || (req.file ? 'Staff Upload' : 'External Library'),
         sourceUrl: req.body?.sourceUrl || src,
         licenseType: req.body?.licenseType || 'Editorial Rights',

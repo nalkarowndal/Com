@@ -131,7 +131,7 @@ export class AuthService {
         const newAdmin = await userRepository.createUser({
           id: 'usr-admin-001',
           username: env.ADMIN_USERNAME,
-          email: 'admin@prism.company.io',
+          email: 'admin@hbk.company.io',
           passwordHash: this.hashPassword(env.ADMIN_PASSWORD),
           name: 'Chief Editorial Curator',
           role: 'admin',
@@ -599,7 +599,7 @@ export class AuthService {
 
       profile = {
         id: String(kakaoUser.id),
-        email: kakaoAccount.email || `kakao_${kakaoUser.id}@prism.user.local`,
+        email: kakaoAccount.email || `kakao_${kakaoUser.id}@hbk.user.local`,
         name: kakaoProfile.nickname || `Kakao Reader ${String(kakaoUser.id).slice(-4)}`,
         picture: kakaoProfile.profile_image_url || '/images/avatars/user.svg'
       };

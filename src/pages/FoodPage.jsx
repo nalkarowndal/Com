@@ -233,7 +233,7 @@ export default function FoodPage() {
         {/* Culinary Philosophy Strip */}
         <section className="food-philosophy-strip" aria-label="Gastronomic manifesto">
           <div className="food-philosophy-content">
-            <span className="mini-stamp">PRISM CUISINE</span>
+            <span className="mini-stamp">HBK CUISINE</span>
             <p>
               "True culinary depth begins not in complex ornamentation, but in the patience to let single ingredients speak their geographic truth."
             </p>

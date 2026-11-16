@@ -190,7 +190,7 @@ async function seedPostgres(client, data) {
           m.categorySlug || 'architecture',
           m.title || m.alt,
           m.alt,
-          m.photographer || 'PRISM Archive',
+          m.photographer || 'HBK Archive',
           m.sourceName || 'Internal',
           m.sourceUrl || m.src,
           m.licenseType || 'Editorial Rights',

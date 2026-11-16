@@ -4,7 +4,7 @@ import { env } from './config/env.js';
 
 async function bootstrap() {
   try {
-    console.info('=== Starting PRISM Company API Server ===');
+    console.info('=== Starting HBK Company API Server ===');
     console.info(`Node Runtime: ${process.version}`);
     console.info(`Environment: ${env.NODE_ENV}`);
 
@@ -16,12 +16,12 @@ async function bootstrap() {
     const app = createApp();
 
     const server = app.listen(env.PORT, () => {
-      console.info(`PRISM API Server listening on http://localhost:${env.PORT}`);
+      console.info(`HBK API Server listening on http://localhost:${env.PORT}`);
       console.info(`Health check available at http://localhost:${env.PORT}/api/health`);
     });
 
     const shutdown = () => {
-      console.info('Gracefully shutting down PRISM API server...');
+      console.info('Gracefully shutting down HBK API server...');
       server.close(() => {
         console.info('Server closed. Goodbye.');
         process.exit(0);

@@ -4,7 +4,7 @@ import request from 'supertest';
 import { createApp } from '../src/app.js';
 import { initDatabase } from '../src/config/database.js';
 
-describe('PRISM Social OAuth & Federated Identity Suite', () => {
+describe('HBK Social OAuth & Federated Identity Suite', () => {
   let app;
 
   before(async () => {
