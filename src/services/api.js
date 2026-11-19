@@ -1,10 +1,11 @@
 import { defaultContent } from '../data/defaultContent';
+import { normalizeApiBaseUrl } from './apiBaseUrl';
 
 const defaultBaseUrl = (typeof window !== 'undefined' && window.location.origin.includes('onrender.com'))
   ? 'https://com-api-ow0l.onrender.com/api'
   : (import.meta.env.PROD ? 'https://com-api-ow0l.onrender.com/api' : 'http://localhost:4000/api');
 
-export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || defaultBaseUrl).trim().replace(/\/+$/, '');
+export const API_BASE_URL = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL || defaultBaseUrl);
 
 /**
  * Helper to fetch with JSON parsing and error handling
