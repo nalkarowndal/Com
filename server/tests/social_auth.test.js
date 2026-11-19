@@ -1,15 +1,23 @@
-import { describe, it, before } from 'node:test';
+import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert';
 import request from 'supertest';
 import { createApp } from '../src/app.js';
 import { initDatabase } from '../src/config/database.js';
+import { env } from '../src/config/env.js';
 
 describe('HBK Social OAuth & Federated Identity Suite', () => {
   let app;
+  let previousNodeEnv;
 
   before(async () => {
+    previousNodeEnv = env.NODE_ENV;
+    env.NODE_ENV = 'development';
     await initDatabase();
     app = createApp();
+  });
+
+  after(() => {
+    env.NODE_ENV = previousNodeEnv;
   });
 
   it('GET /api/auth/config should return public OAuth status and keys without leaking secrets', async () => {
