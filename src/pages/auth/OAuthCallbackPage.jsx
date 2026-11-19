@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
@@ -8,6 +8,8 @@ export default function OAuthCallbackPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { loginWithKakao, loginWithGoogle } = useAuth();
+
+  const loginRequestRef = useRef(null);
 
   const isGoogle = location.pathname.includes('/google');
 
@@ -41,14 +43,25 @@ export default function OAuthCallbackPage() {
     let isMounted = true;
     async function completeOAuth() {
       try {
-        if (isGoogle) {
-          const tokenOrCode = credential || code;
-          await loginWithGoogle(tokenOrCode);
-        } else {
-          // Send the exact origin-aware redirectUri used during the authorization request
-          const redirectUri = `${window.location.origin}/oauth/callback/kakao`;
-          await loginWithKakao({ code, state, redirectUri });
+        if (!loginRequestRef.current) {
+          loginRequestRef.current = (async () => {
+            if (isGoogle) {
+              if (!credential) throw new Error('Missing Google ID token. Please restart Google sign-in.');
+              return loginWithGoogle(credential);
+            }
+            const expectedState = sessionStorage.getItem('kakao_oauth_state');
+            if (!state || !expectedState || state !== expectedState) {
+              throw new Error('The Kakao sign-in request could not be verified. Please sign in again.');
+            }
+            const redirectUri = sessionStorage.getItem('kakao_oauth_redirect_uri') ||
+              `${window.location.origin}/oauth/callback/kakao`;
+            const result = await loginWithKakao({ code, state, redirectUri });
+            sessionStorage.removeItem('kakao_oauth_state');
+            sessionStorage.removeItem('kakao_oauth_redirect_uri');
+            return result;
+          })();
         }
+        await loginRequestRef.current;
         if (isMounted) {
           navigate('/account', { replace: true });
         }

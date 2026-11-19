@@ -321,7 +321,8 @@ export class AuthService {
       kakaoRedirectUri: env.KAKAO_REDIRECT_URI,
       isGoogleConfigured,
       isKakaoConfigured,
-      frontendOrigin: env.FRONTEND_ORIGIN
+      frontendOrigin: env.FRONTEND_ORIGIN,
+      allowSimulation: env.NODE_ENV !== 'production'
     };
   }
 
@@ -379,7 +380,7 @@ export class AuthService {
       !env.GOOGLE_CLIENT_ID.includes('your_google_client_id')
     );
 
-    if (isConfigured && !payload.is_test_token) {
+    if (isConfigured && (env.NODE_ENV === 'production' || !payload.is_test_token)) {
       try {
         const verifyRes = await fetch(
           `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`
@@ -399,12 +400,23 @@ export class AuthService {
             picture: googleData.picture || '/images/avatars/user.svg'
           };
         }
+        const err = new Error('Google could not verify this ID token.');
+        err.code = 'INVALID_TOKEN';
+        err.status = 401;
+        throw err;
       } catch (networkErr) {
         // If offline / test environment, fall back to payload claims if valid
         if (env.NODE_ENV === 'production') {
           throw networkErr;
         }
       }
+    }
+
+    if (env.NODE_ENV === 'production') {
+      const err = new Error('Google sign-in is unavailable. Configure GOOGLE_CLIENT_ID in the backend environment.');
+      err.code = 'OAUTH_NOT_CONFIGURED';
+      err.status = 503;
+      throw err;
     }
 
     if (!payload.sub || !payload.email) {
@@ -427,6 +439,12 @@ export class AuthService {
    * Strictly creates 'user' role; prevents automatic takeover of admin accounts
    */
   async handleGoogleLogin({ idToken, testProfile = null }) {
+    if (testProfile && env.NODE_ENV === 'production') {
+      const err = new Error('Simulated sign-in is disabled in production.');
+      err.code = 'SIMULATION_DISABLED';
+      err.status = 403;
+      throw err;
+    }
     const profile = testProfile || (await this.verifyGoogleIdToken(idToken));
 
     // 1. Check if social identity already linked
@@ -523,6 +541,12 @@ export class AuthService {
    * Strictly creates 'user' role; rejects automatic link to admin
    */
   async handleKakaoLogin({ code, state: _state, redirectUri, testProfile = null }) {
+    if (testProfile && env.NODE_ENV === 'production') {
+      const err = new Error('Simulated sign-in is disabled in production.');
+      err.code = 'SIMULATION_DISABLED';
+      err.status = 403;
+      throw err;
+    }
     let profile = testProfile;
 
     if (!profile) {
@@ -542,7 +566,7 @@ export class AuthService {
 
       if (!isConfigured) {
         const err = new Error(
-          'Kakao authentication is not yet configured. Please supply KAKAO_REST_API_KEY in server/.env.'
+          'Kakao sign-in is unavailable. Configure KAKAO_REST_API_KEY in the backend environment.'
         );
         err.code = 'OAUTH_NOT_CONFIGURED';
         err.status = 503;

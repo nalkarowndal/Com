@@ -21,6 +21,10 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState(false);
 
+  const [configStatus, setConfigStatus] = useState('loading');
+  const [googleSdkStatus, setGoogleSdkStatus] = useState('loading');
+  const siteOrigin = window.location.origin;
+
   // Social Auth Config state
   const [authConfig, setAuthConfig] = useState({
     googleClientId: '',
@@ -28,6 +32,7 @@ export default function LoginPage() {
     kakaoRedirectUri: '',
     isGoogleConfigured: false,
     isKakaoConfigured: false,
+    allowSimulation: false,
   });
 
   // Modal for unconfigured OAuth guide / developer testing
@@ -49,7 +54,7 @@ export default function LoginPage() {
     }
   }, [from, navigate]);
 
-  // Load backend OAuth configuration with automatic retry for Render cold-starts
+  // A failed request must not be reported as missing provider credentials.
   useEffect(() => {
     let isMounted = true;
     let timer = null;
@@ -57,16 +62,16 @@ export default function LoginPage() {
     async function loadConfig(attempt = 1) {
       try {
         const config = await apiAuthGetConfig();
-        if (isMounted && config) {
+        if (isMounted) {
           setAuthConfig(config);
-          // If server just woke up and config is partial, retry briefly
-          if ((!config.isGoogleConfigured || !config.isKakaoConfigured) && attempt < 4) {
-            timer = setTimeout(() => loadConfig(attempt + 1), 3000);
-          }
+          setConfigStatus('ready');
         }
-      } catch (err) {
-        if (isMounted && attempt < 5) {
+      } catch {
+        if (!isMounted) return;
+        if (attempt < 5) {
           timer = setTimeout(() => loadConfig(attempt + 1), 3000);
+        } else {
+          setConfigStatus('error');
         }
       }
     }
@@ -120,6 +125,7 @@ export default function LoginPage() {
           width: targetWidth,
           locale: 'en',
         });
+        setGoogleSdkStatus('ready');
         return true;
       } catch (err) {
         console.warn('Google Identity Services render failed:', err);
@@ -131,12 +137,14 @@ export default function LoginPage() {
       const interval = setInterval(() => {
         if (renderGoogleButton()) {
           clearInterval(interval);
+          clearTimeout(timeout);
         }
       }, 100);
 
       const timeout = setTimeout(() => {
         clearInterval(interval);
-      }, 5000);
+        if (!isCancelled) setGoogleSdkStatus('error');
+      }, 15000);
 
       return () => {
         isCancelled = true;
@@ -176,55 +184,57 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleClick = async () => {
-    let currentConfig = authConfig;
-    if (!currentConfig.isGoogleConfigured) {
-      try {
-        const fresh = await apiAuthGetConfig();
-        if (fresh && fresh.isGoogleConfigured) {
-          setAuthConfig(fresh);
-          currentConfig = fresh;
-        }
-      } catch {}
+  const refreshAuthConfig = async () => {
+    setError(null);
+    setConfigStatus('loading');
+    try {
+      const fresh = await apiAuthGetConfig();
+      setAuthConfig(fresh);
+      setConfigStatus('ready');
+      return fresh;
+    } catch {
+      setConfigStatus('error');
+      setError('Sign-in services could not be reached. Please try again.');
+      return null;
     }
+  };
 
-    if (currentConfig.isGoogleConfigured && window.google?.accounts?.id) {
-      window.google.accounts.id.prompt();
-    } else {
+  const handleGoogleClick = async () => {
+    const currentConfig = await refreshAuthConfig();
+    if (!currentConfig) return;
+    if (!currentConfig.isGoogleConfigured) {
       setActiveModalProvider('google');
+      return;
     }
+    if (googleSdkStatus !== 'ready' || !window.google?.accounts?.id) {
+      setError('Google sign-in is still loading or has been blocked. Please reload the page and try again.');
+      return;
+    }
+    window.google.accounts.id.prompt();
   };
 
   const handleKakaoClick = async () => {
-    let currentConfig = authConfig;
+    const currentConfig = await refreshAuthConfig();
+    if (!currentConfig) return;
     if (!currentConfig.isKakaoConfigured || !currentConfig.kakaoRestApiKey) {
-      try {
-        const fresh = await apiAuthGetConfig();
-        if (fresh && fresh.isKakaoConfigured) {
-          setAuthConfig(fresh);
-          currentConfig = fresh;
-        }
-      } catch {}
-    }
-
-    if (currentConfig.isKakaoConfigured && currentConfig.kakaoRestApiKey) {
-      const state = Math.random().toString(36).substring(2, 15);
-      sessionStorage.setItem('kakao_oauth_state', state);
-      const originUri = `${window.location.origin}/oauth/callback/kakao`;
-      const redirectUri = (
-        window.location.origin.includes('onrender.com') ||
-        window.location.origin.includes('localhost') ||
-        window.location.origin.includes('127.0.0.1')
-      )
-        ? originUri
-        : (currentConfig.kakaoRedirectUri || originUri);
-      window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${currentConfig.kakaoRestApiKey}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&state=${state}`;
-    } else {
       setActiveModalProvider('kakao');
+      return;
     }
+    const state = crypto.randomUUID();
+    const redirectUri = currentConfig.kakaoRedirectUri || `${siteOrigin}/oauth/callback/kakao`;
+    sessionStorage.setItem('kakao_oauth_state', state);
+    sessionStorage.setItem('kakao_oauth_redirect_uri', redirectUri);
+    const params = new URLSearchParams({
+      client_id: currentConfig.kakaoRestApiKey,
+      redirect_uri: redirectUri,
+      response_type: 'code',
+      state
+    });
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?${params}`;
   };
 
   const handleSimulateSocialLogin = async (provider) => {
+    if (!import.meta.env.DEV || !authConfig.allowSimulation) return;
     setActiveModalProvider(null);
     setSocialLoading(true);
     setError(null);
@@ -351,6 +361,16 @@ export default function LoginPage() {
           <span className="auth-divider-line" />
         </div>
 
+        {configStatus === 'loading' && (
+          <p role="status">Loading sign-in options...</p>
+        )}
+        {configStatus === 'error' && (
+          <p role="alert">Sign-in services could not be reached. Select a provider to retry.</p>
+        )}
+        {authConfig.isGoogleConfigured && googleSdkStatus === 'error' && (
+          <p role="alert">Google sign-in could not load. Please reload the page or check your browser extensions.</p>
+        )}
+
         {/* Federated Social Login Section */}
         <div className="social-auth-section" aria-label="Social sign in options">
           {/* Google Identity Services Container */}
@@ -359,7 +379,7 @@ export default function LoginPage() {
               type="button"
               className="btn-social btn-google-official"
               onClick={handleGoogleClick}
-              disabled={loading || socialLoading}
+              disabled={loading || socialLoading || configStatus === 'loading'}
               aria-label="Sign in with Google"
             >
               <svg className="social-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
@@ -378,7 +398,7 @@ export default function LoginPage() {
               type="button"
               className="btn-social btn-kakao-official"
               onClick={handleKakaoClick}
-              disabled={loading || socialLoading}
+              disabled={loading || socialLoading || configStatus === 'loading'}
               aria-label="Login with Kakao"
             >
               <svg className="social-icon" viewBox="0 0 24 24" width="20" height="20" fill="#000000" aria-hidden="true">
@@ -410,7 +430,7 @@ export default function LoginPage() {
           <div className="auth-modal-card">
             <div className="modal-header">
               <h3 id="modal-provider-title" className="modal-title">
-                {activeModalProvider === 'google' ? 'Google OAuth Configuration' : 'Kakao OAuth Configuration'}
+                {activeModalProvider === 'google' ? 'Google Sign In' : 'Kakao Sign In'}
               </h3>
               <button
                 type="button"
@@ -424,42 +444,29 @@ export default function LoginPage() {
 
             <div className="modal-body">
               <div className="modal-desc">
-                {activeModalProvider === 'google' ? (
-                  <>
-                    The Google Client ID is not configured yet in <code>server/.env</code>.
-                    <br /><br />
-                    To activate live Google Identity Services in production:
-                    <ol className="modal-steps">
-                      <li>Create an OAuth 2.0 Web Client ID in <strong>Google Cloud Console</strong>.</li>
-                      <li>Add Authorized JavaScript Origins: <code>https://com-web-x8qu.onrender.com</code> and <code>http://localhost:5173</code></li>
-                      <li>Add Authorized Redirect URIs: <code>https://com-web-x8qu.onrender.com/oauth/callback/google</code> and <code>http://localhost:5173/oauth/callback/google</code></li>
-                      <li>Set <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> in <code>server/.env</code>.</li>
-                    </ol>
-                  </>
-                ) : (
-                  <>
-                    The Kakao REST API Key is not configured yet in <code>server/.env</code>.
-                    <br /><br />
-                    To activate live Kakao Login in production:
-                    <ol className="modal-steps">
-                      <li>Register an application in <strong>Kakao Developers</strong>.</li>
-                      <li>In Web Platform, add Site Domains: <code>https://com-web-x8qu.onrender.com</code> and <code>http://localhost:5173</code></li>
-                      <li>In Kakao Login &gt; Redirect URI, add: <code>https://com-web-x8qu.onrender.com/oauth/callback/kakao</code> and <code>http://localhost:5173/oauth/callback/kakao</code></li>
-                      <li>Set <code>KAKAO_REST_API_KEY</code> and <code>KAKAO_CLIENT_SECRET</code> in <code>server/.env</code>.</li>
-                    </ol>
-                  </>
-                )}
+                {activeModalProvider === 'google' ? 'Google' : 'Kakao'} sign-in is currently unavailable.
+                Please use your email and password or try again later.
               </div>
 
-              <div className="modal-dev-note">
-                <strong>Development &amp; Verification Mode</strong>
-                <p>
-                  You can immediately simulate a verified {activeModalProvider === 'google' ? 'Google' : 'Kakao'} reader sign-in to test role assignment, session issuance, and reader account provisioning.
-                </p>
-                <p style={{ marginTop: '0.4rem', color: '#888', fontSize: '0.82rem' }}>
-                  ※ 개발자 콘솔 설정 없이 바로 테스트하시려면 하단의 <strong>[Simulate {activeModalProvider === 'google' ? 'Google' : 'Kakao'} Sign In]</strong> 버튼을 누르시면 즉시 인증된 계정으로 로그인됩니다.
-                </p>
-              </div>
+              {import.meta.env.DEV && (
+                <div className="modal-dev-note">
+                  <strong>Provider configuration</strong>
+                  <p>For Render deployments, add credentials to the backend Web Service&apos;s Environment page and redeploy.</p>
+                  {activeModalProvider === 'google' ? (
+                    <ol className="modal-steps">
+                      <li>Create a Web application client in Google Cloud Console.</li>
+                      <li>Register the Authorized JavaScript origin <code>{siteOrigin}</code>.</li>
+                      <li>Set <code>GOOGLE_CLIENT_ID</code> on the backend. This GIS callback flow uses the JavaScript origin.</li>
+                    </ol>
+                  ) : (
+                    <ol className="modal-steps">
+                      <li>Enable Kakao Login in Kakao Developers.</li>
+                      <li>Register <code>{authConfig.kakaoRedirectUri || `${siteOrigin}/oauth/callback/kakao`}</code> as the redirect URI.</li>
+                      <li>Set <code>KAKAO_REST_API_KEY</code>, <code>KAKAO_CLIENT_SECRET</code>, and <code>KAKAO_REDIRECT_URI</code> on the backend.</li>
+                    </ol>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="modal-actions">
@@ -470,13 +477,15 @@ export default function LoginPage() {
               >
                 Cancel
               </button>
-              <button
-                type="button"
-                className="btn-modal-primary"
-                onClick={() => handleSimulateSocialLogin(activeModalProvider)}
-              >
-                Simulate {activeModalProvider === 'google' ? 'Google' : 'Kakao'} Sign In
-              </button>
+              {import.meta.env.DEV && authConfig.allowSimulation && (
+                <button
+                  type="button"
+                  className="btn-modal-primary"
+                  onClick={() => handleSimulateSocialLogin(activeModalProvider)}
+                >
+                  Simulate {activeModalProvider === 'google' ? 'Google' : 'Kakao'} Sign In
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -4,7 +4,7 @@ const defaultBaseUrl = (typeof window !== 'undefined' && window.location.origin.
   ? 'https://com-api-ow0l.onrender.com/api'
   : (import.meta.env.PROD ? 'https://com-api-ow0l.onrender.com/api' : 'http://localhost:4000/api');
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || defaultBaseUrl;
+export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || defaultBaseUrl).trim().replace(/\/+$/, '');
 
 /**
  * Helper to fetch with JSON parsing and error handling
@@ -270,7 +270,14 @@ export async function apiAuthChangePassword({ currentPassword, newPassword }) {
  * Social & Federated Authentication API (Google, Kakao)
  */
 export async function apiAuthGetConfig() {
-  const json = await request('/auth/config');
+  const json = await request('/auth/config', { cache: 'no-store' });
+  if (
+    !json.data ||
+    typeof json.data.isGoogleConfigured !== 'boolean' ||
+    typeof json.data.isKakaoConfigured !== 'boolean'
+  ) {
+    throw new Error('The authentication configuration response is invalid.');
+  }
   return json.data;
 }
 
