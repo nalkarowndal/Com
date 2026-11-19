@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { API_BASE_URL } from '../../services/api';
 
 export default function AdminSettingsPage() {
   const [health, setHealth] = useState(null);
@@ -9,7 +10,7 @@ export default function AdminSettingsPage() {
     let isMounted = true;
     async function checkHealth() {
       try {
-        const res = await fetch('http://localhost:4000/api/health').catch(() => null);
+        const res = await fetch(`${API_BASE_URL}/health`).catch(() => null);
         if (res && res.ok) {
           const json = await res.json();
           if (isMounted) setHealth(json);
@@ -59,7 +60,7 @@ export default function AdminSettingsPage() {
               </div>
               <div className="kv-row">
                 <span className="kv-key">API Base URL</span>
-                <span className="kv-val">http://localhost:4000/api</span>
+                <span className="kv-val">{API_BASE_URL}</span>
               </div>
               <div className="kv-row">
                 <span className="kv-key">Database Migrations</span>
