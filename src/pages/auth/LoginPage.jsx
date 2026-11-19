@@ -361,9 +361,6 @@ export default function LoginPage() {
           <span className="auth-divider-line" />
         </div>
 
-        {configStatus === 'loading' && (
-          <p role="status">Loading sign-in options...</p>
-        )}
         {configStatus === 'error' && (
           <p role="alert">Sign-in services could not be reached. Select a provider to retry.</p>
         )}
