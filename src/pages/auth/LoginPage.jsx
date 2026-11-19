@@ -179,7 +179,14 @@ export default function LoginPage() {
     if (authConfig.isKakaoConfigured && authConfig.kakaoRestApiKey) {
       const state = Math.random().toString(36).substring(2, 15);
       sessionStorage.setItem('kakao_oauth_state', state);
-      const redirectUri = authConfig.kakaoRedirectUri || `${window.location.origin}/oauth/callback/kakao`;
+      const originUri = `${window.location.origin}/oauth/callback/kakao`;
+      const redirectUri = (
+        window.location.origin.includes('onrender.com') ||
+        window.location.origin.includes('localhost') ||
+        window.location.origin.includes('127.0.0.1')
+      )
+        ? originUri
+        : (authConfig.kakaoRedirectUri || originUri);
       window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${authConfig.kakaoRestApiKey}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&state=${state}`;
     } else {
       setActiveModalProvider('kakao');
@@ -393,7 +400,8 @@ export default function LoginPage() {
                     To activate live Google Identity Services in production:
                     <ol className="modal-steps">
                       <li>Create an OAuth 2.0 Web Client ID in <strong>Google Cloud Console</strong>.</li>
-                      <li>Add Authorized JavaScript Origin: <code>http://localhost:5173</code></li>
+                      <li>Add Authorized JavaScript Origins: <code>https://com-web-x8qu.onrender.com</code> and <code>http://localhost:5173</code></li>
+                      <li>Add Authorized Redirect URIs: <code>https://com-web-x8qu.onrender.com/oauth/callback/google</code> and <code>http://localhost:5173/oauth/callback/google</code></li>
                       <li>Set <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> in <code>server/.env</code>.</li>
                     </ol>
                   </>
@@ -404,7 +412,8 @@ export default function LoginPage() {
                     To activate live Kakao Login in production:
                     <ol className="modal-steps">
                       <li>Register an application in <strong>Kakao Developers</strong>.</li>
-                      <li>Enable Kakao Login and add Redirect URI: <code>http://localhost:5173/oauth/callback/kakao</code></li>
+                      <li>In Web Platform, add Site Domains: <code>https://com-web-x8qu.onrender.com</code> and <code>http://localhost:5173</code></li>
+                      <li>In Kakao Login &gt; Redirect URI, add: <code>https://com-web-x8qu.onrender.com/oauth/callback/kakao</code> and <code>http://localhost:5173/oauth/callback/kakao</code></li>
                       <li>Set <code>KAKAO_REST_API_KEY</code> and <code>KAKAO_CLIENT_SECRET</code> in <code>server/.env</code>.</li>
                     </ol>
                   </>

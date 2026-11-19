@@ -67,11 +67,11 @@
 `.env.example`을 참고하여 `server/.env` 파일을 설정합니다.
 
 ```dotenv
-# 포트 및 오리진
+# 포트 및 오리진 (로컬: http://localhost:5173 | 배포: https://com-web-x8qu.onrender.com)
 PORT=4000
 NODE_ENV=development
-CLIENT_ORIGIN=http://localhost:5173
-FRONTEND_ORIGIN=http://localhost:5173
+CLIENT_ORIGIN=https://com-web-x8qu.onrender.com
+FRONTEND_ORIGIN=https://com-web-x8qu.onrender.com
 
 # 데이터베이스
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/company_db
@@ -87,20 +87,21 @@ ADMIN_PASSWORD=AdminSecurePassword2026!
 # Google Identity Services (Google Cloud Console 발급)
 # 1. Google Cloud Console > API 및 서비스 > 사용자 인증 정보
 # 2. OAuth 2.0 클라이언트 ID (웹 애플리케이션) 생성
-# 3. 승인된 자바스크립트 원본: http://localhost:5173
-# 4. 승인된 리디렉션 URI: http://localhost:5173/oauth/callback/google
+# 3. 승인된 자바스크립트 원본: http://localhost:5173 및 https://com-web-x8qu.onrender.com
+# 4. 승인된 리디렉션 URI: http://localhost:5173/oauth/callback/google 및 https://com-web-x8qu.onrender.com/oauth/callback/google
 GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 # Kakao Developers (Kakao Developers 콘솔 발급)
 # 1. Kakao Developers 콘솔 > 내 애플리케이션 생성
 # 2. 앱 키 > REST API 키 복사
-# 3. 카카오 로그인 활성화 (ON)
-# 4. 카카오 로그인 > Redirect URI 등록: http://localhost:5173/oauth/callback/kakao
-# 5. 보안 > Client Secret 발급 및 활성화
+# 3. 플랫폼 > Web > 사이트 도메인: http://localhost:5173 및 https://com-web-x8qu.onrender.com 등록
+# 4. 카카오 로그인 활성화 (ON)
+# 5. 카카오 로그인 > Redirect URI 등록: http://localhost:5173/oauth/callback/kakao 및 https://com-web-x8qu.onrender.com/oauth/callback/kakao
+# 6. 보안 > Client Secret 발급 및 활성화
 KAKAO_REST_API_KEY=your_kakao_rest_api_key
 KAKAO_CLIENT_SECRET=your_kakao_client_secret
-KAKAO_REDIRECT_URI=http://localhost:5173/oauth/callback/kakao
+KAKAO_REDIRECT_URI=https://com-web-x8qu.onrender.com/oauth/callback/kakao
 ```
 
 > **개발 환경 안내**: 외부 OAuth 키(`GOOGLE_CLIENT_ID`, `KAKAO_REST_API_KEY`)가 설정되지 않은 로컬 개발 환경에서도 로그인 화면에서 공식 가이드 팝업 및 '시뮬레이션 로그인' 기능을 통해 백엔드 연동과 계정 프로비저닝 흐름을 100% 테스트할 수 있습니다.

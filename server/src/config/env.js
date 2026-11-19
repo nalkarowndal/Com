@@ -11,8 +11,8 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 export const env = {
   PORT: parseInt(process.env.PORT || '4000', 10),
   NODE_ENV: process.env.NODE_ENV || 'development',
-  CLIENT_ORIGIN: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
-  FRONTEND_ORIGIN: process.env.FRONTEND_ORIGIN || process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+  CLIENT_ORIGIN: process.env.CLIENT_ORIGIN || 'https://com-web-x8qu.onrender.com',
+  FRONTEND_ORIGIN: process.env.FRONTEND_ORIGIN || process.env.CLIENT_ORIGIN || 'https://com-web-x8qu.onrender.com',
   DATABASE_URL: process.env.DATABASE_URL || '',
   JWT_SECRET: process.env.JWT_SECRET || 'dev_secret_key_company_prism_2026',
   SESSION_SECRET: process.env.SESSION_SECRET || 'dev_session_secret_company_prism_2026',
@@ -22,5 +22,5 @@ export const env = {
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || '',
   KAKAO_REST_API_KEY: process.env.KAKAO_REST_API_KEY || '',
   KAKAO_CLIENT_SECRET: process.env.KAKAO_CLIENT_SECRET || '',
-  KAKAO_REDIRECT_URI: process.env.KAKAO_REDIRECT_URI || 'http://localhost:5173/oauth/callback/kakao'
+  KAKAO_REDIRECT_URI: process.env.KAKAO_REDIRECT_URI || 'https://com-web-x8qu.onrender.com/oauth/callback/kakao'
 };

@@ -258,7 +258,8 @@ export class AuthController {
     }
 
     const state = Math.random().toString(36).substring(2, 15);
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${config.kakaoRestApiKey}&redirect_uri=${encodeURIComponent(config.kakaoRedirectUri)}&response_type=code&state=${state}`;
+    const redirectUri = req.query.redirect_uri || config.kakaoRedirectUri || 'https://com-web-x8qu.onrender.com/oauth/callback/kakao';
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${config.kakaoRestApiKey}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&state=${state}`;
 
     return res.redirect(kakaoAuthUrl);
   }
@@ -267,6 +268,7 @@ export class AuthController {
     try {
       const { code, state, error, error_description } = req.query;
       const config = authService.getAuthConfig();
+      const redirectUri = req.query.redirect_uri || config.kakaoRedirectUri || 'https://com-web-x8qu.onrender.com/oauth/callback/kakao';
 
       if (error) {
         return res.redirect(`${config.frontendOrigin}/login?error=${encodeURIComponent(error_description || error)}`);
@@ -279,7 +281,7 @@ export class AuthController {
       const result = await authService.handleKakaoLogin({
         code,
         state,
-        redirectUri: config.kakaoRedirectUri
+        redirectUri
       });
 
       res.cookie('prism_auth_token', result.token, getCookieOptions());

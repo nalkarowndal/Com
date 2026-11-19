@@ -1,35 +1,54 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 export default function OAuthCallbackPage() {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const navigate = useNavigate();
-  const { loginWithKakao } = useAuth();
+  const { loginWithKakao, loginWithGoogle } = useAuth();
+
+  const isGoogle = location.pathname.includes('/google');
 
   const code = searchParams.get('code');
   const state = searchParams.get('state');
   const errorParam = searchParams.get('error');
   const errorDesc = searchParams.get('error_description');
 
+  // Parse credential from query or hash fragment (standard in Google GIS redirect flow)
+  const hashParams = typeof window !== 'undefined' && window.location.hash
+    ? new URLSearchParams(window.location.hash.replace(/^#/, ''))
+    : null;
+  const credential = searchParams.get('credential') ||
+    searchParams.get('id_token') ||
+    (hashParams ? (hashParams.get('credential') || hashParams.get('id_token')) : null);
+
   const [error, setError] = useState(() => {
     if (errorParam) {
       return errorDesc || errorParam || 'Social authentication was cancelled or failed.';
     }
-    if (!code) {
-      return 'Missing authorization code from identity provider.';
+    if (!code && !credential) {
+      return `Missing authorization token or code from ${isGoogle ? 'Google' : 'Kakao'} provider.`;
     }
     return null;
   });
 
   useEffect(() => {
-    if (error || !code) return;
+    if (error) return;
+    if (!code && !credential) return;
 
     let isMounted = true;
     async function completeOAuth() {
       try {
-        await loginWithKakao({ code, state });
+        if (isGoogle) {
+          const tokenOrCode = credential || code;
+          await loginWithGoogle(tokenOrCode);
+        } else {
+          // Send the exact origin-aware redirectUri used during the authorization request
+          const redirectUri = `${window.location.origin}/oauth/callback/kakao`;
+          await loginWithKakao({ code, state, redirectUri });
+        }
         if (isMounted) {
           navigate('/account', { replace: true });
         }
@@ -45,7 +64,7 @@ export default function OAuthCallbackPage() {
     return () => {
       isMounted = false;
     };
-  }, [code, state, error, loginWithKakao, navigate]);
+  }, [code, state, credential, isGoogle, error, loginWithKakao, loginWithGoogle, navigate]);
 
   if (error) {
     return (

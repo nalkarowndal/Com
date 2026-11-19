@@ -15,11 +15,13 @@ export function configureSecurity(app) {
   // CORS configuration
   const allowedOrigins = [
     env.CLIENT_ORIGIN,
+    env.FRONTEND_ORIGIN,
+    'https://com-web-x8qu.onrender.com',
     'http://localhost:5173',
     'http://localhost:4173',
     'http://127.0.0.1:5173',
     'http://127.0.0.1:4173'
-  ];
+  ].filter(Boolean);
 
   app.use(
     cors({

@@ -42,12 +42,15 @@ cp server/.env.example server/.env
 ### 환경 변수 세부 항목
 ```env
 PORT=4000
-NODE_ENV=development
-CLIENT_ORIGIN=http://localhost:5173
+NODE_ENV=production
+# 로컬 개발 시 http://localhost:5173, 배포 시 https://com-web-x8qu.onrender.com
+CLIENT_ORIGIN=https://com-web-x8qu.onrender.com
+FRONTEND_ORIGIN=https://com-web-x8qu.onrender.com
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/company_db
 JWT_SECRET=super_secret_editorial_prism_company_jwt_key_2026
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=AdminSecurePassword2026!
+KAKAO_REDIRECT_URI=https://com-web-x8qu.onrender.com/oauth/callback/kakao
 ```
 
 > **참고**: `DATABASE_URL`에 접속할 수 없는 경우, 백엔드는 자동으로 내장 영속 파일 DB(`server/db/persistent_data.json`)로 복원력 있게 전환되어 모든 API와 기능을 정상 제공합니다.
