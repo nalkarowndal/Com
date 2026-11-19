@@ -49,22 +49,31 @@ export default function LoginPage() {
     }
   }, [from, navigate]);
 
-  // Load backend OAuth configuration
+  // Load backend OAuth configuration with automatic retry for Render cold-starts
   useEffect(() => {
     let isMounted = true;
-    async function loadConfig() {
+    let timer = null;
+
+    async function loadConfig(attempt = 1) {
       try {
         const config = await apiAuthGetConfig();
         if (isMounted && config) {
           setAuthConfig(config);
+          // If server just woke up and config is partial, retry briefly
+          if ((!config.isGoogleConfigured || !config.isKakaoConfigured) && attempt < 4) {
+            timer = setTimeout(() => loadConfig(attempt + 1), 3000);
+          }
         }
       } catch (err) {
-        console.warn('Could not fetch OAuth configuration:', err);
+        if (isMounted && attempt < 5) {
+          timer = setTimeout(() => loadConfig(attempt + 1), 3000);
+        }
       }
     }
     loadConfig();
     return () => {
       isMounted = false;
+      if (timer) clearTimeout(timer);
     };
   }, []);
 
@@ -167,16 +176,38 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleClick = () => {
-    if (authConfig.isGoogleConfigured && window.google?.accounts?.id) {
+  const handleGoogleClick = async () => {
+    let currentConfig = authConfig;
+    if (!currentConfig.isGoogleConfigured) {
+      try {
+        const fresh = await apiAuthGetConfig();
+        if (fresh && fresh.isGoogleConfigured) {
+          setAuthConfig(fresh);
+          currentConfig = fresh;
+        }
+      } catch {}
+    }
+
+    if (currentConfig.isGoogleConfigured && window.google?.accounts?.id) {
       window.google.accounts.id.prompt();
     } else {
       setActiveModalProvider('google');
     }
   };
 
-  const handleKakaoClick = () => {
-    if (authConfig.isKakaoConfigured && authConfig.kakaoRestApiKey) {
+  const handleKakaoClick = async () => {
+    let currentConfig = authConfig;
+    if (!currentConfig.isKakaoConfigured || !currentConfig.kakaoRestApiKey) {
+      try {
+        const fresh = await apiAuthGetConfig();
+        if (fresh && fresh.isKakaoConfigured) {
+          setAuthConfig(fresh);
+          currentConfig = fresh;
+        }
+      } catch {}
+    }
+
+    if (currentConfig.isKakaoConfigured && currentConfig.kakaoRestApiKey) {
       const state = Math.random().toString(36).substring(2, 15);
       sessionStorage.setItem('kakao_oauth_state', state);
       const originUri = `${window.location.origin}/oauth/callback/kakao`;
@@ -186,8 +217,8 @@ export default function LoginPage() {
         window.location.origin.includes('127.0.0.1')
       )
         ? originUri
-        : (authConfig.kakaoRedirectUri || originUri);
-      window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${authConfig.kakaoRestApiKey}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&state=${state}`;
+        : (currentConfig.kakaoRedirectUri || originUri);
+      window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${currentConfig.kakaoRestApiKey}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&state=${state}`;
     } else {
       setActiveModalProvider('kakao');
     }
@@ -424,6 +455,9 @@ export default function LoginPage() {
                 <strong>Development &amp; Verification Mode</strong>
                 <p>
                   You can immediately simulate a verified {activeModalProvider === 'google' ? 'Google' : 'Kakao'} reader sign-in to test role assignment, session issuance, and reader account provisioning.
+                </p>
+                <p style={{ marginTop: '0.4rem', color: '#888', fontSize: '0.82rem' }}>
+                  ※ 개발자 콘솔 설정 없이 바로 테스트하시려면 하단의 <strong>[Simulate {activeModalProvider === 'google' ? 'Google' : 'Kakao'} Sign In]</strong> 버튼을 누르시면 즉시 인증된 계정으로 로그인됩니다.
                 </p>
               </div>
             </div>
